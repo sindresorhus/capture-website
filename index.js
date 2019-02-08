@@ -62,6 +62,8 @@ const captureWebsite = async (url, options) => {
 		...options
 	};
 
+	const timeoutInSeconds = options.timeout * 1000;
+
 	const viewportOptions = {
 		width: options.width,
 		height: options.height,
@@ -123,7 +125,7 @@ const captureWebsite = async (url, options) => {
 	}
 
 	await page.goto(finalUrl, {
-		timeout: options.timeout * 1000,
+		timeout: timeoutInSeconds,
 		waitUntil: 'networkidle2'
 	});
 
@@ -165,14 +167,14 @@ const captureWebsite = async (url, options) => {
 	if (options.waitForElement) {
 		await page.waitForSelector(options.waitForElement, {
 			visible: true,
-			timeout: options.timeout
+			timeout: timeoutInSeconds
 		});
 	}
 
 	if (options.element) {
 		await page.waitForSelector(options.element, {
 			visible: true,
-			timeout: options.timeout
+			timeout: timeoutInSeconds
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		screenshotOptions.fullPage = false;
