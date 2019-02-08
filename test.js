@@ -10,6 +10,7 @@ import devices from 'puppeteer/DeviceDescriptors';
 import tempy from 'tempy';
 import delay from 'delay';
 import toughCookie from 'tough-cookie';
+import fileUrl from 'file-url';
 import captureWebsite, {_startBrowser} from '.';
 
 const defaultResponse = (() => {
@@ -61,6 +62,20 @@ test('capture screenshot - from url', async t => {
 
 test('capture screenshot - from local file', async t => {
 	t.true(isPng(await instance('fixtures/local-file.html', {
+		width: 100,
+		height: 100
+	})));
+});
+
+test('capture screenshot - from file URL', async t => {
+	t.true(isPng(await instance(fileUrl('fixtures/local-file.html'), {
+		width: 100,
+		height: 100
+	})));
+});
+
+test('capture screenshot - from data URL', async t => {
+	t.true(isPng(await instance('data:text/html,<h1>Awesome!</h1>', {
 		width: 100,
 		height: 100
 	})));

@@ -35,7 +35,6 @@
 	],
 	"dependencies": {
 		"file-url": "^2.0.2",
-		"is-url-superb": "^2.0.0",
 		"puppeteer": "^1.12.2"
 	},
 	"devDependencies": {

@@ -49,7 +49,7 @@ Returns a `Promise<string>` with the screenshot as [Base64](https://developer.mo
 
 Type: `string`
 
-The URL or local file path to the website.
+The URL, file URL, data URL, or local file path to the website.
 
 ```js
 const captureWebsite = require('capture-website');

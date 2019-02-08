@@ -2,11 +2,12 @@
 const {promisify} = require('util');
 const fs = require('fs');
 const fileUrl = require('file-url');
-const isUrl = require('is-url-superb');
 const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
 
 const writeFile = promisify(fs.writeFile);
+
+const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
 const hideElements = elements => {
 	for (const element of elements) {
