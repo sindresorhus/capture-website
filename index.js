@@ -4,6 +4,7 @@ const fs = require('fs');
 const fileUrl = require('file-url');
 const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
+const toughCookie = require('tough-cookie');
 
 const writeFile = promisify(fs.writeFile);
 
@@ -24,6 +25,25 @@ const removeElements = elements => {
 const getBoundingClientRect = element => {
 	const {height, width, x, y} = element.getBoundingClientRect();
 	return {height, width, x, y};
+};
+
+const parseCookie = (url, cookie) => {
+	if (typeof cookie === 'object') {
+		return cookie;
+	}
+
+	const jar = new toughCookie.CookieJar(undefined, {rejectPublicSuffixes: false});
+	jar.setCookieSync(cookie, url);
+	const ret = jar.serializeSync().cookies[0];
+
+	// Use this instead of the above when the following issue is fixed:
+	// https://github.com/salesforce/tough-cookie/issues/149
+	// const ret = toughCookie.parse(cookie).serializeSync();
+
+	ret.name = ret.key;
+	delete ret.key;
+
+	return ret;
 };
 
 const captureWebsite = async (url, options) => {
@@ -80,7 +100,8 @@ const captureWebsite = async (url, options) => {
 	}
 
 	if (options.cookies) {
-		await page.setCookie(...options.cookies);
+		const cookies = options.cookies.map(cookie => parseCookie(finalUrl, cookie));
+		await page.setCookie(...cookies);
 	}
 
 	if (options.headers) {

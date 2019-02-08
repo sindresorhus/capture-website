@@ -281,9 +281,31 @@ Set a custom [user agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Head
 
 ##### cookies
 
-Type: `Object[]`
+Type: `Array<string | Object>`
 
-Set cookies in the [following format](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetcookiecookies).
+Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetcookiecookies).
+
+Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
+
+```js
+const captureWebsite = require('capture-website');
+
+(async () => {
+	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+		cookies: [
+			// This format is useful for when you copy it from the browser
+			'id=unicorn; Expires=Wed, 21 Oct 2018 07:28:00 GMT;',
+
+			// This format is useful for when you have to manually create a cookie
+			{
+				name: 'id',
+				value: 'unicorn',
+				expires: Math.round(new Date('2018-10-21').getTime() / 1000)
+			}
+		]
+	});
+})();
+```
 
 ##### authentication
 

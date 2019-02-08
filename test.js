@@ -444,6 +444,16 @@ test('`cookies` option`', async t => {
 
 	t.is(pixels[0], 0);
 
+	const pixels2 = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		cookies: [
+			'color=black'
+		]
+	}));
+
+	t.is(pixels2[0], 0);
+
 	await server.close();
 });
 
