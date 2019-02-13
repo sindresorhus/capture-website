@@ -58,6 +58,7 @@ const captureWebsite = async (url, options) => {
 		timeout: 60, // The Puppeteer default of 30 is too short
 		delay: 0,
 		debug: false,
+		launchOptions: {},
 		_keepAlive: false,
 		...options
 	};
@@ -88,10 +89,10 @@ const captureWebsite = async (url, options) => {
 		screenshotOptions.omitBackground = !options.defaultBackground;
 	}
 
-	const launchOptions = {};
+	const launchOptions = options.launchOptions;
 
 	if (options.debug) {
-		launchOptions.headless = !options.debug;
+		launchOptions.headless = false;
 	}
 
 	const browser = options._browser || await puppeteer.launch(launchOptions);
