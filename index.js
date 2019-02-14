@@ -89,7 +89,7 @@ const captureWebsite = async (url, options) => {
 		screenshotOptions.omitBackground = !options.defaultBackground;
 	}
 
-	const {launchOptions} = options;
+	const launchOptions = {...options.launchOptions};
 
 	if (options.debug) {
 		launchOptions.headless = false;
