@@ -358,11 +358,9 @@ Note: This overrides `launchOptions.headless = false`.
 Type: `Object`<br>
 Default: `{}`
 
-Options passed to `puppeteer.launch([options])`.
-See [puppeteer docs](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
-Note: Some launch options will be overridden by other options. For example,
-`debug: true` sets `launchOptions.headless = false`.
+Note: Some of the launch options are overridden by the `debug` option.
 
 ### captureWebsite.devices
 
