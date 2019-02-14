@@ -362,6 +362,15 @@ Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppete
 
 Note: Some of the launch options are overridden by the `debug` option.
 
+##### overwrite
+
+Type: `boolean`<br>
+Default: `false`
+
+Overwrite the destination file if it exists instead of throwing an error.
+
+*This option applies only to `captureWebsite.file()`.*
+
 ### captureWebsite.devices
 
 Type: `string[]`

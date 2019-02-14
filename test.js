@@ -470,6 +470,23 @@ test('`authentication` option', async t => {
 	})));
 });
 
+test('`overwrite` option', async t => {
+	const filePath = tempy.file();
+
+	await t.notThrowsAsync(async () => {
+		await captureWebsite.file(server.url, filePath, {
+			width: 100,
+			height: 100
+		});
+
+		await captureWebsite.file(server.url, filePath, {
+			width: 100,
+			height: 100,
+			overwrite: true
+		});
+	});
+});
+
 test('handle redirects', async t => {
 	const server = await createTestServer();
 

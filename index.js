@@ -217,9 +217,12 @@ const captureWebsite = async (url, options) => {
 	return buffer;
 };
 
-module.exports.file = async (url, filePath, options) => {
+module.exports.file = async (url, filePath, options = {}) => {
 	const screenshot = await captureWebsite(url, options);
-	await writeFile(filePath, screenshot, {flag: 'wx'});
+
+	await writeFile(filePath, screenshot, {
+		flag: options.overwrite ? 'w' : 'wx'
+	});
 };
 
 module.exports.buffer = async (url, options) => captureWebsite(url, {...options, encoding: 'binary'});
