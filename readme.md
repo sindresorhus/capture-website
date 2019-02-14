@@ -351,6 +351,17 @@ Default: `false`
 
 Show the browser window so you can see what it's doing.
 
+Note: This overrides `launchOptions.headless = false`.
+
+##### launchOptions
+
+Type: `Object`<br>
+Default: `{}`
+
+Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+
+Note: Some of the launch options are overridden by the `debug` option.
+
 ### captureWebsite.devices
 
 Type: `string[]`
