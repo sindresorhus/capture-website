@@ -93,10 +93,27 @@ const captureWebsite = async (url, options) => {
 
 	if (options.debug) {
 		launchOptions.headless = false;
+		launchOptions.slowMo = 100;
 	}
 
 	const browser = options._browser || await puppeteer.launch(launchOptions);
 	const page = await browser.newPage();
+
+	if (options.debug) {
+		page.on('console', message => {
+			let {url, lineNumber, columnNumber} = message.location();
+			lineNumber = lineNumber ? `:${lineNumber}` : '';
+			columnNumber = columnNumber ? `:${columnNumber}` : '';
+			const location = url ? ` (${url}${lineNumber}${columnNumber})` : '';
+			console.log(`\nPage log:${location}\n${message.text()}\n`);
+		});
+
+		page.on('pageerror', error => {
+			console.log('\nPage error:', error, '\n');
+		});
+
+		// TODO: Add more events from https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#event-requestfailed
+	}
 
 	if (options.authentication) {
 		await page.authenticate(options.authentication);

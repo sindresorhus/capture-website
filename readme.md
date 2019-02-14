@@ -349,9 +349,9 @@ const checkSomething = require('./check-something');
 Type: `boolean`<br>
 Default: `false`
 
-Show the browser window so you can see what it's doing.
+Show the browser window so you can see what it's doing, redirect page console output to the terminal, and slow down each Puppeteer operation.
 
-Note: This overrides `launchOptions.headless = false`.
+Note: This overrides `launchOptions` with `{headless: false, slowMo: 100}`.
 
 ##### launchOptions
 
