@@ -230,6 +230,33 @@ test('`removeElements` option', async t => {
 	t.is(pixels[0], 255);
 });
 
+test('`clickElement` option', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div style="background-color: black; width: 100px; height: 100px;"></div>
+				<script>
+					document.querySelector('div').addEventListener('click', function () {
+						this.style.backgroundColor = 'red';
+					});
+				</script>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		clickElement: 'div'
+	}));
+
+	t.is(pixels[0], 255);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+});
+
 test('`modules` option - inline', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
