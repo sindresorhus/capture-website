@@ -202,7 +202,7 @@ This sets [`display: none`](https://stackoverflow.com/a/133064/64949) on the mat
 
 Type: `string`
 
-Click DOM element matching the given [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+Click a DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
 ##### modules
 
