@@ -155,6 +155,10 @@ const captureWebsite = async (url, options) => {
 		await Promise.all(options.removeElements.map(selector => page.$$eval(selector, removeElements)));
 	}
 
+	if (options.clickElement) {
+		await page.click(options.clickElement);
+	}
+
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
 
 	if (options.modules) {
