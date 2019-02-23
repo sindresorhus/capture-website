@@ -1,3 +1,4 @@
+/* global window */
 'use strict';
 const {promisify} = require('util');
 const fs = require('fs');
@@ -200,6 +201,25 @@ const captureWebsite = async (url, options) => {
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		screenshotOptions.fullPage = false;
+	}
+
+	if (options.scrollToElement) {
+		if (typeof options.scrollToElement === 'string') {
+			options.scrollToElement = {
+				element: options.scrollToElement,
+				offsetFrom: 'top',
+				offset: 0
+			};
+		}
+
+		const {x, y} = await page.$eval(options.scrollToElement.element, getBoundingClientRect);
+
+		await page.evaluate((x, y, from, offset) => {
+			window.scrollTo(x, y);
+			window.scrollBy({
+				[from]: offset
+			});
+		}, x, y, options.scrollToElement.offsetFrom, options.scrollToElement.offset);
 	}
 
 	if (options.delay) {
