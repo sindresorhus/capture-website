@@ -204,6 +204,22 @@ Type: `string`
 
 Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
+##### scrollToElement
+
+Type: `string | object`
+
+###### element
+
+Type: `string`
+
+###### offsetFrom
+
+Type: `top | left` (scrollY and scrollX)
+
+###### offset
+
+Type: `number`
+
 ##### modules
 
 Type: `string[]`
