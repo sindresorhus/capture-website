@@ -312,6 +312,59 @@ test('`modules` option - url', async t => {
 	t.is(pixels[2], 0);
 });
 
+test('`scrollToElement` option - string', async t => {
+	const server = await createTestServer();
+
+	server.get('/', (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div id="first" style="background-color: black; width: 100px; height: 100px;"></div>
+				<div id="second" style="background-color: red; width: 100px; height: 100px;"></div>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		scrollToElement: '#second'
+	}));
+
+	t.is(pixels[0], 255);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+});
+
+test('`scrollToElement` option - object', async t => {
+	const server = await createTestServer();
+
+	server.get('/', (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div id="first" style="background-color: black; width: 100px; height: 100px;"></div>
+				<div id="second" style="background-color: red; width: 100px; height: 100px;"></div>
+				<div id="third" style="background-color: blue; width: 100px; height: 100px;"></div>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		scrollToElement: {
+			element: '#second',
+			offsetFrom: 'top',
+			offset: 50
+		}
+	}));
+	t.is(pixels[0], 255);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+	t.is(pixels[pixels.length - 4], 0);
+	t.is(pixels[pixels.length - 3], 0);
+	t.is(pixels[pixels.length - 2], 255);
+});
+
 test('`scripts` option - inline', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
@@ -441,7 +494,7 @@ test('`headers` option', async t => {
 	await server.close();
 });
 
-test('`cookies` option`', async t => {
+test('`cookies` option', async t => {
 	const server = await createTestServer();
 
 	server.get('/', (request, response) => {
