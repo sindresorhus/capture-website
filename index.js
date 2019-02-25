@@ -22,9 +22,53 @@ const removeElements = elements => {
 	}
 };
 
+const scrollToElement = (element, options) => {
+	const hasOverflow = string => /overflow(-x|-y)?: ?( |auto|scroll)+;/.test(string);
+	const findScrollParent = element => {
+		if (element === undefined) {
+			return;
+		}
+
+		if (hasOverflow(element.style.cssText)) {
+			return element;
+		}
+
+		return findScrollParent(element.parentElement);
+	};
+
+	const calculateOffset = (rect, options) => {
+		if (options === undefined) {
+			return {x: rect.left, y: rect.top};
+		}
+
+		const offset = options.offset | 0;
+
+		switch (options.offsetFrom) {
+			case 'top':
+				return {x: rect.left, y: rect.top + offset};
+			case 'right':
+				return {x: rect.left - offset, y: rect.top};
+			case 'bottom':
+				return {x: rect.left, y: rect.top - offset};
+			case 'left':
+				return {x: rect.left + offset, y: rect.top};
+			default:
+				return {x: rect.left, y: rect.top};
+		}
+	};
+
+	const rect = element.getBoundingClientRect();
+	const offset = calculateOffset(rect, options);
+	const parent = findScrollParent(element);
+
+	if (parent !== undefined) {
+		parent.scrollTo(offset.x, offset.y);
+	}
+};
+
 const getBoundingClientRect = element => {
-	const {height, width, x, y} = element.getBoundingClientRect();
-	return {height, width, x, y};
+	const {top, left, height, width, x, y} = element.getBoundingClientRect();
+	return {top, left, height, width, x, y};
 };
 
 const parseCookie = (url, cookie) => {
@@ -157,6 +201,14 @@ const captureWebsite = async (url, options) => {
 
 	if (options.clickElement) {
 		await page.click(options.clickElement);
+	}
+
+	if (options.scrollToElement) {
+		if (typeof options.scrollToElement === 'object') {
+			await page.$eval(options.scrollToElement.element, scrollToElement, options.scrollToElement);
+		} else {
+			await page.$eval(options.scrollToElement, scrollToElement);
+		}
 	}
 
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
