@@ -212,9 +212,7 @@ const captureWebsite = async (url, options) => {
 
 	if (!options.element && options.inset && options.inset.top) {
 		await Promise.all([
-			await page.evaluate((insetTop) => {
-				window.scrollTo({top: insetTop});
-			}, options.inset.top)
+			await page.evaluate(`window.scrollTo({top: ${options.inset.top}})`)
 		]);
 	}
 
