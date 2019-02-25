@@ -199,7 +199,22 @@ const captureWebsite = async (url, options) => {
 			timeout: timeoutInSeconds
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
+		if (options.inset) {
+			let inset = options.inset;
+			screenshotOptions.clip.width -= (inset.left + inset.right) || inset * 2;
+			screenshotOptions.clip.height -= (inset.top + inset.bottom) || inset * 2;
+			screenshotOptions.clip.x += inset.left || inset;
+			screenshotOptions.clip.y += inset.top || inset;
+		}
 		screenshotOptions.fullPage = false;
+	}
+
+	if (!options.element && options.inset && options.inset.top) {
+		await Promise.all([
+			await page.evaluate((top) => {
+				window.scrollTo({ "top": top });
+			}, options.inset.top)
+		]);
 	}
 
 	if (options.delay) {
