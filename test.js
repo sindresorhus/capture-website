@@ -259,6 +259,29 @@ test('`clickElement` option', async t => {
 	await server.close();
 });
 
+test('`inset` option', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body style="margin: 0; padding: 40px">
+				<div style="background-color: black; width: 100px; height: 100px;"></div>
+			</body>
+		`);
+	});
+
+	const size = imageSize(await instance(server.url, {
+		scaleFactor: 1,
+		element: 'div',
+		inset: -10
+	}));
+
+	t.is(size.width, 120);
+	t.is(size.height, 120);
+
+	await server.close();
+});
+
 test('`modules` option - inline', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,

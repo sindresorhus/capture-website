@@ -204,6 +204,45 @@ Type: `string`
 
 Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
+##### inset
+
+Type: `number` or `object`
+
+Ignore certain pixel at the top of the page:
+
+```javascript
+const captureWebsite = require('capture-website');
+
+(async () => {
+	await captureWebsite.file('https://sindresorhus.com', 'top-inset.png', {
+		inset: {top: 100}
+	});
+})();
+```
+
+Or select an element and also include 10px around it:
+
+```
+{
+  element: '.foo',
+  inset: {
+    top: -10,
+    right: -10,
+    bottom: -10,
+    left: -10
+  }
+}
+```
+
+Or the shorthand for all sides:
+
+```
+{
+  element: '.foo',
+  inset: -10
+}
+```
+
 ##### modules
 
 Type: `string[]`
