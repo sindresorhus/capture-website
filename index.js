@@ -212,7 +212,7 @@ const captureWebsite = async (url, options) => {
 	if (!options.element && options.inset && options.inset.top) {
 		await Promise.all([
 			await page.evaluate((top) => {
-				window.scrollTo({ "top": top });
+				window.scrollTo({ 'top': top });
 			}, options.inset.top)
 		]);
 	}
