@@ -259,7 +259,7 @@ test('`clickElement` option', async t => {
 	await server.close();
 });
 
-test('`inset` option', async t => {
+test('`inset number` option', async t => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -278,6 +278,34 @@ test('`inset` option', async t => {
 
 	t.is(size.width, 120);
 	t.is(size.height, 120);
+
+	await server.close();
+});
+
+test('`inset object` option', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body style="margin: 0; padding: 40px">
+				<div style="background-color: black; width: 100px; height: 100px;"></div>
+			</body>
+		`);
+	});
+
+	const size = imageSize(await instance(server.url, {
+		scaleFactor: 1,
+		element: 'div',
+		inset: {
+			top: 10,
+			right: -10,
+			bottom: -20,
+			left: 20
+		}
+	}));
+
+	t.is(size.width, 90);
+	t.is(size.height, 110);
 
 	await server.close();
 });

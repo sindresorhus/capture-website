@@ -206,9 +206,11 @@ Click the DOM element matching the given [CSS selector](https://developer.mozill
 
 ##### inset
 
-Type: `number` or `object`
+Type: `number | Object`
 
-Ignore certain pixel at the top of the page:
+Ignore certain pixels at the top of the page, but if `element` is defined it will include or exclude pixels from the element
+
+To Ignore 100 pixels at the top of the page:
 
 ```javascript
 const captureWebsite = require('capture-website');

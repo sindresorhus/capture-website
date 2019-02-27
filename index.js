@@ -200,20 +200,19 @@ const captureWebsite = async (url, options) => {
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		if (options.inset) {
-			const {inset} = options;
-			screenshotOptions.clip.width -= (inset.left + inset.right) || inset * 2;
-			screenshotOptions.clip.height -= (inset.top + inset.bottom) || inset * 2;
-			screenshotOptions.clip.x += inset.left || inset;
-			screenshotOptions.clip.y += inset.top || inset;
+			let {inset} = options;
+			inset = typeof inset === 'number' ? {top: inset, right: inset, bottom: inset, left: inset} : inset;
+			screenshotOptions.clip.width -= (inset.left + inset.right);
+			screenshotOptions.clip.height -= (inset.top + inset.bottom);
+			screenshotOptions.clip.x += inset.left;
+			screenshotOptions.clip.y += inset.top;
 		}
 
 		screenshotOptions.fullPage = false;
 	}
 
 	if (!options.element && options.inset && options.inset.top) {
-		await Promise.all([
-			await page.evaluate(`window.scrollTo({top: ${options.inset.top}})`)
-		]);
+		await page.evaluate(`window.scrollTo({top: ${options.inset.top}})`);
 	}
 
 	if (options.delay) {
