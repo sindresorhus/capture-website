@@ -199,6 +199,7 @@ const captureWebsite = async (url, options) => {
 			timeout: timeoutInSeconds
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
+
 		if (options.inset) {
 			const {inset} = options;
 			screenshotOptions.clip.width -= (inset.left + inset.right) || inset * 2;
