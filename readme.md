@@ -212,12 +212,14 @@ Ignore certain pixels at the top of the page, but if `element` is defined it wil
 
 To Ignore 100 pixels at the top of the page:
 
-```javascript
+```js
 const captureWebsite = require('capture-website');
 
 (async () => {
 	await captureWebsite.file('https://sindresorhus.com', 'top-inset.png', {
-		inset: {top: 100}
+		inset: {
+			top: 100
+		}
 	});
 })();
 ```
@@ -226,13 +228,13 @@ Or select an element and also include 10px around it:
 
 ```
 {
-  element: '.foo',
-  inset: {
-    top: -10,
-    right: -10,
-    bottom: -10,
-    left: -10
-  }
+	element: '.foo',
+	inset: {
+		top: -10,
+		right: -10,
+		bottom: -10,
+		left: -10
+	}
 }
 ```
 
@@ -240,8 +242,8 @@ Or the shorthand for all sides:
 
 ```
 {
-  element: '.foo',
-  inset: -10
+	element: '.foo',
+	inset: -10
 }
 ```
 

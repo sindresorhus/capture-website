@@ -199,6 +199,7 @@ const captureWebsite = async (url, options) => {
 			timeout: timeoutInSeconds
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
+
 		if (options.inset) {
 			let {inset} = options;
 			inset = typeof inset === 'number' ? {top: inset, right: inset, bottom: inset, left: inset} : inset;
