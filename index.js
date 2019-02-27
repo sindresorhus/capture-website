@@ -95,6 +95,10 @@ const captureWebsite = async (url, options) => {
 		launchOptions.headless = false;
 		launchOptions.slowMo = 100;
 	}
+	
+	if (options.executablePath) {
+		launchOptions.executablePath = options.executablePath;
+	}	
 
 	const browser = options._browser || await puppeteer.launch(launchOptions);
 	const page = await browser.newPage();
