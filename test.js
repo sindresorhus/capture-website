@@ -259,7 +259,7 @@ test('`clickElement` option', async t => {
 	await server.close();
 });
 
-test('`inset number` option', async t => {
+test('`inset` option - with element and using number', async t => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -282,7 +282,7 @@ test('`inset number` option', async t => {
 	await server.close();
 });
 
-test('`inset object` option', async t => {
+test('`inset` option - with element and using object', async t => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -306,6 +306,31 @@ test('`inset object` option', async t => {
 
 	t.is(size.width, 90);
 	t.is(size.height, 110);
+
+	await server.close();
+});
+
+test('`inset` option - without element', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body style="margin: 0; padding-top: 90px">
+				<div style="background-color: black; width: 100%; height: 200px;"></div>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		scaleFactor: 1,
+		inset: {top: 100}
+	}));
+
+	t.is(pixels[0], 0);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
 
 	await server.close();
 });
