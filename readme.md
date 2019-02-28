@@ -396,14 +396,14 @@ const options = {
 	height: 1000
 };
 
-const items = new Map([
+const items = [
 	['https://sindresorhus.com', 'sindresorhus'],
 	['https://github.com', 'github'],
 	// …
-]);
+];
 
 (async () => {
-	await Promise.all(items.map(({url, filename}) => {
+	await Promise.all(items.map(([url, filename]) => {
 		return captureWebsite.file(url, `${filename}.png`, options);
 	}));
 })();
