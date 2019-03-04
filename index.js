@@ -22,6 +22,23 @@ const removeElements = elements => {
 	}
 };
 
+const disableAnimations = options => {
+	const defaults = {transform: false, animation: true, transition: true};
+	options = {...defaults, ...options};
+
+	const transform = options.transform ? 'transform: initial !important;' : '';
+	const animation = options.animation ? 'animation: initial !important;' : '';
+	const transition = options.transition ? 'transition: initial !important;' : '';
+
+	const rule = `*,:after,:before{${transform}${animation}${transition}}`;
+
+	const style = document.createElement('style'); // eslint-disable-line no-undef
+	document.body.append(style); // eslint-disable-line no-undef
+
+	const {sheet} = style;
+	sheet.insertRule(rule);
+};
+
 const getBoundingClientRect = element => {
 	const {height, width, x, y} = element.getBoundingClientRect();
 	return {height, width, x, y};
@@ -157,6 +174,10 @@ const captureWebsite = async (url, options) => {
 
 	if (options.clickElement) {
 		await page.click(options.clickElement);
+	}
+
+	if (options.disableAnimations) {
+		await page.evaluate(disableAnimations, options.disableAnimations);
 	}
 
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';

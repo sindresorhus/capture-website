@@ -204,6 +204,28 @@ Type: `string`
 
 Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
+##### disableAnimations
+
+Type: `boolean | Object`<br>
+Default: `false`
+
+Disable CSS [Transform](https://developer.mozilla.org/en-US/docs/Web/CSS/transform), [Animation](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [Transition](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+
+###### transform
+
+Type: `boolean`<br>
+Default: `false`
+
+###### animation
+
+Type: `boolean`<br>
+Default: `true`
+
+###### transition
+
+Type: `boolean`<br>
+Default: `true`
+
 ##### modules
 
 Type: `string[]`
