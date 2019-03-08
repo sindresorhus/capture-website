@@ -13,10 +13,11 @@
 		"node": ">=8"
 	},
 	"scripts": {
-		"test": "xo && ava"
+		"test": "xo && ava && tsd-check"
 	},
 	"files": [
-		"index.js"
+		"index.js",
+		"index.d.ts"
 	],
 	"keywords": [
 		"capture",
@@ -39,6 +40,7 @@
 		"tough-cookie": "^3.0.1"
 	},
 	"devDependencies": {
+		"@types/puppeteer": "^1.12.3",
 		"ava": "^1.2.0",
 		"create-test-server": "^2.1.1",
 		"delay": "^4.1.0",
@@ -48,6 +50,7 @@
 		"pify": "^4.0.1",
 		"png-js": "^0.1.1",
 		"tempy": "^0.2.1",
+		"tsd-check": "^0.3.0",
 		"xo": "^0.24.0"
 	}
 }
