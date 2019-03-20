@@ -1,4 +1,4 @@
-import {expectType} from 'tsd-check';
+import {expectType} from 'tsd';
 import {file, base64, buffer, devices} from '.';
 
 expectType<Promise<void>>(
