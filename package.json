@@ -13,7 +13,7 @@
 		"node": ">=8"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd-check"
+		"test": "xo && ava && tsd"
 	},
 	"files": [
 		"index.js",
@@ -50,7 +50,7 @@
 		"pify": "^4.0.1",
 		"png-js": "^0.1.1",
 		"tempy": "^0.2.1",
-		"tsd-check": "^0.3.0",
+		"tsd": "^0.7.0",
 		"xo": "^0.24.0"
 	}
 }
