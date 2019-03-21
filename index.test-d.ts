@@ -1,8 +1,8 @@
 import {expectType} from 'tsd';
-import {file, base64, buffer, devices} from '.';
+import captureWebsite from '.';
 
 expectType<Promise<void>>(
-	file('https://github.com/sindresorhus/capture-website#readme', './page.png', {
+	captureWebsite.file('https://github.com/sindresorhus/capture-website#readme', './page.png', {
 		cookies: [
 			{
 				name: 'id',
@@ -14,11 +14,11 @@ expectType<Promise<void>>(
 );
 
 expectType<Promise<string>>(
-	base64('https://github.com/sindresorhus/capture-website#readme')
+	captureWebsite.base64('https://github.com/sindresorhus/capture-website#readme')
 );
 
 expectType<Promise<Buffer>>(
-	buffer('https://github.com/sindresorhus/capture-website#readme')
+	captureWebsite.buffer('https://github.com/sindresorhus/capture-website#readme')
 );
 
-expectType<string[]>(devices);
+expectType<string[]>(captureWebsite.devices);

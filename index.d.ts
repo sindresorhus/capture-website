@@ -187,56 +187,56 @@ export interface Options {
 	@default {}
 	*/
 	launchOptions?: LaunchOptions;
+}
 
+export interface FileOptions extends Options {
 	/**
 	Overwrite the destination file if it exists instead of throwing an error.
-
-	This option applies only to `captureWebsite.file()`.
 
 	@default false
 	*/
 	overwrite?: boolean;
 }
 
-/**
-Devices supported by the `emulateDevice` option.
-*/
-export const devices: string[];
+declare const captureWebsite: {
+	/**
+	Devices supported by the `emulateDevice` option.
+	*/
+	devices: string[];
 
-/**
-Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
+	/**
+	Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
 
-@param url - The URL, file URL, data URL, or local file path to the website.
-@param outputFilePath - The path to write the screenshot.
-@returns A promise that resolves when the screenshot is written to the given file path.
+	@param url - The URL, file URL, data URL, or local file path to the website.
+	@param outputFilePath - The path to write the screenshot.
+	@returns A promise that resolves when the screenshot is written to the given file path.
 
-@example
-```
-import captureWebsite from 'capture-website';
+	@example
+	```
+	import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
-})();
-```
-*/
-export function file(
-	url: string,
-	outputFilePath: string,
-	options?: Options
-): Promise<void>;
+	(async () => {
+		await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
+	})();
+	```
+	*/
+	file(url: string, outputFilePath: string, options?: FileOptions): Promise<void>;
 
-/**
-Capture a screnshot of the given `url`.
+	/**
+	Capture a screnshot of the given `url`.
 
-@param url - The URL, file URL, data URL, or local file path to the website.
-@returns The screenshot as binary.
-*/
-export function buffer(url: string, options?: Options): Promise<Buffer>;
+	@param url - The URL, file URL, data URL, or local file path to the website.
+	@returns The screenshot as binary.
+	*/
+	buffer(url: string, options?: Options): Promise<Buffer>;
 
-/**
-Capture a screnshot of the given `url`.
+	/**
+	Capture a screnshot of the given `url`.
 
-@param url - The URL, file URL, data URL, or local file path to the website.
-@returns The screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
-*/
-export function base64(url: string, options?: Options): Promise<string>;
+	@param url - The URL, file URL, data URL, or local file path to the website.
+	@returns The screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
+	*/
+	base64(url: string, options?: Options): Promise<string>;
+};
+
+export default captureWebsite;
