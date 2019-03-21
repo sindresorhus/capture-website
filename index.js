@@ -5,6 +5,8 @@ const fileUrl = require('file-url');
 const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
+const Joi = require('joi');
+const ValidationError = require('./validation-error');
 
 const writeFile = promisify(fs.writeFile);
 
@@ -25,6 +27,24 @@ const removeElements = elements => {
 const getBoundingClientRect = element => {
 	const {height, width, x, y} = element.getBoundingClientRect();
 	return {height, width, x, y};
+};
+
+const validateOptions = options => {
+	const schema = Joi.object().keys({
+		clip: Joi.object(),
+		element: Joi.string()
+	}).oxor('clip', 'element').unknown(true);
+
+	const {error, value} = Joi.validate(options, schema);
+
+	if (error) {
+		throw new ValidationError(error.message, options);
+	}
+
+	return {
+		error,
+		value
+	};
 };
 
 const parseCookie = (url, cookie) => {
@@ -48,6 +68,8 @@ const parseCookie = (url, cookie) => {
 
 const captureWebsite = async (url, options) => {
 	const finalUrl = isUrl(url) ? url : fileUrl(url);
+
+	validateOptions(options);
 
 	options = {
 		width: 1280,
@@ -200,6 +222,15 @@ const captureWebsite = async (url, options) => {
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		screenshotOptions.fullPage = false;
+	}
+
+	if (options.clip) {
+		screenshotOptions.clip = {
+			x: options.clip.x,
+			y: options.clip.y,
+			width: options.clip.width,
+			height: options.clip.height
+		};
 	}
 
 	if (options.delay) {

@@ -13,7 +13,8 @@
 		"node": ">=8"
 	},
 	"scripts": {
-		"test": "xo && ava"
+		"test": "xo && ava",
+		"test:watch": "ava --watch --verbose"
 	},
 	"files": [
 		"index.js"
@@ -35,6 +36,7 @@
 	],
 	"dependencies": {
 		"file-url": "^2.0.2",
+		"joi": "^14.3.1",
 		"puppeteer": "^1.12.2",
 		"tough-cookie": "^3.0.1"
 	},

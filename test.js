@@ -11,6 +11,7 @@ import tempy from 'tempy';
 import delay from 'delay';
 import toughCookie from 'tough-cookie';
 import fileUrl from 'file-url';
+import ValidationError from './validation-error';
 import captureWebsite, {_startBrowser} from '.';
 
 const defaultResponse = (() => {
@@ -99,6 +100,24 @@ test('captureWebsite.base64()', async t => {
 	});
 
 	t.true(isPng(Buffer.from(screenshot, 'base64')));
+});
+
+test('option validation - `clip` and `element` options can\'t be used together ', async t => {
+	const expectedErrorMessage = '"value" contains a conflict between optional exclusive peers [clip, element]';
+	const options = {
+		width: 100,
+		height: 100,
+		element: 'html',
+		clip: {
+			x: 1,
+			y: 10,
+			width: 10,
+			height: 100
+		}
+	};
+	const error = await t.throwsAsync(captureWebsite.base64(server.url, options), ValidationError);
+
+	t.is(error.message, expectedErrorMessage);
 });
 
 test('`type` option', async t => {
@@ -271,6 +290,22 @@ test('`modules` option - inline', async t => {
 	t.is(pixels[0], 255);
 	t.is(pixels[1], 0);
 	t.is(pixels[2], 0);
+});
+
+test('`clip` option', async t => {
+	const size = imageSize(await instance(server.url, {
+		width: 100,
+		height: 200,
+		scaleFactor: 1,
+		clip: {
+			x: 10,
+			y: 30,
+			width: 500,
+			height: 300
+		}
+	}));
+	t.is(size.width, 500);
+	t.is(size.height, 300);
 });
 
 test('`modules` option - file', async t => {
