@@ -11,7 +11,6 @@ import tempy from 'tempy';
 import delay from 'delay';
 import toughCookie from 'tough-cookie';
 import fileUrl from 'file-url';
-import ValidationError from './validation-error';
 import captureWebsite, {_startBrowser} from '.';
 
 const defaultResponse = (() => {
@@ -103,7 +102,7 @@ test('captureWebsite.base64()', async t => {
 });
 
 test('option validation - `clip` and `element` options can\'t be used together ', async t => {
-	const expectedErrorMessage = '"value" contains a conflict between optional exclusive peers [clip, element]';
+	const expectedErrorMessage = 'options.clip and options.element are exclusive';
 	const options = {
 		width: 100,
 		height: 100,
@@ -115,7 +114,7 @@ test('option validation - `clip` and `element` options can\'t be used together '
 			height: 100
 		}
 	};
-	const error = await t.throwsAsync(captureWebsite.base64(server.url, options), ValidationError);
+	const error = await t.throwsAsync(captureWebsite.base64(server.url, options));
 
 	t.is(error.message, expectedErrorMessage);
 });

@@ -5,8 +5,6 @@ const fileUrl = require('file-url');
 const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
-const Joi = require('joi');
-const ValidationError = require('./validation-error');
 
 const writeFile = promisify(fs.writeFile);
 
@@ -29,22 +27,14 @@ const getBoundingClientRect = element => {
 	return {height, width, x, y};
 };
 
-const validateOptions = options => {
-	const schema = Joi.object().keys({
-		clip: Joi.object(),
-		element: Joi.string()
-	}).oxor('clip', 'element').unknown(true);
-
-	const {error, value} = Joi.validate(options, schema);
-
-	if (error) {
-		throw new ValidationError(error.message, options);
+function assert(value, message) {
+	if (!value) {
+		throw new Error(message);
 	}
+}
 
-	return {
-		error,
-		value
-	};
+const validateOptions = options => {
+	assert(!options.clip || !options.element, 'options.clip and options.element are exclusive');
 };
 
 const parseCookie = (url, cookie) => {
