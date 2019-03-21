@@ -33,15 +33,21 @@ const captureWebsite = require('capture-website');
 
 ## API
 
-### captureWebsite.file(url, filePath, [options])
+### captureWebsite.file(url, outputFilePath, [options])
 
-Returns a `Promise<void>` that resolves when the screenshot is written to the given file path.
+Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
+
+Returns a `Promise<void>` that resolves when the screenshot is written.
 
 ### captureWebsite.buffer(url, [options])
+
+Capture a screnshot of the given `url`.
 
 Returns a `Promise<Buffer>` with the screenshot as binary.
 
 ### captureWebsite.base64(url, [options])
+
+Capture a screnshot of the given `url`.
 
 Returns a `Promise<string>` with the screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 
