@@ -307,6 +307,17 @@ test('`clip` option', async t => {
 	t.is(size.height, 300);
 });
 
+test('`clip` option check default values', async t => {
+	const size = imageSize(await instance(server.url, {
+		width: 100,
+		height: 200,
+		scaleFactor: 1,
+		clip: {}
+	}));
+	t.is(size.width, 100);
+	t.is(size.height, 100);
+});
+
 test('`modules` option - file', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,

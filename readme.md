@@ -33,15 +33,21 @@ const captureWebsite = require('capture-website');
 
 ## API
 
-### captureWebsite.file(url, filePath, [options])
+### captureWebsite.file(url, outputFilePath, [options])
 
-Returns a `Promise<void>` that resolves when the screenshot is written to the given file path.
+Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
+
+Returns a `Promise<void>` that resolves when the screenshot is written.
 
 ### captureWebsite.buffer(url, [options])
+
+Capture a screnshot of the given `url`.
 
 Returns a `Promise<Buffer>` with the screenshot as binary.
 
 ### captureWebsite.base64(url, [options])
+
+Capture a screnshot of the given `url`.
 
 Returns a `Promise<string>` with the screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 
@@ -165,10 +171,18 @@ Wait for a DOM element matching the given [CSS selector](https://developer.mozil
 
 Type: `object`
 
-- `x` - `number` - x-coordinate of top-left corner of clip area
-- `y` - `number` - y-coordinate of top-left corner of clip area
-- `width` - `number` - width of clipping area
-- `height` - `number` - height of clipping area<br>
+- **x** - x-coordinate of top-left corner of clip area  
+Type: `number`  
+Default: 0
+- **y** - y-coordinate of top-left corner of clip area  
+Type: `number`  
+Default: 0
+- **width** - width of clipping area  
+Type: `number`  
+Default: 100
+- **height**  - height of clipping area  
+Type: `number`  
+Default: 100<br>
 
 An object which specifies clipping region of the page.
 

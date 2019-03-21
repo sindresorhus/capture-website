@@ -216,10 +216,10 @@ const captureWebsite = async (url, options) => {
 
 	if (options.clip) {
 		screenshotOptions.clip = {
-			x: options.clip.x,
-			y: options.clip.y,
-			width: options.clip.width,
-			height: options.clip.height
+			x: options.clip.x || 0,
+			y: options.clip.y || 0,
+			width: options.clip.width || 100,
+			height: options.clip.height || 100
 		};
 	}
 
