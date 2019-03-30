@@ -1,201 +1,202 @@
+/// <reference lib="dom"/>
 /// <reference types="puppeteer"/>
 import {SetCookie, LaunchOptions, Page, Browser} from 'puppeteer';
 
-export interface Authentication {
-	username: string;
-	password?: string;
-}
+declare namespace captureWebsite {
+	interface Authentication {
+		username: string;
+		password?: string;
+	}
 
-export interface BeforeScreenshot {
-	(page: Page, browser: Browser): void;
-}
+	type BeforeScreenshot = (page: Page, browser: Browser) => void;
 
-export interface Options {
-	/**
-	Page width.
+	interface Options {
+		/**
+		Page width.
 
-	@default 1280
-	*/
-	width?: number;
+		@default 1280
+		*/
+		width?: number;
 
-	/**
-	Page height.
+		/**
+		Page height.
 
-	@default 800
-	*/
-	height?: number;
+		@default 800
+		*/
+		height?: number;
 
-	/**
-	Image type.
+		/**
+		Image type.
 
-	@default png
-	*/
-	type?: 'png' | 'jpeg';
+		@default png
+		*/
+		type?: 'png' | 'jpeg';
 
-	/**
-	Image quality. Only for {type: 'jpeg'}.
+		/**
+		Image quality. Only for {type: 'jpeg'}.
 
-	@default 1
-	*/
-	quality?: number;
+		@default 1
+		*/
+		quality?: number;
 
-	/**
-	Scale the webpage `n` times.
+		/**
+		Scale the webpage `n` times.
 
-	The default is what you would get if you captured a normal screenshot on a computer with a retina (High DPI) screen.
+		The default is what you would get if you captured a normal screenshot on a computer with a retina (High DPI) screen.
 
-	@default 2
-	*/
-	scaleFactor?: number;
+		@default 2
+		*/
+		scaleFactor?: number;
 
-	/**
-	Make it look like the screenshot was taken on the specified device.
+		/**
+		Make it look like the screenshot was taken on the specified device.
 
-	This overrides the `width`, `height`, `scaleFactor`, and `userAgent` options.
-	*/
-	emulateDevice?: string;
+		This overrides the `width`, `height`, `scaleFactor`, and `userAgent` options.
+		*/
+		emulateDevice?: string;
 
-	/**
-	Capture the full scrollable page, not just the viewport.
+		/**
+		Capture the full scrollable page, not just the viewport.
 
-	@default false
-	*/
-	fullPage?: boolean;
+		@default false
+		*/
+		fullPage?: boolean;
 
-	/**
-	Include the default white background.
+		/**
+		Include the default white background.
 
-	Disabling this lets you capture screenshots with transparency.
+		Disabling this lets you capture screenshots with transparency.
 
-	@default true
-	*/
-	defaultBackground?: boolean;
+		@default true
+		*/
+		defaultBackground?: boolean;
 
-	/**
-	The number of seconds before giving up trying to load the page.
+		/**
+		The number of seconds before giving up trying to load the page.
 
-	Specify `0` to disable the timeout.
+		Specify `0` to disable the timeout.
 
-	@default 60
-	*/
-	timeout?: number;
+		@default 60
+		*/
+		timeout?: number;
 
-	/**
-	The number of seconds to wait after the page finished loading before capturing the screenshot.
+		/**
+		The number of seconds to wait after the page finished loading before capturing the screenshot.
 
-	This can be useful if you know the page has animations that you like it to finish before capturing the screenshot.
+		This can be useful if you know the page has animations that you like it to finish before capturing the screenshot.
 
-	@default 0
-	*/
-	delay?: number;
+		@default 0
+		*/
+		delay?: number;
 
-	/**
-	Wait for a DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) to appear in the page and to be visible before capturing the screenshot. It times out after `options.timeout` seconds.
-	*/
-	waitForElement?: string;
+		/**
+		Wait for a DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) to appear in the page and to be visible before capturing the screenshot. It times out after `options.timeout` seconds.
+		*/
+		waitForElement?: string;
 
-	/**
-	Capture the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors). It will wait for the element to appear in the page and to be visible. It times out after `options.timeout` seconds
-	*/
-	element?: string;
+		/**
+		Capture the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors). It will wait for the element to appear in the page and to be visible. It times out after `options.timeout` seconds
+		*/
+		element?: string;
 
-	/**
-	Hide DOM elements matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+		/**
+		Hide DOM elements matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
-	Can be useful for cleaning up the page.
+		Can be useful for cleaning up the page.
 
-	This sets [`visibility: hidden`](https://stackoverflow.com/a/133064/64949) on the matched elements.
-	*/
-	hideElements?: string[];
+		This sets [`visibility: hidden`](https://stackoverflow.com/a/133064/64949) on the matched elements.
+		*/
+		hideElements?: string[];
 
-	/**
-	Remove DOM elements matching the given [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+		/**
+		Remove DOM elements matching the given [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
-	This sets [`display: none`](https://stackoverflow.com/a/133064/64949) on the matched elements, so it could potentially break the website layout.
-	*/
-	removeElements?: string[];
+		This sets [`display: none`](https://stackoverflow.com/a/133064/64949) on the matched elements, so it could potentially break the website layout.
+		*/
+		removeElements?: string[];
 
-	/**
-	Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
-	*/
-	clickElement?: string;
+		/**
+		Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+		*/
+		clickElement?: string;
 
-	/**
-	Inject [JavaScript modules](https://developers.google.com/web/fundamentals/primers/modules) into the page.
+		/**
+		Inject [JavaScript modules](https://developers.google.com/web/fundamentals/primers/modules) into the page.
 
-	Accepts an array of inline code, absolute URLs, and local file paths (must have a .js extension).
-	*/
-	modules?: string[];
+		Accepts an array of inline code, absolute URLs, and local file paths (must have a .js extension).
+		*/
+		modules?: string[];
 
-	/**
-	Same as the `modules` option, but instead injects the code as [`<script>` instead of `<script type="module">`](https://developers.google.com/web/fundamentals/primers/modules). Prefer the `modules` option whenever possible.
-	*/
-	scripts?: string[];
+		/**
+		Same as the `modules` option, but instead injects the code as [`<script>` instead of `<script type="module">`](https://developers.google.com/web/fundamentals/primers/modules). Prefer the `modules` option whenever possible.
+		*/
+		scripts?: string[];
 
-	/**
-	Inject CSS styles into the page.
+		/**
+		Inject CSS styles into the page.
 
-	Accepts an array of inline code, absolute URLs, and local file paths (must have a `.css` extension).
-	*/
-	styles?: string[];
+		Accepts an array of inline code, absolute URLs, and local file paths (must have a `.css` extension).
+		*/
+		styles?: string[];
 
-	/**
-	Set custom [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
+		/**
+		Set custom [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
 
-	@default {}
-	*/
-	headers?: Headers;
+		@default {}
+		*/
+		headers?: Headers;
 
-	/**
-	Set a custom [user agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent).
-	*/
-	userAgent?: string;
+		/**
+		Set a custom [user agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent).
+		*/
+		userAgent?: string;
 
-	/**
-	Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetcookiecookies).
+		/**
+		Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetcookiecookies).
 
-	Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
-	*/
-	cookies?: (string | SetCookie)[];
+		Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
+		*/
+		cookies?: (string | SetCookie)[];
 
-	/**
-	Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).
-	*/
-	authentication?: Authentication;
+		/**
+		Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).
+		*/
+		authentication?: Authentication;
 
-	/**
-	The specified function is called right before the screenshot is captured. It gives you a lot of power to do custom stuff. The function can be async.
+		/**
+		The specified function is called right before the screenshot is captured. It gives you a lot of power to do custom stuff. The function can be async.
 
-	Note: Make sure to not call `page.close()` or `browser.close()`.
-	*/
-	beforeScreenshot?: BeforeScreenshot;
+		Note: Make sure to not call `page.close()` or `browser.close()`.
+		*/
+		beforeScreenshot?: BeforeScreenshot;
 
-	/**
-	Show the browser window so you can see what it's doing, redirect page console output to the terminal, and slow down each Puppeteer operation.
+		/**
+		Show the browser window so you can see what it's doing, redirect page console output to the terminal, and slow down each Puppeteer operation.
 
-	Note: This overrides `launchOptions` with `{headless: false, slowMo: 100}`.
+		Note: This overrides `launchOptions` with `{headless: false, slowMo: 100}`.
 
-	@default false
-	*/
-	debug?: boolean;
+		@default false
+		*/
+		debug?: boolean;
 
-	/**
-	Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+		/**
+		Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
-	Note: Some of the launch options are overridden by the `debug` option.
+		Note: Some of the launch options are overridden by the `debug` option.
 
-	@default {}
-	*/
-	launchOptions?: LaunchOptions;
-}
+		@default {}
+		*/
+		launchOptions?: LaunchOptions;
+	}
 
-export interface FileOptions extends Options {
-	/**
-	Overwrite the destination file if it exists instead of throwing an error.
+	interface FileOptions extends Options {
+		/**
+		Overwrite the destination file if it exists instead of throwing an error.
 
-	@default false
-	*/
-	overwrite?: boolean;
+		@default false
+		*/
+		overwrite?: boolean;
+	}
 }
 
 declare const captureWebsite: {
@@ -213,14 +214,18 @@ declare const captureWebsite: {
 
 	@example
 	```
-	import captureWebsite from 'capture-website';
+	import captureWebsite = require('capture-website');
 
 	(async () => {
 		await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
 	})();
 	```
 	*/
-	file(url: string, outputFilePath: string, options?: FileOptions): Promise<void>;
+	file(
+		url: string,
+		outputFilePath: string,
+		options?: captureWebsite.FileOptions
+	): Promise<void>;
 
 	/**
 	Capture a screnshot of the given `url`.
@@ -228,7 +233,7 @@ declare const captureWebsite: {
 	@param url - The URL, file URL, data URL, or local file path to the website.
 	@returns The screenshot as binary.
 	*/
-	buffer(url: string, options?: Options): Promise<Buffer>;
+	buffer(url: string, options?: captureWebsite.Options): Promise<Buffer>;
 
 	/**
 	Capture a screnshot of the given `url`.
@@ -236,7 +241,7 @@ declare const captureWebsite: {
 	@param url - The URL, file URL, data URL, or local file path to the website.
 	@returns The screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 	*/
-	base64(url: string, options?: Options): Promise<string>;
+	base64(url: string, options?: captureWebsite.Options): Promise<string>;
 };
 
-export default captureWebsite;
+export = captureWebsite;
