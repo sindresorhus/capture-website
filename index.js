@@ -85,7 +85,7 @@ const captureWebsite = async (url, options) => {
 		screenshotOptions.fullPage = options.fullPage;
 	}
 
-	if (options.defaultBackground) {
+	if (typeof options.defaultBackground === 'boolean') {
 		screenshotOptions.omitBackground = !options.defaultBackground;
 	}
 
