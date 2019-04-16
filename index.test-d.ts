@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import captureWebsite from '.';
+import captureWebsite = require('.');
 
 expectType<Promise<void>>(
 	captureWebsite.file('https://github.com/sindresorhus/capture-website#readme', './page.png', {
