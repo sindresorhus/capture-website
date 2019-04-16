@@ -167,6 +167,25 @@ Type: `string`
 
 Wait for a DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) to appear in the page and to be visible before capturing the screenshot. It times out after `options.timeout` seconds.
 
+##### clip
+
+Type: `object`
+
+- **x** - x-coordinate of top-left corner of clip area  
+Type: `number`  
+Default: 0
+- **y** - y-coordinate of top-left corner of clip area  
+Type: `number`  
+Default: 0
+- **width** - width of clipping area  
+Type: `number`  
+Default: 100
+- **height**  - height of clipping area  
+Type: `number`  
+Default: 100<br>
+
+An object which specifies clipping region of the page.
+
 ##### element
 
 Type: `string`

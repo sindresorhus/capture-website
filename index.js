@@ -27,6 +27,16 @@ const getBoundingClientRect = element => {
 	return {height, width, x, y};
 };
 
+function assert(value, message) {
+	if (!value) {
+		throw new Error(message);
+	}
+}
+
+const validateOptions = options => {
+	assert(!options.clip || !options.element, 'options.clip and options.element are exclusive');
+};
+
 const parseCookie = (url, cookie) => {
 	if (typeof cookie === 'object') {
 		return cookie;
@@ -48,6 +58,8 @@ const parseCookie = (url, cookie) => {
 
 const captureWebsite = async (url, options) => {
 	const finalUrl = isUrl(url) ? url : fileUrl(url);
+
+	validateOptions(options);
 
 	options = {
 		width: 1280,
@@ -200,6 +212,15 @@ const captureWebsite = async (url, options) => {
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		screenshotOptions.fullPage = false;
+	}
+
+	if (options.clip) {
+		screenshotOptions.clip = {
+			x: options.clip.x || 0,
+			y: options.clip.y || 0,
+			width: options.clip.width || 100,
+			height: options.clip.height || 100
+		};
 	}
 
 	if (options.delay) {

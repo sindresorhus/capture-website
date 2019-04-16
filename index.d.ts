@@ -1,6 +1,6 @@
 /// <reference lib="dom"/>
 /// <reference types="puppeteer"/>
-import {SetCookie, LaunchOptions, Page, Browser} from 'puppeteer';
+import { SetCookie, LaunchOptions, Page, Browser } from 'puppeteer';
 
 declare namespace captureWebsite {
 	interface Authentication {
@@ -93,6 +93,11 @@ declare namespace captureWebsite {
 		Wait for a DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) to appear in the page and to be visible before capturing the screenshot. It times out after `options.timeout` seconds.
 		*/
 		waitForElement?: string;
+
+		/**
+		An object which specifies clipping region of the page.
+		*/
+		clip?: ClipOptions;
 
 		/**
 		Capture the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors). It will wait for the element to appear in the page and to be visible. It times out after `options.timeout` seconds
@@ -245,3 +250,29 @@ declare const captureWebsite: {
 };
 
 export = captureWebsite;
+interface ClipOptions {
+	/**
+	x-coordinate of top-left corner of clip area
+	@default 0
+	*/
+	x?: number;
+
+	/**
+	y-coordinate of top-left corner of clip area
+	@default 0
+	*/
+	y?: number;
+
+	/**
+	width of clipping area
+	@default 100
+	*/
+	width?: number;
+
+	/**
+	height of clipping area
+	@default 100
+	*/
+	height?: number;
+}
+

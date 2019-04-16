@@ -101,6 +101,24 @@ test('captureWebsite.base64()', async t => {
 	t.true(isPng(Buffer.from(screenshot, 'base64')));
 });
 
+test('option validation - `clip` and `element` options can\'t be used together ', async t => {
+	const expectedErrorMessage = 'options.clip and options.element are exclusive';
+	const options = {
+		width: 100,
+		height: 100,
+		element: 'html',
+		clip: {
+			x: 1,
+			y: 10,
+			width: 10,
+			height: 100
+		}
+	};
+	const error = await t.throwsAsync(captureWebsite.base64(server.url, options));
+
+	t.is(error.message, expectedErrorMessage);
+});
+
 test('`type` option', async t => {
 	t.true(isJpg(await instance(server.url, {
 		width: 100,
@@ -271,6 +289,33 @@ test('`modules` option - inline', async t => {
 	t.is(pixels[0], 255);
 	t.is(pixels[1], 0);
 	t.is(pixels[2], 0);
+});
+
+test('`clip` option', async t => {
+	const size = imageSize(await instance(server.url, {
+		width: 100,
+		height: 200,
+		scaleFactor: 1,
+		clip: {
+			x: 10,
+			y: 30,
+			width: 500,
+			height: 300
+		}
+	}));
+	t.is(size.width, 500);
+	t.is(size.height, 300);
+});
+
+test('`clip` option check default values', async t => {
+	const size = imageSize(await instance(server.url, {
+		width: 100,
+		height: 200,
+		scaleFactor: 1,
+		clip: {}
+	}));
+	t.is(size.width, 100);
+	t.is(size.height, 100);
 });
 
 test('`modules` option - file', async t => {
