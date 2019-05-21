@@ -37,6 +37,7 @@
 	"dependencies": {
 		"file-url": "^2.0.2",
 		"puppeteer": "^1.14.0",
+		"sharp": "^0.22.1",
 		"tough-cookie": "^3.0.1"
 	},
 	"devDependencies": {

@@ -49,6 +49,12 @@ declare namespace captureWebsite {
 		scaleFactor?: number;
 
 		/**
+		Make it look like the screenshot was taken on the specified device with device frame.
+
+		@default false
+		*/
+		deviceFrame?: boolean;
+		/**
 		Make it look like the screenshot was taken on the specified device.
 
 		This overrides the `width`, `height`, `scaleFactor`, and `userAgent` options.

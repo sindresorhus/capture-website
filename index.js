@@ -5,6 +5,8 @@ const fileUrl = require('file-url');
 const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
+const sharp = require('sharp');
+const {framesConfig} = require('./device-frames/frames-config');
 
 const writeFile = promisify(fs.writeFile);
 
@@ -58,6 +60,7 @@ const captureWebsite = async (url, options) => {
 		timeout: 60, // The Puppeteer default of 30 is too short
 		delay: 0,
 		debug: false,
+		deviceFrame: false,
 		launchOptions: {},
 		_keepAlive: false,
 		...options
@@ -217,13 +220,22 @@ const captureWebsite = async (url, options) => {
 	if (!options._keepAlive) {
 		await browser.close();
 	}
+	// If device frame is true, we need to add device frame here.
 
-	return buffer;
+	const dfConfig = framesConfig[options.emulateDevice];
+	let newBuffer = buffer;
+	if (options.deviceFrame === true && dfConfig !== undefined) {
+		newBuffer = sharp(`./device-frames/${dfConfig.frameSrc}`)
+			.composite([{input: buffer, top: dfConfig.top, left: dfConfig.left},
+				{input: `./device-frames/${dfConfig.frameSrc}`}])
+			.toBuffer();
+	}
+
+	return newBuffer;
 };
 
 module.exports.file = async (url, filePath, options = {}) => {
 	const screenshot = await captureWebsite(url, options);
-
 	await writeFile(filePath, screenshot, {
 		flag: options.overwrite ? 'w' : 'wx'
 	});
