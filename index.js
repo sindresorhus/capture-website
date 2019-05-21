@@ -224,7 +224,7 @@ const captureWebsite = async (url, options) => {
 
 	const dfConfig = framesConfig[options.emulateDevice];
 	let newBuffer = buffer;
-	if (options.deviceFrame === true && dfConfig !== undefined) {
+	if (options.fullPage === false && options.deviceFrame === true && dfConfig !== undefined) {
 		newBuffer = sharp(`./device-frames/${dfConfig.frameSrc}`)
 			.composite([{input: buffer, top: dfConfig.top, left: dfConfig.left},
 				{input: `./device-frames/${dfConfig.frameSrc}`}])
