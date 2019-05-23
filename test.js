@@ -277,7 +277,7 @@ test('`disableAnimations` option', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
-		disableAnimations: true // Defaults: {transform: false, animation: true, transition: true};
+		disableAnimations: true
 	}));
 
 	t.is(pixels[0], 0);

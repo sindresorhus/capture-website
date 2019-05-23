@@ -22,20 +22,12 @@ const removeElements = elements => {
 	}
 };
 
-const disableAnimations = options => {
-	const defaults = {transform: false, animation: true, transition: true};
-	options = {...defaults, ...options};
-
-	const transform = options.transform ? 'transform: initial !important;' : '';
-	const animation = options.animation ? 'animation: initial !important;' : '';
-	const transition = options.transition ? 'transition: initial !important;' : '';
-
-	const rule = `*,::after,::before{${transform}${animation}${transition}}`;
+const disableAnimations = () => {
+	const rule = '*,::after,::before{animation: initial !important; transition: initial !important;}';
 
 	const style = document.createElement('style'); // eslint-disable-line no-undef
 	document.body.append(style); // eslint-disable-line no-undef
 
-	const {sheet} = style;
 	style.sheet.insertRule(rule);
 };
 

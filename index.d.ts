@@ -121,6 +121,12 @@ declare namespace captureWebsite {
 		clickElement?: string;
 
 		/**
+		Disable CSS [Animation](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [Transition](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+		@default false 
+		*/
+		disableAnimations?: boolean;
+
+		/**
 		Inject [JavaScript modules](https://developers.google.com/web/fundamentals/primers/modules) into the page.
 
 		Accepts an array of inline code, absolute URLs, and local file paths (must have a .js extension).
