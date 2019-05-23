@@ -33,15 +33,21 @@ const captureWebsite = require('capture-website');
 
 ## API
 
-### captureWebsite.file(url, filePath, [options])
+### captureWebsite.file(url, outputFilePath, [options])
 
-Returns a `Promise<void>` that resolves when the screenshot is written to the given file path.
+Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
+
+Returns a `Promise<void>` that resolves when the screenshot is written.
 
 ### captureWebsite.buffer(url, [options])
+
+Capture a screnshot of the given `url`.
 
 Returns a `Promise<Buffer>` with the screenshot as binary.
 
 ### captureWebsite.base64(url, [options])
+
+Capture a screnshot of the given `url`.
 
 Returns a `Promise<string>` with the screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 
@@ -105,7 +111,7 @@ The default is what you would get if you captured a normal screenshot on a compu
 ##### emulateDevice
 
 Type: `string`<br>
-Values: [Devices](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js) *(Use the `name` property)*
+Values: [Devices](https://github.com/GoogleChrome/puppeteer/blob/master/lib/DeviceDescriptors.js) *(Use the `name` property)*
 
 Make it look like the screenshot was taken on the specified device.
 
