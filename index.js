@@ -30,7 +30,7 @@ const disableAnimations = options => {
 	const animation = options.animation ? 'animation: initial !important;' : '';
 	const transition = options.transition ? 'transition: initial !important;' : '';
 
-	const rule = `*,:after,:before{${transform}${animation}${transition}}`;
+	const rule = `*,::after,::before{${transform}${animation}${transition}}`;
 
 	const style = document.createElement('style'); // eslint-disable-line no-undef
 	document.body.append(style); // eslint-disable-line no-undef
