@@ -36,7 +36,7 @@ const disableAnimations = options => {
 	document.body.append(style); // eslint-disable-line no-undef
 
 	const {sheet} = style;
-	sheet.insertRule(rule);
+	style.sheet.insertRule(rule);
 };
 
 const getBoundingClientRect = element => {
