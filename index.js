@@ -163,6 +163,10 @@ const captureWebsite = async (url, options) => {
 		waitUntil: 'networkidle2'
 	});
 
+	if (options.disableAnimations) {
+		await page.evaluate(disableAnimations, options.disableAnimations);
+	}
+
 	if (options.hideElements) {
 		await Promise.all(options.hideElements.map(selector => page.$$eval(selector, hideElements)));
 	}
@@ -173,10 +177,6 @@ const captureWebsite = async (url, options) => {
 
 	if (options.clickElement) {
 		await page.click(options.clickElement);
-	}
-
-	if (options.disableAnimations) {
-		await page.evaluate(disableAnimations, options.disableAnimations);
 	}
 
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
