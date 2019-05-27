@@ -23,13 +23,13 @@ const removeElements = elements => {
 };
 
 const scrollToElement = (element, options) => {
-	const hasOverflow = string => /overflow(-x|-y)?: ?( |auto|scroll)+;/.test(string);
+	const isOverflown = e => e.scrollHeight > e.clientHeight || e.scrollWidth > e.clientWidth;
 	const findScrollParent = element => {
 		if (element === undefined) {
 			return;
 		}
 
-		if (hasOverflow(element.style.cssText)) {
+		if (isOverflown(element)) {
 			return element;
 		}
 
