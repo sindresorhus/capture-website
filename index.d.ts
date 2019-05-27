@@ -121,7 +121,8 @@ declare namespace captureWebsite {
 		clickElement?: string;
 
 		/**
-		Disable CSS [Animation](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [Transition](https://developer.mozilla.org/en-US/docs/Web/CSS/transition)
+		Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
+
 		@default false 
 		*/
 		disableAnimations?: boolean;
