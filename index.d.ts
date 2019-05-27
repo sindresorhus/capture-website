@@ -54,6 +54,7 @@ declare namespace captureWebsite {
 		@default false
 		*/
 		deviceFrame?: boolean;
+
 		/**
 		Make it look like the screenshot was taken on the specified device.
 

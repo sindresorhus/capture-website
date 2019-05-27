@@ -1,9 +1,9 @@
-module.exports.framesConfig = {
+module.exports = {
 	'iPhone X': {
 		top: 105,
 		left: 105,
 		width: 1338,
 		height: 2650,
-		frameSrc: 'iphone-x-frame.png'
+		image: 'iphone-x.png'
 	}
 };

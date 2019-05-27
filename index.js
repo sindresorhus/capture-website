@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
 const sharp = require('sharp');
-const {framesConfig} = require('./device-frames/frames-config');
+const framesConfig = require('./device-frames/config');
 
 const writeFile = promisify(fs.writeFile);
 
@@ -225,9 +225,9 @@ const captureWebsite = async (url, options) => {
 	const dfConfig = framesConfig[options.emulateDevice];
 	let newBuffer = buffer;
 	if (options.fullPage === false && options.deviceFrame === true && dfConfig !== undefined) {
-		newBuffer = sharp(`./device-frames/${dfConfig.frameSrc}`)
+		newBuffer = sharp(`./device-frames/${dfConfig.image}`)
 			.composite([{input: buffer, top: dfConfig.top, left: dfConfig.left},
-				{input: `./device-frames/${dfConfig.frameSrc}`}])
+				{input: `./device-frames/${dfConfig.image}`}])
 			.toBuffer();
 	}
 

@@ -108,13 +108,6 @@ Scale the webpage `n` times.
 
 The default is what you would get if you captured a normal screenshot on a computer with a retina (High DPI) screen.
 
-##### deviceFrame
-
-Type: `boolean`<br>
-Default: `false`
-
-when true, scrrenshot will be captured with device frame.
-
 ##### emulateDevice
 
 Type: `string`<br>
@@ -133,6 +126,15 @@ const captureWebsite = require('capture-website');
 	});
 })();
 ```
+##### deviceFrame
+
+Type: `boolean`<br>
+Default: `false`
+
+Capture image with device frame.
+
+Use this option with `emulateDevice` options. Check aavailable device frames [List](https://github.com/sindresorhus/capture-website/tree/master/device-frames). Device Frame will only appear when `fullPage` is false.
+
 
 ##### fullPage
 
