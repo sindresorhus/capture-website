@@ -24,6 +24,22 @@ const removeElements = elements => {
 	}
 };
 
+const disableAnimations = () => {
+	const rule = `
+		*,
+		::before,
+		::after {
+			animation: initial !important;
+			transition: initial !important;
+		}
+	`;
+
+	const style = document.createElement('style'); // eslint-disable-line no-undef
+	document.body.append(style); // eslint-disable-line no-undef
+
+	style.sheet.insertRule(rule);
+};
+
 const getBoundingClientRect = element => {
 	const {height, width, x, y} = element.getBoundingClientRect();
 	return {height, width, x, y};
@@ -149,6 +165,10 @@ const captureWebsite = async (url, options) => {
 		timeout: timeoutInSeconds,
 		waitUntil: 'networkidle2'
 	});
+
+	if (options.disableAnimations) {
+		await page.evaluate(disableAnimations, options.disableAnimations);
+	}
 
 	if (options.hideElements) {
 		await Promise.all(options.hideElements.map(selector => page.$$eval(selector, hideElements)));

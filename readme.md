@@ -15,10 +15,6 @@ $ npm install capture-website
 
 Note to Linux users: If you get a "No usable sandbox!" error, you need to enable [system sandboxing](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#setting-up-chrome-linux-sandbox).
 
-<a href="https://www.patreon.com/sindresorhus">
-	<img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
-</a>
-
 
 ## Usage
 
@@ -111,7 +107,7 @@ The default is what you would get if you captured a normal screenshot on a compu
 ##### emulateDevice
 
 Type: `string`<br>
-Values: [Devices](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js) *(Use the `name` property)*
+Values: [Devices](https://github.com/GoogleChrome/puppeteer/blob/master/lib/DeviceDescriptors.js) *(Use the `name` property)*
 
 Make it look like the screenshot was taken on the specified device.
 
@@ -218,6 +214,13 @@ This sets [`display: none`](https://stackoverflow.com/a/133064/64949) on the mat
 Type: `string`
 
 Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+
+##### disableAnimations
+
+Type: `boolean`<br>
+Default: `false`
+
+Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
 
 ##### modules
 
@@ -438,8 +441,3 @@ The biggest difference is that Pageres supports capturing multiple screenshots i
 
 - [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) - CLI for this module
 - [pageres](https://github.com/sindresorhus/pageres) - A different take on screenshotting websites
-
-
-## License
-
-MIT © [Sindre Sorhus](https://sindresorhus.com)
