@@ -35,8 +35,8 @@
 		"jpg"
 	],
 	"dependencies": {
-		"file-url": "^2.0.2",
-		"puppeteer": "^1.14.0",
+		"file-url": "^3.0.0",
+		"puppeteer": "^1.17.0",
 		"sharp": "^0.22.1",
 		"tough-cookie": "^3.0.1"
 	},
