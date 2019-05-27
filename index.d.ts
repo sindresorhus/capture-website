@@ -123,7 +123,7 @@ declare namespace captureWebsite {
 		/**
 		Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
 
-		@default false 
+		@default false
 		*/
 		disableAnimations?: boolean;
 
