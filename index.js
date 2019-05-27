@@ -222,13 +222,30 @@ const captureWebsite = async (url, options) => {
 	}
 	// If device frame is true, we need to add device frame here.
 
-	const dfConfig = framesConfig[options.emulateDevice];
 	let newBuffer = buffer;
-	if (options.fullPage === false && options.deviceFrame === true && dfConfig !== undefined) {
-		newBuffer = sharp(`./device-frames/${dfConfig.image}`)
-			.composite([{input: buffer, top: dfConfig.top, left: dfConfig.left},
-				{input: `./device-frames/${dfConfig.image}`}])
-			.toBuffer();
+
+	if (options.deviceFrame === true) {
+		const dfConfig = framesConfig[options.emulateDevice];
+		if (options.fullPage === true) {
+			throw new Error(
+				'options fullPage must not be used when deviceFrame is true'
+			);
+		}
+
+		if (dfConfig === undefined) {
+			throw new Error(
+				`The device name \`${options.emulateDevice}\` is not supported for device frame`
+			);
+		}
+
+		newBuffer = sharp(`./device-frames/${dfConfig.image}`).composite([
+			{
+				input: buffer,
+				top: dfConfig.top,
+				left: dfConfig.left
+			},
+			{input: `./device-frames/${dfConfig.image}`}
+		]).toBuffer();
 	}
 
 	return newBuffer;
@@ -236,6 +253,7 @@ const captureWebsite = async (url, options) => {
 
 module.exports.file = async (url, filePath, options = {}) => {
 	const screenshot = await captureWebsite(url, options);
+
 	await writeFile(filePath, screenshot, {
 		flag: options.overwrite ? 'w' : 'wx'
 	});

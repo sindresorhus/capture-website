@@ -21,5 +21,4 @@ const captureWebsite = require('.');
 	} catch (error) {
 		console.error(error);
 	}
-
 })();
