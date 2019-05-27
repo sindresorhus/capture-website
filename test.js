@@ -325,6 +325,34 @@ test('`scrollToElement` option as object', async t => {
 	await server.close();
 });
 
+test('`disableAnimations` option', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<style>
+				div{animation:test 5s infinite}
+				@keyframes test{0%{background-color:#fff}100%{background-color:#eee}}
+			</style>
+			<body style="margin: 0;">
+				<div style="background-color: black; width: 100px; height: 100px;"></div>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		disableAnimations: true
+	}));
+
+	t.is(pixels[0], 0);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+
+	await server.close();
+});
+
 test('`modules` option - inline', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,

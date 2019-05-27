@@ -15,10 +15,6 @@ $ npm install capture-website
 
 Note to Linux users: If you get a "No usable sandbox!" error, you need to enable [system sandboxing](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#setting-up-chrome-linux-sandbox).
 
-<a href="https://www.patreon.com/sindresorhus">
-	<img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
-</a>
-
 
 ## Usage
 
@@ -33,15 +29,21 @@ const captureWebsite = require('capture-website');
 
 ## API
 
-### captureWebsite.file(url, filePath, [options])
+### captureWebsite.file(url, outputFilePath, [options])
 
-Returns a `Promise<void>` that resolves when the screenshot is written to the given file path.
+Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
+
+Returns a `Promise<void>` that resolves when the screenshot is written.
 
 ### captureWebsite.buffer(url, [options])
+
+Capture a screnshot of the given `url`.
 
 Returns a `Promise<Buffer>` with the screenshot as binary.
 
 ### captureWebsite.base64(url, [options])
+
+Capture a screnshot of the given `url`.
 
 Returns a `Promise<string>` with the screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 
@@ -105,7 +107,7 @@ The default is what you would get if you captured a normal screenshot on a compu
 ##### emulateDevice
 
 Type: `string`<br>
-Values: [Devices](https://github.com/GoogleChrome/puppeteer/blob/master/DeviceDescriptors.js) *(Use the `name` property)*
+Values: [Devices](https://github.com/GoogleChrome/puppeteer/blob/master/lib/DeviceDescriptors.js) *(Use the `name` property)*
 
 Make it look like the screenshot was taken on the specified device.
 
@@ -213,6 +215,13 @@ Scroll to the DOM element matching the given [CSS selector](https://developer.mo
 - `element` <[string]> A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 - `offsetFrom` <[string]> Possible values are: `top`, `right`, `bottom`, `left`.
 - `offset` <[number]> Offset in pixels.
+
+##### disableAnimations
+
+Type: `boolean`<br>
+Default: `false`
+
+Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
 
 ##### modules
 
@@ -406,14 +415,14 @@ const options = {
 	height: 1000
 };
 
-const items = new Map([
+const items = [
 	['https://sindresorhus.com', 'sindresorhus'],
 	['https://github.com', 'github'],
 	// …
-]);
+];
 
 (async () => {
-	await Promise.all(items.map(({url, filename}) => {
+	await Promise.all(items.map(([url, filename]) => {
 		return captureWebsite.file(url, `${filename}.png`, options);
 	}));
 })();
@@ -433,8 +442,3 @@ The biggest difference is that Pageres supports capturing multiple screenshots i
 
 - [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) - CLI for this module
 - [pageres](https://github.com/sindresorhus/pageres) - A different take on screenshotting websites
-
-
-## License
-
-MIT © [Sindre Sorhus](https://sindresorhus.com)

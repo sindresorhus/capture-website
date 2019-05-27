@@ -66,6 +66,22 @@ const scrollToElement = (element, options) => {
 	}
 };
 
+const disableAnimations = () => {
+	const rule = `
+		*,
+		::before,
+		::after {
+			animation: initial !important;
+			transition: initial !important;
+		}
+	`;
+
+	const style = document.createElement('style'); // eslint-disable-line no-undef
+	document.body.append(style); // eslint-disable-line no-undef
+
+	style.sheet.insertRule(rule);
+};
+
 const getBoundingClientRect = element => {
 	const {top, left, height, width, x, y} = element.getBoundingClientRect();
 	return {top, left, height, width, x, y};
@@ -129,7 +145,7 @@ const captureWebsite = async (url, options) => {
 		screenshotOptions.fullPage = options.fullPage;
 	}
 
-	if (options.defaultBackground) {
+	if (typeof options.defaultBackground === 'boolean') {
 		screenshotOptions.omitBackground = !options.defaultBackground;
 	}
 
@@ -190,6 +206,10 @@ const captureWebsite = async (url, options) => {
 		timeout: timeoutInSeconds,
 		waitUntil: 'networkidle2'
 	});
+
+	if (options.disableAnimations) {
+		await page.evaluate(disableAnimations, options.disableAnimations);
+	}
 
 	if (options.hideElements) {
 		await Promise.all(options.hideElements.map(selector => page.$$eval(selector, hideElements)));
