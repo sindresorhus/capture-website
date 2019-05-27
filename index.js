@@ -23,7 +23,14 @@ const removeElements = elements => {
 };
 
 const disableAnimations = () => {
-	const rule = '*,::after,::before{animation: initial !important; transition: initial !important;}';
+	const rule = `
+		*,
+		::before,
+		::after {
+			animation: initial !important;
+			transition: initial !important;
+		}
+	`;
 
 	const style = document.createElement('style'); // eslint-disable-line no-undef
 	document.body.append(style); // eslint-disable-line no-undef
