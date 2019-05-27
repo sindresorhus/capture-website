@@ -206,6 +206,13 @@ Type: `string`
 
 Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
+##### disableAnimations
+
+Type: `boolean`<br>
+Default: `false`
+
+Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
+
 ##### modules
 
 Type: `string[]`
