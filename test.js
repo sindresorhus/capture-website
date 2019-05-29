@@ -469,7 +469,7 @@ test('`headers` option', async t => {
 	await server.close();
 });
 
-test('`cookies` option`', async t => {
+test('`cookies` option', async t => {
 	const server = await createTestServer();
 
 	server.get('/', (request, response) => {
