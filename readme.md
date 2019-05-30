@@ -208,7 +208,7 @@ Click the DOM element matching the given [CSS selector](https://developer.mozill
 
 ##### scrollToElement
 
-Type: `string | Object`
+Type: `string | object`
 
 Scroll to the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 

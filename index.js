@@ -41,7 +41,7 @@ const scrollToElement = (element, options) => {
 			return {x: rect.left, y: rect.top};
 		}
 
-		const offset = options.offset | 0;
+		const offset = options.offset || 0;
 
 		switch (options.offsetFrom) {
 			case 'top':
