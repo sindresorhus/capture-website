@@ -212,9 +212,24 @@ Type: `string | object`
 
 Scroll to the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
-- `element` <[string]> A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
-- `offsetFrom` <[string]> Possible values are: `top`, `right`, `bottom`, `left`.
-- `offset` <[number]> Offset in pixels.
+###### element
+
+Type: `string`
+
+A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+
+###### offsetFrom
+
+Type: `string`<br>
+Values: `top | right | bottom | left`
+
+Offset origin.
+
+###### offset
+
+Type: `number`
+
+Offset in pixels.
 
 ##### disableAnimations
 

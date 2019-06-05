@@ -11,8 +11,17 @@ declare namespace captureWebsite {
 	type BeforeScreenshot = (page: Page, browser: Browser) => void;
 
 	interface ScrollToElementOptions {
+		/**
+		A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+		*/
 		element: string;
-		offsetFrom: "top" | "right" | "bottom" | "left";
+		/**
+		Offset origin. Possible values are: `top`, `right`, `bottom`, `left`.
+		*/
+		offsetFrom: 'top' | 'right' | 'bottom' | 'left';
+		/**
+		Offset in pixels.
+		*/
 		offset: number;
 	}
 

@@ -23,7 +23,13 @@ const removeElements = elements => {
 };
 
 const scrollToElement = (element, options) => {
-	const isOverflown = e => e.scrollHeight > e.clientHeight || e.scrollWidth > e.clientWidth;
+	const isOverflown = element => {
+		return (
+			element.scrollHeight > element.clientHeight ||
+			element.scrollWidth > element.clientWidth
+		);
+	};
+
 	const findScrollParent = element => {
 		if (element === undefined) {
 			return;
@@ -53,7 +59,7 @@ const scrollToElement = (element, options) => {
 			case 'left':
 				return {x: rect.left + offset, y: rect.top};
 			default:
-				return {x: rect.left, y: rect.top};
+				throw new Error('Invalid scrollToElement.offsetFrom value');
 		}
 	};
 
@@ -223,14 +229,6 @@ const captureWebsite = async (url, options) => {
 		await page.click(options.clickElement);
 	}
 
-	if (options.scrollToElement) {
-		if (typeof options.scrollToElement === 'object') {
-			await page.$eval(options.scrollToElement.element, scrollToElement, options.scrollToElement);
-		} else {
-			await page.$eval(options.scrollToElement, scrollToElement);
-		}
-	}
-
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
 
 	if (options.modules) {
@@ -276,6 +274,14 @@ const captureWebsite = async (url, options) => {
 
 	if (options.delay) {
 		await page.waitFor(options.delay * 1000);
+	}
+
+	if (options.scrollToElement) {
+		if (typeof options.scrollToElement === 'object') {
+			await page.$eval(options.scrollToElement.element, scrollToElement, options.scrollToElement);
+		} else {
+			await page.$eval(options.scrollToElement, scrollToElement);
+		}
 	}
 
 	if (options.beforeScreenshot) {
