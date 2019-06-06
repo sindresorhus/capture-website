@@ -10,6 +10,23 @@ declare namespace captureWebsite {
 
 	type BeforeScreenshot = (page: Page, browser: Browser) => void;
 
+	interface ScrollToElementOptions {
+		/**
+		A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+		*/
+		element: string;
+
+		/**
+		Offset origin.
+		*/
+		offsetFrom: 'top' | 'right' | 'bottom' | 'left';
+
+		/**
+		Offset in pixels.
+		*/
+		offset: number;
+	}
+
 	interface Options {
 		/**
 		Page width.
@@ -119,6 +136,11 @@ declare namespace captureWebsite {
 		Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 		*/
 		clickElement?: string;
+
+		/**
+		Scroll to the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors). 
+		*/
+		scrollToElement?: string | captureWebsite.ScrollToElementOptions
 
 		/**
 		Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).

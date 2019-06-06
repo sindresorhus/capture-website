@@ -206,6 +206,31 @@ Type: `string`
 
 Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
+##### scrollToElement
+
+Type: `string | object`
+
+Scroll to the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+
+###### element
+
+Type: `string`
+
+A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+
+###### offsetFrom
+
+Type: `string`<br>
+Values: `top | right | bottom | left`
+
+Offset origin.
+
+###### offset
+
+Type: `number`
+
+Offset in pixels.
+
 ##### disableAnimations
 
 Type: `boolean`<br>

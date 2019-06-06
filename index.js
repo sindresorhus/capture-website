@@ -22,6 +22,71 @@ const removeElements = elements => {
 	}
 };
 
+const scrollToElement = (element, options) => {
+	const isOverflown = element => {
+		return (
+			element.scrollHeight > element.clientHeight ||
+			element.scrollWidth > element.clientWidth
+		);
+	};
+
+	const findScrollParent = element => {
+		if (element === undefined) {
+			return;
+		}
+
+		if (isOverflown(element)) {
+			return element;
+		}
+
+		return findScrollParent(element.parentElement);
+	};
+
+	const calculateOffset = (rect, options) => {
+		if (options === undefined) {
+			return {
+				x: rect.left,
+				y: rect.top
+			};
+		}
+
+		const offset = options.offset || 0;
+
+		switch (options.offsetFrom) {
+			case 'top':
+				return {
+					x: rect.left,
+					y: rect.top + offset
+				};
+			case 'right':
+				return {
+					x: rect.left - offset,
+					y: rect.top
+				};
+			case 'bottom':
+				return {
+					x: rect.left,
+					y: rect.top - offset
+				};
+			case 'left':
+				return {
+					x: rect.left + offset,
+					y: rect.top
+				};
+			default:
+				throw new Error('Invalid `scrollToElement.offsetFrom` value');
+		}
+	};
+
+	const rect = element.getBoundingClientRect();
+	const offset = calculateOffset(rect, options);
+	const parent = findScrollParent(element);
+
+	if (parent !== undefined) {
+		parent.scrollTo(offset.x, offset.y);
+	}
+};
+
 const disableAnimations = () => {
 	const rule = `
 		*,
@@ -39,8 +104,8 @@ const disableAnimations = () => {
 };
 
 const getBoundingClientRect = element => {
-	const {height, width, x, y} = element.getBoundingClientRect();
-	return {height, width, x, y};
+	const {top, left, height, width, x, y} = element.getBoundingClientRect();
+	return {top, left, height, width, x, y};
 };
 
 const parseCookie = (url, cookie) => {
@@ -224,6 +289,14 @@ const captureWebsite = async (url, options) => {
 
 	if (options.delay) {
 		await page.waitFor(options.delay * 1000);
+	}
+
+	if (options.scrollToElement) {
+		if (typeof options.scrollToElement === 'object') {
+			await page.$eval(options.scrollToElement.element, scrollToElement, options.scrollToElement);
+		} else {
+			await page.$eval(options.scrollToElement, scrollToElement);
+		}
 	}
 
 	if (options.beforeScreenshot) {

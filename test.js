@@ -259,6 +259,72 @@ test('`clickElement` option', async t => {
 	await server.close();
 });
 
+test('`scrollToElement` option as string', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div style="width: 100px; height: 100px; overflow: auto;">
+					<div style="width: 200px; height: 200px; display: flex; flex-wrap: wrap">
+						<div id="red" style="background-color: #f00; width: 100px; height: 100px; flex: 1 0 auto;"></div>
+						<div id="green" style="background-color: #0f0; width: 100px; height: 100px; flex: 1 0 auto;"></div>
+						<div id="blue" style="background-color: #00f; width: 100px; height: 100px; flex: 1 0 auto;"></div>
+						<div id="black" style="background-color: #000; width: 100px; height: 100px; flex: 1 0 auto;"></div>
+					</div>
+				</div>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		scrollToElement: '#black'
+	}));
+
+	t.is(pixels[0], 0);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+
+	await server.close();
+});
+
+test('`scrollToElement` option as object', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div style="width: 100px; height: 100px; overflow: auto;">
+					<div style="width: 200px; height: 200px; display: flex; flex-wrap: wrap">
+						<div id="red" style="background-color: #f00; width: 100px; height: 100px; flex: 1 0 auto;"></div>
+						<div id="green" style="background-color: #0f0; width: 100px; height: 100px; flex: 1 0 auto;"></div>
+						<div id="blue" style="background-color: #00f; width: 100px; height: 100px; flex: 1 0 auto;"></div>
+						<div id="black" style="background-color: #000; width: 100px; height: 100px; flex: 1 0 auto;"></div>
+					</div>
+				</div>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		scrollToElement: {
+			element: '#green',
+			offsetFrom: 'top',
+			offset: 100
+		}
+	}));
+
+	t.is(pixels[0], 0);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+
+	await server.close();
+});
+
 test('`disableAnimations` option', async t => {
 	const server = await createTestServer();
 
