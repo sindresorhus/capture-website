@@ -44,22 +44,37 @@ const scrollToElement = (element, options) => {
 
 	const calculateOffset = (rect, options) => {
 		if (options === undefined) {
-			return {x: rect.left, y: rect.top};
+			return {
+				x: rect.left,
+				y: rect.top
+			};
 		}
 
 		const offset = options.offset || 0;
 
 		switch (options.offsetFrom) {
 			case 'top':
-				return {x: rect.left, y: rect.top + offset};
+				return {
+					x: rect.left,
+					y: rect.top + offset
+				};
 			case 'right':
-				return {x: rect.left - offset, y: rect.top};
+				return {
+					x: rect.left - offset,
+					y: rect.top
+				};
 			case 'bottom':
-				return {x: rect.left, y: rect.top - offset};
+				return {
+					x: rect.left,
+					y: rect.top - offset
+				};
 			case 'left':
-				return {x: rect.left + offset, y: rect.top};
+				return {
+					x: rect.left + offset,
+					y: rect.top
+				};
 			default:
-				throw new Error('Invalid scrollToElement.offsetFrom value');
+				throw new Error('Invalid `scrollToElement.offsetFrom` value');
 		}
 	};
 
