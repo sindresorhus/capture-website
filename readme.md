@@ -29,19 +29,19 @@ const captureWebsite = require('capture-website');
 
 ## API
 
-### captureWebsite.file(url, outputFilePath, [options])
+### captureWebsite.file(url, outputFilePath, options?)
 
 Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
 
 Returns a `Promise<void>` that resolves when the screenshot is written.
 
-### captureWebsite.buffer(url, [options])
+### captureWebsite.buffer(url, options?)
 
 Capture a screnshot of the given `url`.
 
 Returns a `Promise<Buffer>` with the screenshot as binary.
 
-### captureWebsite.base64(url, [options])
+### captureWebsite.base64(url, options?)
 
 Capture a screnshot of the given `url`.
 
@@ -63,7 +63,7 @@ const captureWebsite = require('capture-website');
 
 #### options
 
-Type: `Object`
+Type: `object`
 
 ##### width
 
@@ -82,8 +82,8 @@ Page height.
 ##### type
 
 Type: `string`<br>
-Values: `png` `jpeg`<br>
-Default: `png`
+Values: `'png'` `'jpeg'`<br>
+Default: `'png'`
 
 Image type.
 
@@ -296,7 +296,7 @@ const captureWebsite = require('capture-website');
 
 ##### headers
 
-Type: `Object`<br>
+Type: `object`<br>
 Default: `{}`
 
 Set custom [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
@@ -321,7 +321,7 @@ Set a custom [user agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Head
 
 ##### cookies
 
-Type: `Array<string | Object>`
+Type: `Array<string | object>`
 
 Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetcookiecookies).
 
@@ -349,7 +349,7 @@ const captureWebsite = require('capture-website');
 
 ##### authentication
 
-Type: `Object`
+Type: `object`
 
 Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).
 
@@ -395,7 +395,7 @@ Note: This overrides `launchOptions` with `{headless: false, slowMo: 100}`.
 
 ##### launchOptions
 
-Type: `Object`<br>
+Type: `object`<br>
 Default: `{}`
 
 Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).

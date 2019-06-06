@@ -4,8 +4,8 @@ import {SetCookie, LaunchOptions, Page, Browser} from 'puppeteer';
 
 declare namespace captureWebsite {
 	interface Authentication {
-		username: string;
-		password?: string;
+		readonly username: string;
+		readonly password?: string;
 	}
 
 	type BeforeScreenshot = (page: Page, browser: Browser) => void;
@@ -14,17 +14,17 @@ declare namespace captureWebsite {
 		/**
 		A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 		*/
-		element: string;
+		readonly element: string;
 
 		/**
 		Offset origin.
 		*/
-		offsetFrom: 'top' | 'right' | 'bottom' | 'left';
+		readonly offsetFrom: 'top' | 'right' | 'bottom' | 'left';
 
 		/**
 		Offset in pixels.
 		*/
-		offset: number;
+		readonly offset: number;
 	}
 
 	interface Options {
@@ -33,28 +33,28 @@ declare namespace captureWebsite {
 
 		@default 1280
 		*/
-		width?: number;
+		readonly width?: number;
 
 		/**
 		Page height.
 
 		@default 800
 		*/
-		height?: number;
+		readonly height?: number;
 
 		/**
 		Image type.
 
 		@default png
 		*/
-		type?: 'png' | 'jpeg';
+		readonly type?: 'png' | 'jpeg';
 
 		/**
 		Image quality. Only for {type: 'jpeg'}.
 
 		@default 1
 		*/
-		quality?: number;
+		readonly quality?: number;
 
 		/**
 		Scale the webpage `n` times.
@@ -63,21 +63,21 @@ declare namespace captureWebsite {
 
 		@default 2
 		*/
-		scaleFactor?: number;
+		readonly scaleFactor?: number;
 
 		/**
 		Make it look like the screenshot was taken on the specified device.
 
 		This overrides the `width`, `height`, `scaleFactor`, and `userAgent` options.
 		*/
-		emulateDevice?: string;
+		readonly emulateDevice?: string;
 
 		/**
 		Capture the full scrollable page, not just the viewport.
 
 		@default false
 		*/
-		fullPage?: boolean;
+		readonly fullPage?: boolean;
 
 		/**
 		Include the default white background.
@@ -86,7 +86,7 @@ declare namespace captureWebsite {
 
 		@default true
 		*/
-		defaultBackground?: boolean;
+		readonly defaultBackground?: boolean;
 
 		/**
 		The number of seconds before giving up trying to load the page.
@@ -95,7 +95,7 @@ declare namespace captureWebsite {
 
 		@default 60
 		*/
-		timeout?: number;
+		readonly timeout?: number;
 
 		/**
 		The number of seconds to wait after the page finished loading before capturing the screenshot.
@@ -104,17 +104,17 @@ declare namespace captureWebsite {
 
 		@default 0
 		*/
-		delay?: number;
+		readonly delay?: number;
 
 		/**
 		Wait for a DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors) to appear in the page and to be visible before capturing the screenshot. It times out after `options.timeout` seconds.
 		*/
-		waitForElement?: string;
+		readonly waitForElement?: string;
 
 		/**
 		Capture the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors). It will wait for the element to appear in the page and to be visible. It times out after `options.timeout` seconds
 		*/
-		element?: string;
+		readonly element?: string;
 
 		/**
 		Hide DOM elements matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
@@ -123,81 +123,81 @@ declare namespace captureWebsite {
 
 		This sets [`visibility: hidden`](https://stackoverflow.com/a/133064/64949) on the matched elements.
 		*/
-		hideElements?: string[];
+		readonly hideElements?: string[];
 
 		/**
 		Remove DOM elements matching the given [CSS selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
 		This sets [`display: none`](https://stackoverflow.com/a/133064/64949) on the matched elements, so it could potentially break the website layout.
 		*/
-		removeElements?: string[];
+		readonly removeElements?: string[];
 
 		/**
 		Click the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 		*/
-		clickElement?: string;
+		readonly clickElement?: string;
 
 		/**
-		Scroll to the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors). 
+		Scroll to the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 		*/
-		scrollToElement?: string | captureWebsite.ScrollToElementOptions
+		readonly scrollToElement?: string | captureWebsite.ScrollToElementOptions
 
 		/**
 		Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
 
 		@default false
 		*/
-		disableAnimations?: boolean;
+		readonly disableAnimations?: boolean;
 
 		/**
 		Inject [JavaScript modules](https://developers.google.com/web/fundamentals/primers/modules) into the page.
 
 		Accepts an array of inline code, absolute URLs, and local file paths (must have a .js extension).
 		*/
-		modules?: string[];
+		readonly modules?: string[];
 
 		/**
 		Same as the `modules` option, but instead injects the code as [`<script>` instead of `<script type="module">`](https://developers.google.com/web/fundamentals/primers/modules). Prefer the `modules` option whenever possible.
 		*/
-		scripts?: string[];
+		readonly scripts?: string[];
 
 		/**
 		Inject CSS styles into the page.
 
 		Accepts an array of inline code, absolute URLs, and local file paths (must have a `.css` extension).
 		*/
-		styles?: string[];
+		readonly styles?: string[];
 
 		/**
 		Set custom [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
 
 		@default {}
 		*/
-		headers?: Headers;
+		readonly headers?: Headers;
 
 		/**
 		Set a custom [user agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent).
 		*/
-		userAgent?: string;
+		readonly userAgent?: string;
 
 		/**
 		Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetcookiecookies).
 
 		Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
 		*/
-		cookies?: (string | SetCookie)[];
+		readonly cookies?: (string | SetCookie)[];
 
 		/**
 		Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).
 		*/
-		authentication?: Authentication;
+		readonly authentication?: Authentication;
 
 		/**
 		The specified function is called right before the screenshot is captured. It gives you a lot of power to do custom stuff. The function can be async.
 
 		Note: Make sure to not call `page.close()` or `browser.close()`.
 		*/
-		beforeScreenshot?: BeforeScreenshot;
+		readonly beforeScreenshot?: BeforeScreenshot;
 
 		/**
 		Show the browser window so you can see what it's doing, redirect page console output to the terminal, and slow down each Puppeteer operation.
@@ -206,7 +206,7 @@ declare namespace captureWebsite {
 
 		@default false
 		*/
-		debug?: boolean;
+		readonly debug?: boolean;
 
 		/**
 		Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
@@ -215,7 +215,7 @@ declare namespace captureWebsite {
 
 		@default {}
 		*/
-		launchOptions?: LaunchOptions;
+		readonly launchOptions?: LaunchOptions;
 	}
 
 	interface FileOptions extends Options {
@@ -224,7 +224,7 @@ declare namespace captureWebsite {
 
 		@default false
 		*/
-		overwrite?: boolean;
+		readonly overwrite?: boolean;
 	}
 }
 
@@ -232,7 +232,7 @@ declare const captureWebsite: {
 	/**
 	Devices supported by the `emulateDevice` option.
 	*/
-	devices: string[];
+	readonly devices: string[];
 
 	/**
 	Capture a screnshot of the given `url` and save it to the given `outputFilePath`.

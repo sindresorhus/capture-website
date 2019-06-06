@@ -1,3 +1,4 @@
+/* global document */
 'use strict';
 const {promisify} = require('util');
 const fs = require('fs');
@@ -97,8 +98,8 @@ const disableAnimations = () => {
 		}
 	`;
 
-	const style = document.createElement('style'); // eslint-disable-line no-undef
-	document.body.append(style); // eslint-disable-line no-undef
+	const style = document.createElement('style');
+	document.body.append(style);
 
 	style.sheet.insertRule(rule);
 };

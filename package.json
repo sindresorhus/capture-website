@@ -41,7 +41,7 @@
 	},
 	"devDependencies": {
 		"@types/puppeteer": "^1.12.3",
-		"ava": "^1.4.1",
+		"ava": "^2.0.0",
 		"create-test-server": "^3.0.1",
 		"delay": "^4.1.0",
 		"image-size": "^0.7.2",
