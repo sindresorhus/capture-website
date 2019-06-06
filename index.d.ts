@@ -15,10 +15,12 @@ declare namespace captureWebsite {
 		A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 		*/
 		element: string;
+
 		/**
-		Offset origin. Possible values are: `top`, `right`, `bottom`, `left`.
+		Offset origin.
 		*/
 		offsetFrom: 'top' | 'right' | 'bottom' | 'left';
+
 		/**
 		Offset in pixels.
 		*/
