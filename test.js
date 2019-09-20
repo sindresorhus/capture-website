@@ -81,6 +81,14 @@ test('capture screenshot - from data URL', async t => {
 	})));
 });
 
+test('capture screenshot - from HTML Content', async t => {
+	t.true(isPng(await instance('<h1>Awesome!</h1>', {
+		inputType: 'html',
+		width: 100,
+		height: 100
+	})));
+});
+
 test('captureWebsite.file()', async t => {
 	const filePath = tempy.file();
 

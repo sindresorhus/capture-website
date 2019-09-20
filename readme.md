@@ -29,29 +29,29 @@ const captureWebsite = require('capture-website');
 
 ## API
 
-### captureWebsite.file(url, outputFilePath, options?)
+### captureWebsite.file(input, outputFilePath, options?)
 
-Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
+Capture a screenshot of the given `input` and save it to the given `outputFilePath`.
 
 Returns a `Promise<void>` that resolves when the screenshot is written.
 
-### captureWebsite.buffer(url, options?)
+### captureWebsite.buffer(input, options?)
 
-Capture a screnshot of the given `url`.
+Capture a screenshot of the given `input`.
 
 Returns a `Promise<Buffer>` with the screenshot as binary.
 
-### captureWebsite.base64(url, options?)
+### captureWebsite.base64(input, options?)
 
-Capture a screnshot of the given `url`.
+Capture a screenshot of the given `input`.
 
 Returns a `Promise<string>` with the screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 
-#### url
+#### input
 
 Type: `string`
 
-The URL, file URL, data URL, or local file path to the website.
+The URL, file URL, data URL, or local file path to the website, or HTML content of the website.
 
 ```js
 const captureWebsite = require('capture-website');
@@ -64,6 +64,14 @@ const captureWebsite = require('capture-website');
 #### options
 
 Type: `object`
+
+##### inputType
+
+Type: `string`<br>
+Default: `url`<br>
+Values: `url | html`
+
+Input type. Set to `html` to treat `input` as HTML content.
 
 ##### width
 
