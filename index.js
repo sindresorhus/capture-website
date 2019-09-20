@@ -144,9 +144,9 @@ const captureWebsite = async (input, options) => {
 		...options
 	};
 
-	const isHTMLContent = options.inputType === 'html'
+	const isHTMLContent = options.inputType === 'html';
 
-	input = isHTMLContent || isUrl(input) ? input : fileUrl(input)
+	input = isHTMLContent || isUrl(input) ? input : fileUrl(input);
 
 	const timeoutInSeconds = options.timeout * 1000;
 
