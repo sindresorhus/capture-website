@@ -353,6 +353,66 @@ test('`disableAnimations` option', async t => {
 	await server.close();
 });
 
+test('`javascrtiptEnabled` option with value false', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div style="background-color: black; width: 100px; height: 100px;"></div>
+				<script>
+					setTimeout(function() {
+						document.querySelector('div').style.backgroundColor = 'red';
+					}, 1500);
+				</script>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		delay: 1,
+		javascriptEnabled: false
+	}));
+
+	t.is(pixels[0], 0);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+
+	await server.close();
+});
+
+test('`javascrtiptEnabled` false disable module', async t => {
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		javascriptEnabled: false,
+		modules: [
+			'document.querySelector(\'div\').style.backgroundColor = \'red\';'
+		]
+	}));
+
+	t.is(pixels[0], 0);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+});
+
+test('`javascrtiptEnabled` false disable script', async t => {
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		javascriptEnabled: false,
+		scripts: [
+			'document.querySelector(\'div\').style.backgroundColor = \'red\';'
+		]
+	}));
+
+	t.is(pixels[0], 0);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+});
+
 test('`modules` option - inline', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,

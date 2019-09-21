@@ -150,6 +150,13 @@ declare namespace captureWebsite {
 		readonly disableAnimations?: boolean;
 
 		/**
+		Options to enable javascript execution on the page. If disabled, it also disable modules and scripts
+
+		@default true
+		*/
+		readonly javascriptEnabled?: boolean;
+
+		/**
 		Inject [JavaScript modules](https://developers.google.com/web/fundamentals/primers/modules) into the page.
 
 		Accepts an array of inline code, absolute URLs, and local file paths (must have a .js extension).

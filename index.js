@@ -142,6 +142,7 @@ const captureWebsite = async (url, options) => {
 		debug: false,
 		launchOptions: {},
 		_keepAlive: false,
+		javascriptEnabled: true,
 		...options
 	};
 
@@ -246,22 +247,25 @@ const captureWebsite = async (url, options) => {
 	}
 
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
+	if (options.javascriptEnabled) {
+		if (options.modules) {
+			await Promise.all(options.modules.map(module_ => {
+				return page.addScriptTag({
+					[getInjectKey('js', module_)]: module_,
+					type: 'module'
+				});
+			}));
+		}
 
-	if (options.modules) {
-		await Promise.all(options.modules.map(module_ => {
-			return page.addScriptTag({
-				[getInjectKey('js', module_)]: module_,
-				type: 'module'
-			});
-		}));
-	}
-
-	if (options.scripts) {
-		await Promise.all(options.scripts.map(script => {
-			return page.addScriptTag({
-				[getInjectKey('js', script)]: script
-			});
-		}));
+		if (options.scripts) {
+			await Promise.all(options.scripts.map(script => {
+				return page.addScriptTag({
+					[getInjectKey('js', script)]: script
+				});
+			}));
+		}
+	} else {
+		await page.setJavaScriptEnabled(options.javascriptEnabled);
 	}
 
 	if (options.styles) {
