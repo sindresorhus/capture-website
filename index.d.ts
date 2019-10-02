@@ -29,7 +29,7 @@ declare namespace captureWebsite {
 
 	interface Options {
 		/**
-		Image type.
+		Input type.
 
 		@default url
 		*/
