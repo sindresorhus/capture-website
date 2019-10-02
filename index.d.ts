@@ -270,7 +270,7 @@ declare const captureWebsite: {
 	/**
 	Capture a screenshot of the given `input`.
 
-	@param input - The URL, file URL, data URL, or local file path to the website, or HTML content of the website.
+	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@returns The screenshot as binary.
 	*/
 	buffer(input: string, options?: captureWebsite.Options): Promise<Buffer>;
@@ -278,7 +278,7 @@ declare const captureWebsite: {
 	/**
 	Capture a screenshot of the given `url`.
 
-	@param input - The URL, file URL, data URL, or local file path to the website, or HTML content of the website.
+	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@returns The screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 	*/
 	base64(input: string, options?: captureWebsite.Options): Promise<string>;
