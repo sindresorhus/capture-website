@@ -244,7 +244,7 @@ declare const captureWebsite: {
 	/**
 	Capture a screenshot of the given `input` and save it to the given `outputFilePath`.
 
-	@param input - The URL, file URL, data URL, or local file path to the website, or HTML content of the website.
+	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@param outputFilePath - The path to write the screenshot.
 	@returns A promise that resolves when the screenshot is written to the given file path.
 
