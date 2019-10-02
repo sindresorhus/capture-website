@@ -78,7 +78,7 @@ Set it to `html` to treat `input` as HTML content.
 const captureWebsite = require('capture-website');
 
 (async () => {
-	await captureWebsite.file('<h1>Awesome!</h1>', 'local-file.png', {
+	await captureWebsite.file('<h1>Awesome!</h1>', 'screenshot.png', {
 		inputType: 'html'
 	});
 })();
