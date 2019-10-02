@@ -68,10 +68,10 @@ Type: `object`
 ##### inputType
 
 Type: `string`<br>
-Default: `url`<br>
-Values: `url | html`
+Default: `'url'`<br>
+Values: `'url'` `'html'`
 
-Input type. Set to `html` to treat `input` as HTML content.
+Set it to `html` to treat `input` as HTML content.
 
 ##### width
 
