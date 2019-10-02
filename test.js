@@ -81,7 +81,7 @@ test('capture screenshot - from data URL', async t => {
 	})));
 });
 
-test('capture screenshot - from HTML Content', async t => {
+test('capture screenshot - from HTML content', async t => {
 	t.true(isPng(await instance('<h1>Awesome!</h1>', {
 		inputType: 'html',
 		width: 100,
