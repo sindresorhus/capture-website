@@ -253,7 +253,11 @@ declare const captureWebsite: {
 	import captureWebsite = require('capture-website');
 
 	(async () => {
-		await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
+		await captureWebsite.file('https://sindresorhus.com', 'screenshot-url.png');
+
+		await captureWebsite.file('<h1>Awesome!</h1>', 'screenshot-html.png', {
+			inputType: 'html'
+		});
 	})();
 	```
 	*/

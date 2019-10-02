@@ -73,6 +73,17 @@ Values: `'url'` `'html'`
 
 Set it to `html` to treat `input` as HTML content.
 
+
+```js
+const captureWebsite = require('capture-website');
+
+(async () => {
+	await captureWebsite.file('<h1>Awesome!</h1>', 'local-file.png', {
+		inputType: 'html'
+	});
+})();
+```
+
 ##### width
 
 Type: `number`<br>
