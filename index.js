@@ -142,7 +142,7 @@ const captureWebsite = async (url, options) => {
 		debug: false,
 		launchOptions: {},
 		_keepAlive: false,
-		javascriptEnabled: true,
+		isJavaScriptEnabled: true,
 		...options
 	};
 
@@ -181,6 +181,8 @@ const captureWebsite = async (url, options) => {
 
 	const browser = options._browser || await puppeteer.launch(launchOptions);
 	const page = await browser.newPage();
+
+	page.setJavaScriptEnabled(options.isJavaScriptEnabled);
 
 	if (options.debug) {
 		page.on('console', message => {
@@ -247,25 +249,22 @@ const captureWebsite = async (url, options) => {
 	}
 
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
-	if (options.javascriptEnabled) {
-		if (options.modules) {
-			await Promise.all(options.modules.map(module_ => {
-				return page.addScriptTag({
-					[getInjectKey('js', module_)]: module_,
-					type: 'module'
-				});
-			}));
-		}
 
-		if (options.scripts) {
-			await Promise.all(options.scripts.map(script => {
-				return page.addScriptTag({
-					[getInjectKey('js', script)]: script
-				});
-			}));
-		}
-	} else {
-		await page.setJavaScriptEnabled(options.javascriptEnabled);
+	if (options.modules) {
+		await Promise.all(options.modules.map(module_ => {
+			return page.addScriptTag({
+				[getInjectKey('js', module_)]: module_,
+				type: 'module'
+			});
+		}));
+	}
+
+	if (options.scripts) {
+		await Promise.all(options.scripts.map(script => {
+			return page.addScriptTag({
+				[getInjectKey('js', script)]: script
+			});
+		}));
 	}
 
 	if (options.styles) {

@@ -238,13 +238,12 @@ Default: `false`
 
 Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
 
-##### javascriptEnabled
+##### isJavaScriptEnabled
 
 Type: `boolean`<br>
 Default: `true`
 
-Options to enable javascript execution on the page.
-> nb: If disabled, it also disable `modules` and `scripts`.
+Set JavaScript execution of a website.
 
 ##### modules
 
