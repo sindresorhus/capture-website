@@ -248,7 +248,7 @@ const captureWebsite = async (input, options) => {
 		await page.click(options.clickElement);
 	}
 
-	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
+	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : (value.endsWith(`.${ext}`) ? 'path' : 'content');
 
 	if (options.modules) {
 		await Promise.all(options.modules.map(module_ => {
