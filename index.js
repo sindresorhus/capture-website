@@ -182,7 +182,7 @@ const captureWebsite = async (url, options) => {
 	const browser = options._browser || await puppeteer.launch(launchOptions);
 	const page = await browser.newPage();
 
-	page.setJavaScriptEnabled(options.isJavaScriptEnabled);
+	await page.setJavaScriptEnabled(options.isJavaScriptEnabled);
 
 	if (options.debug) {
 		page.on('console', message => {
@@ -249,6 +249,9 @@ const captureWebsite = async (url, options) => {
 	}
 
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
+
+	// Reset javascript execution to true for modules
+	await page.setJavaScriptEnabled(true);
 
 	if (options.modules) {
 		await Promise.all(options.modules.map(module_ => {

@@ -353,7 +353,7 @@ test('`disableAnimations` option', async t => {
 	await server.close();
 });
 
-test('`isJavaScriptEnabled` option with value false', async t => {
+test('`isJavaScriptEnabled: false` option', async t => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -363,7 +363,7 @@ test('`isJavaScriptEnabled` option with value false', async t => {
 				<script>
 					setTimeout(function() {
 						document.querySelector('div').style.backgroundColor = 'red';
-					}, 1500);
+					}, 500);
 				</script>
 			</body>
 		`);
@@ -383,12 +383,27 @@ test('`isJavaScriptEnabled` option with value false', async t => {
 	await server.close();
 });
 
-test('Still able to execute script even `isJavaScriptEnabled` false', async t => {
+test('`isJavaScriptEnabled: false` works with the `scripts` option', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
-		javascriptEnabled: false,
+		isJavaScriptEnabled: false,
 		scripts: [
+			'document.querySelector(\'div\').style.backgroundColor = \'red\';'
+		]
+	}));
+
+	t.is(pixels[0], 255);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+});
+
+test('`isJavaScriptEnabled: false` works with the `modules` option', async t => {
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		isJavaScriptEnabled: false,
+		modules: [
 			'document.querySelector(\'div\').style.backgroundColor = \'red\';'
 		]
 	}));

@@ -243,7 +243,9 @@ Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animat
 Type: `boolean`<br>
 Default: `true`
 
-Set JavaScript execution of a website.
+Whether JavaScript on the website should be executed.
+
+This does not affect the `scripts` and `modules` options.
 
 ##### modules
 
