@@ -29,6 +29,13 @@ declare namespace captureWebsite {
 
 	interface Options {
 		/**
+		Input type.
+
+		@default url
+		*/
+		readonly inputType?: 'url' | 'html';
+
+		/**
 		Page width.
 
 		@default 1280
@@ -235,9 +242,9 @@ declare const captureWebsite: {
 	readonly devices: string[];
 
 	/**
-	Capture a screnshot of the given `url` and save it to the given `outputFilePath`.
+	Capture a screenshot of the given `input` and save it to the given `outputFilePath`.
 
-	@param url - The URL, file URL, data URL, or local file path to the website.
+	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@param outputFilePath - The path to write the screenshot.
 	@returns A promise that resolves when the screenshot is written to the given file path.
 
@@ -246,31 +253,35 @@ declare const captureWebsite: {
 	import captureWebsite = require('capture-website');
 
 	(async () => {
-		await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
+		await captureWebsite.file('https://sindresorhus.com', 'screenshot-url.png');
+
+		await captureWebsite.file('<h1>Awesome!</h1>', 'screenshot-html.png', {
+			inputType: 'html'
+		});
 	})();
 	```
 	*/
 	file(
-		url: string,
+		input: string,
 		outputFilePath: string,
 		options?: captureWebsite.FileOptions
 	): Promise<void>;
 
 	/**
-	Capture a screnshot of the given `url`.
+	Capture a screenshot of the given `input`.
 
-	@param url - The URL, file URL, data URL, or local file path to the website.
+	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@returns The screenshot as binary.
 	*/
-	buffer(url: string, options?: captureWebsite.Options): Promise<Buffer>;
+	buffer(input: string, options?: captureWebsite.Options): Promise<Buffer>;
 
 	/**
-	Capture a screnshot of the given `url`.
+	Capture a screenshot of the given `input`.
 
-	@param url - The URL, file URL, data URL, or local file path to the website.
+	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@returns The screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 	*/
-	base64(url: string, options?: captureWebsite.Options): Promise<string>;
+	base64(input: string, options?: captureWebsite.Options): Promise<string>;
 };
 
 export = captureWebsite;

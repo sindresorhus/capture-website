@@ -128,10 +128,9 @@ const parseCookie = (url, cookie) => {
 	return ret;
 };
 
-const captureWebsite = async (url, options) => {
-	const finalUrl = isUrl(url) ? url : fileUrl(url);
-
+const captureWebsite = async (input, options) => {
 	options = {
+		inputType: 'url',
 		width: 1280,
 		height: 800,
 		scaleFactor: 2,
@@ -144,6 +143,10 @@ const captureWebsite = async (url, options) => {
 		_keepAlive: false,
 		...options
 	};
+
+	const isHTMLContent = options.inputType === 'html';
+
+	input = isHTMLContent || isUrl(input) ? input : fileUrl(input);
 
 	const timeoutInSeconds = options.timeout * 1000;
 
@@ -202,7 +205,7 @@ const captureWebsite = async (url, options) => {
 	}
 
 	if (options.cookies) {
-		const cookies = options.cookies.map(cookie => parseCookie(finalUrl, cookie));
+		const cookies = options.cookies.map(cookie => parseCookie(isHTMLContent ? 'about:blank' : input, cookie));
 		await page.setCookie(...cookies);
 	}
 
@@ -224,7 +227,7 @@ const captureWebsite = async (url, options) => {
 		await page.emulate(devices[options.emulateDevice]);
 	}
 
-	await page.goto(finalUrl, {
+	await page[isHTMLContent ? 'setContent' : 'goto'](input, {
 		timeout: timeoutInSeconds,
 		waitUntil: 'networkidle2'
 	});
