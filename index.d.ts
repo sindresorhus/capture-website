@@ -150,7 +150,9 @@ declare namespace captureWebsite {
 		readonly disableAnimations?: boolean;
 
 		/**
-		Set JavaScript execution of a website.
+		Whether JavaScript on the website should be executed.
+
+		This does not affect the `scripts` and `modules` options.
 
 		@default true
 		*/
