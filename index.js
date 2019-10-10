@@ -250,7 +250,7 @@ const captureWebsite = async (url, options) => {
 
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
 
-	// Reset javascript execution to true for modules
+	// Enable JavaScript again for `modules` and `scripts`.
 	await page.setJavaScriptEnabled(true);
 
 	if (options.modules) {
