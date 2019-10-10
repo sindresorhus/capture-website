@@ -250,8 +250,10 @@ const captureWebsite = async (url, options) => {
 
 	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : value.endsWith(`.${ext}`) ? 'path' : 'content';
 
-	// Enable JavaScript again for `modules` and `scripts`.
-	await page.setJavaScriptEnabled(true);
+	if (!options.isJavaScriptEnabled) {
+		// Enable JavaScript again for `modules` and `scripts`.
+		await page.setJavaScriptEnabled(true);
+	}
 
 	if (options.modules) {
 		await Promise.all(options.modules.map(module_ => {
