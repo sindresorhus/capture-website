@@ -13,7 +13,7 @@ See [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) f
 $ npm install capture-website
 ```
 
-Note to Linux users: If you get a "No usable sandbox!" error, you need to enable [system sandboxing](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#setting-up-chrome-linux-sandbox).
+Note to Linux users: If you get a sandbox-related error, you need to enable [system sandboxing](#im-getting-a-sandbox-related-error).
 
 
 ## Usage
@@ -475,6 +475,27 @@ const items = [
 
 
 ## FAQ
+
+### I'm getting a sandbox-related error
+
+If you get an error like `No usable sandbox!` or `Running as root without --no-sandbox is not supported`, you need to properly [set up sandboxing](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#setting-up-chrome-linux-sandbox) on your Linux instance.
+
+Alternatively, if you completely trust the content, you can disable sandboxing (strongly discouraged):
+
+```js
+const captureWebsite = require('capture-website');
+
+(async () => {
+	await captureWebsite.file('…', '…', {
+		launchOptions: {
+			args: [
+				'--no-sandbox',
+				'--disable-setuid-sandbox'
+			]
+		}
+	});
+})();
+```
 
 ### How is this different from your [Pageres](https://github.com/sindresorhus/pageres) project?
 
