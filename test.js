@@ -168,7 +168,7 @@ test('`timeout` option', async t => {
 		width: 100,
 		height: 100,
 		timeout: 1
-	}), /1000ms exceeded/);
+	}), /1000 ms exceeded/);
 
 	await server.close();
 });
