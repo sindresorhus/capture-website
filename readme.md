@@ -421,6 +421,13 @@ Show the browser window so you can see what it's doing, redirect page console ou
 
 Note: This overrides `launchOptions` with `{headless: false, slowMo: 100}`.
 
+##### darkMode
+
+Type: `boolean`<br>
+Default: `false`
+
+Emulate preference of dark color scheme [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme).
+
 ##### launchOptions
 
 Type: `object`<br>

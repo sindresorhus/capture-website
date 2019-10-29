@@ -698,3 +698,44 @@ test('handle redirects', async t => {
 
 	await server.close();
 });
+
+test('`darkMode` option', async t => {
+	const server = await createTestServer();
+
+	server.get('/', (request, response) => {
+		response.end(`
+		<html>
+			<head>
+				<style>
+					body {
+						background: white;
+						width: 100px;
+						height: 100px;
+					}
+					@media (prefers-color-scheme: dark) {
+						body { background: black; }
+					}
+				</style>
+			</head>
+			<body></body>
+		</html>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100
+	}));
+
+	t.is(pixels[0], 255);
+
+	const pixels2 = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		darkMode: true
+	}));
+
+	t.is(pixels2[0], 0);
+
+	await server.close();
+});
