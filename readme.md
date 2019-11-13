@@ -67,8 +67,8 @@ Type: `object`
 
 ##### inputType
 
-Type: `string`<br>
-Default: `'url'`<br>
+Type: `string`\
+Default: `'url'`\
 Values: `'url'` `'html'`
 
 Set it to `html` to treat `input` as HTML content.
@@ -86,37 +86,37 @@ const captureWebsite = require('capture-website');
 
 ##### width
 
-Type: `number`<br>
+Type: `number`\
 Default: `1280`
 
 Page width.
 
 ##### height
 
-Type: `number`<br>
+Type: `number`\
 Default: `800`
 
 Page height.
 
 ##### type
 
-Type: `string`<br>
-Values: `'png'` `'jpeg'`<br>
+Type: `string`\
+Values: `'png'` `'jpeg'`\
 Default: `'png'`
 
 Image type.
 
 ##### quality
 
-Type: `number`<br>
-Values: `0...1`<br>
+Type: `number`\
+Values: `0...1`\
 Default: `1`
 
 Image quality. Only for `{type: 'jpeg'}`.
 
 ##### scaleFactor
 
-Type: `number`<br>
+Type: `number`\
 Default: `2`
 
 Scale the webpage `n` times.
@@ -125,7 +125,7 @@ The default is what you would get if you captured a normal screenshot on a compu
 
 ##### emulateDevice
 
-Type: `string`<br>
+Type: `string`\
 Values: [Devices](https://github.com/GoogleChrome/puppeteer/blob/master/lib/DeviceDescriptors.js) *(Use the `name` property)*
 
 Make it look like the screenshot was taken on the specified device.
@@ -144,14 +144,14 @@ const captureWebsite = require('capture-website');
 
 ##### fullPage
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Capture the full scrollable page, not just the viewport.
 
 ##### defaultBackground
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `true`
 
 Include the default white background.
@@ -160,7 +160,7 @@ Disabling this lets you capture screenshots with transparency.
 
 ##### timeout
 
-Type: `number` *(seconds)*<br>
+Type: `number` *(seconds)*\
 Default: `60`
 
 The number of seconds before giving up trying to load the page.
@@ -169,7 +169,7 @@ Specify `0` to disable the timeout.
 
 ##### delay
 
-Type: `number` *(seconds)*<br>
+Type: `number` *(seconds)*\
 Default: `0`
 
 The number of seconds to wait after the page finished loading before capturing the screenshot.
@@ -239,8 +239,8 @@ A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors)
 
 ###### offsetFrom
 
-Type: `string`<br>
-Values: `top | right | bottom | left`
+Type: `string`\
+Values: `'top' | 'right' | 'bottom' | 'left'`
 
 Offset origin.
 
@@ -252,14 +252,14 @@ Offset in pixels.
 
 ##### disableAnimations
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
 
 ##### isJavaScriptEnabled
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `true`
 
 Whether JavaScript on the website should be executed.
@@ -324,7 +324,7 @@ const captureWebsite = require('capture-website');
 
 ##### headers
 
-Type: `object`<br>
+Type: `object`\
 Default: `{}`
 
 Set custom [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
@@ -414,7 +414,7 @@ const checkSomething = require('./check-something');
 
 ##### debug
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Show the browser window so you can see what it's doing, redirect page console output to the terminal, and slow down each Puppeteer operation.
@@ -423,14 +423,14 @@ Note: This overrides `launchOptions` with `{headless: false, slowMo: 100}`.
 
 ##### darkMode
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
-Emulate preference of dark color scheme [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme).
+Emulate preference of dark color scheme ([`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)).
 
 ##### launchOptions
 
-Type: `object`<br>
+Type: `object`\
 Default: `{}`
 
 Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
@@ -439,7 +439,7 @@ Note: Some of the launch options are overridden by the `debug` option.
 
 ##### overwrite
 
-Type: `boolean`<br>
+Type: `boolean`\
 Default: `false`
 
 Overwrite the destination file if it exists instead of throwing an error.
