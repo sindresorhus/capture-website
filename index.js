@@ -6,8 +6,8 @@ const fileUrl = require('file-url');
 const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
-const sleep = require('util').promisify(setTimeout);
 
+const sleep = promisify(setTimeout);
 const writeFile = promisify(fs.writeFile);
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
@@ -322,30 +322,36 @@ const captureWebsite = async (input, options) => {
 		await options.beforeScreenshot(page, browser);
 	}
 
-	if(screenshotOptions.fullPage) {
+	if (screenshotOptions.fullPage) {
 		// Get the height of the rendered page
 		const bodyHandle = await page.$('body');
-		const { height } = await bodyHandle.boundingBox();
+		const ppHeight = await bodyHandle.boundingBox();
 		await bodyHandle.dispose();
 
 		// Scroll one viewport at a time, pausing to let content load
-	  const viewportHeight = viewportOptions.height;
-	  let viewportIncr = 0;
-	  while (viewportIncr + viewportHeight < height) {
-	    await page.evaluate(_viewportHeight => {
-	      window.scrollBy(0, _viewportHeight);
-	    }, viewportHeight);
-	    await sleep(20);
-	    viewportIncr = viewportIncr + viewportHeight;
-	  }
+		const viewportHeight = viewportOptions.height;
+		let viewportIncr = 0;
+		while (viewportIncr + viewportHeight < ppHeight) {
+			/* eslint-disable no-await-in-loop */
+			await page.evaluate(_viewportHeight => {
+				/* eslint-disable no-undef */
+				window.scrollBy(0, _viewportHeight);
+				/* eslint-enable no-undef */
+			}, viewportHeight);
+			await sleep(20);
+			/* eslint-enable no-await-in-loop */
+			viewportIncr += viewportHeight;
+		}
 
 		// Scroll back to top
-	  await page.evaluate(_ => {
-	    window.scrollTo(0, 0);
-	  });
+		await page.evaluate(_ => {
+			/* eslint-disable no-undef */
+			window.scrollTo(0, 0);
+			/* eslint-enable no-undef */
+		});
 
-	  // Some extra delay to let images load
-	  await sleep(100);
+		// Some extra delay to let images load
+		await sleep(100);
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
