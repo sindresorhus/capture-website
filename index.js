@@ -139,6 +139,7 @@ const captureWebsite = async (input, options) => {
 		timeout: 60, // The Puppeteer default of 30 is too short
 		delay: 0,
 		debug: false,
+		darkMode: false,
 		launchOptions: {},
 		_keepAlive: false,
 		isJavaScriptEnabled: true,
@@ -229,6 +230,11 @@ const captureWebsite = async (input, options) => {
 
 		await page.emulate(devices[options.emulateDevice]);
 	}
+
+	await page.emulateMediaFeatures([{
+		name: 'prefers-color-scheme',
+		value: options.darkMode ? 'dark' : 'light'
+	}]);
 
 	await page[isHTMLContent ? 'setContent' : 'goto'](input, {
 		timeout: timeoutInSeconds,

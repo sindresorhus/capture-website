@@ -225,6 +225,13 @@ declare namespace captureWebsite {
 		readonly debug?: boolean;
 
 		/**
+		Emulate preference of dark color scheme [prefers-color-scheme](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme).
+
+		@default false
+		*/
+		readonly darkMode?: boolean;
+
+		/**
 		Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
 
 		Note: Some of the launch options are overridden by the `debug` option.
