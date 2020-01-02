@@ -125,6 +125,10 @@ const parseCookie = (url, cookie) => {
 	ret.name = ret.key;
 	delete ret.key;
 
+	if (ret.expires) {
+		ret.expires = Math.floor(new Date(ret.expires) / 1000);
+	}
+
 	return ret;
 };
 
