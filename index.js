@@ -355,7 +355,7 @@ const captureWebsite = async (input, options) => {
 		});
 
 		// Some extra delay to let images load
-		await page.waitForFunction(imagesHaveLoaded, {timeout: 30});
+		await page.waitForFunction(imagesHaveLoaded, {timeout: 60});
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
