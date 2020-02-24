@@ -129,6 +129,10 @@ const parseCookie = (url, cookie) => {
 	return ret;
 };
 
+const imagesHaveLoaded = () => {
+	return [...document.images].map(i => i.complete);
+};
+
 const captureWebsite = async (input, options) => {
 	options = {
 		inputType: 'url',
@@ -351,7 +355,7 @@ const captureWebsite = async (input, options) => {
 		});
 
 		// Some extra delay to let images load
-		await sleep(100);
+		await page.waitForFunction(imagesHaveLoaded, {timeout: 30});
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
