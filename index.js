@@ -332,7 +332,7 @@ const captureWebsite = async (input, options) => {
 
 		// Scroll one viewport at a time, pausing to let content load
 		const viewportHeight = viewportOptions.height;
-		let viewportIncr = 0;
+		let viewportIncrement = 0;
 		while (viewportIncr + viewportHeight < ppHeight) {
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
