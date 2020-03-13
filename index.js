@@ -129,9 +129,7 @@ const parseCookie = (url, cookie) => {
 	return ret;
 };
 
-const imagesHaveLoaded = () => {
-	return [...document.images].map(i => i.complete);
-};
+const imagesHaveLoaded = () => [...document.images].map(element => element.complete);
 
 const captureWebsite = async (input, options) => {
 	options = {
