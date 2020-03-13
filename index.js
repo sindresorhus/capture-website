@@ -7,7 +7,6 @@ const puppeteer = require('puppeteer');
 const devices = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
 
-const sleep = promisify(setTimeout);
 const writeFile = promisify(fs.writeFile);
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
@@ -327,22 +326,23 @@ const captureWebsite = async (input, options) => {
 	if (screenshotOptions.fullPage) {
 		// Get the height of the rendered page
 		const bodyHandle = await page.$('body');
-		const ppHeight = await bodyHandle.boundingBox();
+		const bodyBoundingHeight = await bodyHandle.boundingBox();
 		await bodyHandle.dispose();
 
 		// Scroll one viewport at a time, pausing to let content load
 		const viewportHeight = viewportOptions.height;
 		let viewportIncrement = 0;
-		while (viewportIncr + viewportHeight < ppHeight) {
+		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
+			const navigationPromise = page.waitForNavigation();
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
 				/* eslint-disable no-undef */
 				window.scrollBy(0, _viewportHeight);
 				/* eslint-enable no-undef */
 			}, viewportHeight);
-			await sleep(20);
+			await navigationPromise;
 			/* eslint-enable no-await-in-loop */
-			viewportIncr += viewportHeight;
+			viewportIncrement += viewportHeight;
 		}
 
 		// Scroll back to top
