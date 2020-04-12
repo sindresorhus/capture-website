@@ -337,7 +337,7 @@ const captureWebsite = async (input, options) => {
 		const viewportHeight = viewportOptions.height;
 		let viewportIncrement = 0;
 		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
-			const navigationPromise = page.waitForNavigation();
+			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
 				/* eslint-disable no-undef */
