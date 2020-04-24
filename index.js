@@ -11,12 +11,6 @@ const writeFile = promisify(fs.writeFile);
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
-const hideElements = elements => {
-	for (const element of elements) {
-		element.style.visibility = 'hidden';
-	}
-};
-
 const removeElements = elements => {
 	for (const element of elements) {
 		element.style.display = 'none';
@@ -250,7 +244,9 @@ const captureWebsite = async (input, options) => {
 	}
 
 	if (options.hideElements) {
-		await Promise.all(options.hideElements.map(selector => page.$$eval(selector, hideElements)));
+		await page.addStyleTag({
+			content: `${options.hideElements.join(', ')} { visibility: hidden; }`
+		});
 	}
 
 	if (options.removeElements) {
