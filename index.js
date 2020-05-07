@@ -11,12 +11,6 @@ const writeFile = promisify(fs.writeFile);
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
-const removeElements = elements => {
-	for (const element of elements) {
-		element.style.display = 'none';
-	}
-};
-
 const scrollToElement = (element, options) => {
 	const isOverflown = element => {
 		return (
@@ -245,12 +239,14 @@ const captureWebsite = async (input, options) => {
 
 	if (options.hideElements) {
 		await page.addStyleTag({
-			content: `${options.hideElements.join(', ')} { visibility: hidden; }`
+			content: `${options.hideElements.join(', ')} { visibility: hidden !important; }`
 		});
 	}
 
 	if (options.removeElements) {
-		await Promise.all(options.removeElements.map(selector => page.$$eval(selector, removeElements)));
+		await page.addStyleTag({
+			content: `${options.removeElements.join(' ')} { display: none !important; }`
+		});
 	}
 
 	if (options.clickElement) {
