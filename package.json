@@ -4,13 +4,14 @@
 	"description": "Capture screenshots of websites",
 	"license": "MIT",
 	"repository": "sindresorhus/capture-website",
+	"funding": "https://github.com/sponsors/sindresorhus",
 	"author": {
 		"name": "Sindre Sorhus",
 		"email": "sindresorhus@gmail.com",
-		"url": "sindresorhus.com"
+		"url": "https://sindresorhus.com"
 	},
 	"engines": {
-		"node": ">=8"
+		"node": ">=10"
 	},
 	"scripts": {
 		"test": "xo && ava && tsd"
@@ -36,21 +37,26 @@
 	],
 	"dependencies": {
 		"file-url": "^3.0.0",
-		"puppeteer": "^2.0.0",
-		"tough-cookie": "^3.0.1"
+		"puppeteer": "^3.0.4",
+		"tough-cookie": "^4.0.0"
 	},
 	"devDependencies": {
-		"@types/puppeteer": "^1.20.2",
+		"@types/puppeteer": "^2.0.1",
 		"ava": "^2.0.0",
 		"create-test-server": "^3.0.1",
 		"delay": "^4.1.0",
 		"image-size": "^0.8.3",
 		"is-jpg": "^2.0.0",
 		"is-png": "^2.0.0",
-		"pify": "^4.0.1",
-		"png-js": "^0.1.1",
-		"tempy": "^0.3.0",
-		"tsd": "^0.10.0",
-		"xo": "^0.25.3"
+		"pify": "^5.0.0",
+		"png-js": "^1.0.0",
+		"tempy": "^0.5.0",
+		"tsd": "^0.11.0",
+		"xo": "^0.30.0"
+	},
+	"xo": {
+		"rules": {
+			"@typescript-eslint/prefer-readonly-parameter-types": "off"
+		}
 	}
 }

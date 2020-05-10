@@ -6,7 +6,7 @@ import isPng from 'is-png';
 import pify from 'pify';
 import PNG from 'png-js';
 import createTestServer from 'create-test-server';
-import devices from 'puppeteer/DeviceDescriptors';
+import {devicesMap} from 'puppeteer/DeviceDescriptors';
 import tempy from 'tempy';
 import delay from 'delay';
 import toughCookie from 'tough-cookie';
@@ -133,7 +133,7 @@ test('`scaleFactor` option', async t => {
 });
 
 test('`emulateDevice` option', async t => {
-	const device = devices['iPhone X'];
+	const device = devicesMap['iPhone X'];
 
 	const size = imageSize(await instance(server.url, {
 		emulateDevice: device.name

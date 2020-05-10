@@ -4,7 +4,7 @@ const {promisify} = require('util');
 const fs = require('fs');
 const fileUrl = require('file-url');
 const puppeteer = require('puppeteer');
-const devices = require('puppeteer/DeviceDescriptors');
+const {devicesMap} = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
 
 const writeFile = promisify(fs.writeFile);
@@ -104,20 +104,20 @@ const parseCookie = (url, cookie) => {
 
 	const jar = new toughCookie.CookieJar(undefined, {rejectPublicSuffixes: false});
 	jar.setCookieSync(cookie, url);
-	const ret = jar.serializeSync().cookies[0];
+	const returnValue = jar.serializeSync().cookies[0];
 
 	// Use this instead of the above when the following issue is fixed:
 	// https://github.com/salesforce/tough-cookie/issues/149
 	// const ret = toughCookie.parse(cookie).serializeSync();
 
-	ret.name = ret.key;
-	delete ret.key;
+	returnValue.name = returnValue.key;
+	delete returnValue.key;
 
-	if (ret.expires) {
-		ret.expires = Math.floor(new Date(ret.expires) / 1000);
+	if (returnValue.expires) {
+		returnValue.expires = Math.floor(new Date(returnValue.expires) / 1000);
 	}
 
-	return ret;
+	return returnValue;
 };
 
 const captureWebsite = async (input, options) => {
@@ -216,11 +216,11 @@ const captureWebsite = async (input, options) => {
 	await page.setViewport(viewportOptions);
 
 	if (options.emulateDevice) {
-		if (!(options.emulateDevice in devices)) {
+		if (!(options.emulateDevice in devicesMap)) {
 			throw new Error(`The device name \`${options.emulateDevice}\` is not supported`);
 		}
 
-		await page.emulate(devices[options.emulateDevice]);
+		await page.emulate(devicesMap[options.emulateDevice]);
 	}
 
 	await page.emulateMediaFeatures([{
@@ -340,7 +340,7 @@ module.exports.buffer = async (url, options) => captureWebsite(url, {...options,
 
 module.exports.base64 = async (url, options) => captureWebsite(url, {...options, encoding: 'base64'});
 
-module.exports.devices = Object.values(devices).map(device => device.name);
+module.exports.devices = Object.values(devicesMap).map(device => device.name);
 
 if (process.env.NODE_ENV === 'test') {
 	module.exports._startBrowser = puppeteer.launch.bind(puppeteer);
