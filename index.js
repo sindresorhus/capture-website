@@ -4,7 +4,6 @@ const {promisify} = require('util');
 const fs = require('fs');
 const fileUrl = require('file-url');
 const puppeteer = require('puppeteer');
-const {devicesMap} = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
 
 const writeFile = promisify(fs.writeFile);
@@ -216,11 +215,11 @@ const captureWebsite = async (input, options) => {
 	await page.setViewport(viewportOptions);
 
 	if (options.emulateDevice) {
-		if (!(options.emulateDevice in devicesMap)) {
+		if (!(options.emulateDevice in puppeteer.devices)) {
 			throw new Error(`The device name \`${options.emulateDevice}\` is not supported`);
 		}
 
-		await page.emulate(devicesMap[options.emulateDevice]);
+		await page.emulate(puppeteer.devices[options.emulateDevice]);
 	}
 
 	await page.emulateMediaFeatures([{
@@ -340,7 +339,7 @@ module.exports.buffer = async (url, options) => captureWebsite(url, {...options,
 
 module.exports.base64 = async (url, options) => captureWebsite(url, {...options, encoding: 'base64'});
 
-module.exports.devices = Object.values(devicesMap).map(device => device.name);
+module.exports.devices = Object.values(puppeteer.devices).map(device => device.name);
 
 if (process.env.NODE_ENV === 'test') {
 	module.exports._startBrowser = puppeteer.launch.bind(puppeteer);

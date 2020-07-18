@@ -37,12 +37,12 @@
 	],
 	"dependencies": {
 		"file-url": "^3.0.0",
-		"puppeteer": "^3.0.4",
+		"puppeteer": "^5.2.0",
 		"tough-cookie": "^4.0.0"
 	},
 	"devDependencies": {
-		"@types/puppeteer": "^2.0.1",
-		"ava": "^2.0.0",
+		"@types/puppeteer": "^3.0.1",
+		"ava": "^2.4.0",
 		"create-test-server": "^3.0.1",
 		"delay": "^4.1.0",
 		"image-size": "^0.8.3",
@@ -51,12 +51,7 @@
 		"pify": "^5.0.0",
 		"png-js": "^1.0.0",
 		"tempy": "^0.5.0",
-		"tsd": "^0.11.0",
-		"xo": "^0.30.0"
-	},
-	"xo": {
-		"rules": {
-			"@typescript-eslint/prefer-readonly-parameter-types": "off"
-		}
+		"tsd": "^0.13.1",
+		"xo": "^0.32.1"
 	}
 }
