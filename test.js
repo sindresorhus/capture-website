@@ -158,31 +158,14 @@ test('`fullPage` option', async t => {
 
 test('`fullPage` option - lazyloading', async t => {
 	const server = await createTestServer();
+	const imageAmount = 50;
 
 	server.get('/', async (request, response) => {
 		response.end(`
 			<body>
-				<div style="display: grid; grid-template-columns: repeat( auto-fill, minmax(150px, 1fr) );" id="grid"></div>
-				<script>
-					const numItemsToGenerate = 250; //how many gallery items you want on the screen
-					const numImagesAvailable = 1100; //how many total images are in the collection you are pulling from
-					const imageWidth = 150; //your desired image width in pixels
-					const imageHeight = 150; //desired image height in pixels
-					const collectionID = 9717149; //the collection ID from the original url
-					function renderGalleryItem(randomNumber){
-					fetch('https://source.unsplash.com/collection/'+collectionID+'/'+imageWidth+'x'+imageHeight+'/?sig='+randomNumber)
-					.then((response)=> {
-						let galleryItem = document.createElement('div');
-						galleryItem.classList.add('gallery-item');
-						galleryItem.innerHTML = '<img class="gallery-image" src="'+response.url+'" alt="gallery image" loading="lazy" />';
-						document.getElementById('grid').appendChild(galleryItem);
-					})
-					}
-					for(let i=0;i<numItemsToGenerate;i++){
-					let randomImageIndex = Math.floor(Math.random() * numImagesAvailable);
-					renderGalleryItem(randomImageIndex);
-					}
-				</script>
+				<div style="display: grid; grid-template-columns: repeat( auto-fill, minmax(150px, 1fr) );">
+				   ${Array(imageAmount).fill().map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy" />`).join('')}
+				</div>
 			</body>
 		`);
 	});
