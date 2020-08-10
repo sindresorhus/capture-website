@@ -6,7 +6,6 @@ It uses [Puppeteer](https://github.com/GoogleChrome/puppeteer) (Chrome) under th
 
 See [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) for the command-line tool.
 
-
 ## Install
 
 ```
@@ -14,7 +13,6 @@ $ npm install capture-website
 ```
 
 Note to Linux users: If you get a sandbox-related error, you need to enable [system sandboxing](#im-getting-a-sandbox-related-error).
-
 
 ## Usage
 
@@ -25,7 +23,6 @@ const captureWebsite = require('capture-website');
 	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
 })();
 ```
-
 
 ## API
 
@@ -72,7 +69,6 @@ Default: `'url'`\
 Values: `'url'` `'html'`
 
 Set it to `html` to treat `input` as HTML content.
-
 
 ```js
 const captureWebsite = require('capture-website');
@@ -452,7 +448,6 @@ Type: `string[]`
 
 Devices supported by the `emulateDevice` option.
 
-
 ## Tips
 
 ### Capturing multiple screenshots
@@ -480,7 +475,6 @@ const items = [
 
 *Check out [`filenamify-url`](https://github.com/sindresorhus/filenamify-url) if you need to create a filename from the URL.*
 
-
 ## FAQ
 
 ### I'm getting a sandbox-related error
@@ -507,7 +501,6 @@ const captureWebsite = require('capture-website');
 ### How is this different from your [Pageres](https://github.com/sindresorhus/pageres) project?
 
 The biggest difference is that Pageres supports capturing multiple screenshots in a single call and it automatically generates the filenames and writes the files. Also, when projects are popular and mature, like Pageres, it becomes harder to make drastic changes. There are many things I would change in Pageres today, but I don't want to risk making lots of breaking changes for such a large userbase before I know whether it will work out or not. So this package is a rethink of how I would have made Pageres had I started it today. I plan to bring some things back to Pageres over time.
-
 
 ## Related
 

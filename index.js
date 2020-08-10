@@ -4,24 +4,11 @@ const {promisify} = require('util');
 const fs = require('fs');
 const fileUrl = require('file-url');
 const puppeteer = require('puppeteer');
-const devices = require('puppeteer/DeviceDescriptors');
 const toughCookie = require('tough-cookie');
 
 const writeFile = promisify(fs.writeFile);
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
-
-const hideElements = elements => {
-	for (const element of elements) {
-		element.style.visibility = 'hidden';
-	}
-};
-
-const removeElements = elements => {
-	for (const element of elements) {
-		element.style.display = 'none';
-	}
-};
 
 const scrollToElement = (element, options) => {
 	const isOverflown = element => {
@@ -116,20 +103,20 @@ const parseCookie = (url, cookie) => {
 
 	const jar = new toughCookie.CookieJar(undefined, {rejectPublicSuffixes: false});
 	jar.setCookieSync(cookie, url);
-	const ret = jar.serializeSync().cookies[0];
+	const returnValue = jar.serializeSync().cookies[0];
 
 	// Use this instead of the above when the following issue is fixed:
 	// https://github.com/salesforce/tough-cookie/issues/149
 	// const ret = toughCookie.parse(cookie).serializeSync();
 
-	ret.name = ret.key;
-	delete ret.key;
+	returnValue.name = returnValue.key;
+	delete returnValue.key;
 
-	if (ret.expires) {
-		ret.expires = Math.floor(new Date(ret.expires) / 1000);
+	if (returnValue.expires) {
+		returnValue.expires = Math.floor(new Date(returnValue.expires) / 1000);
 	}
 
-	return ret;
+	return returnValue;
 };
 
 const imagesHaveLoaded = () => [...document.images].map(element => element.complete);
@@ -230,11 +217,11 @@ const captureWebsite = async (input, options) => {
 	await page.setViewport(viewportOptions);
 
 	if (options.emulateDevice) {
-		if (!(options.emulateDevice in devices)) {
+		if (!(options.emulateDevice in puppeteer.devices)) {
 			throw new Error(`The device name \`${options.emulateDevice}\` is not supported`);
 		}
 
-		await page.emulate(devices[options.emulateDevice]);
+		await page.emulate(puppeteer.devices[options.emulateDevice]);
 	}
 
 	await page.emulateMediaFeatures([{
@@ -252,11 +239,15 @@ const captureWebsite = async (input, options) => {
 	}
 
 	if (options.hideElements) {
-		await Promise.all(options.hideElements.map(selector => page.$$eval(selector, hideElements)));
+		await page.addStyleTag({
+			content: `${options.hideElements.join(', ')} { visibility: hidden !important; }`
+		});
 	}
 
 	if (options.removeElements) {
-		await Promise.all(options.removeElements.map(selector => page.$$eval(selector, removeElements)));
+		await page.addStyleTag({
+			content: `${options.removeElements.join(' ')} { display: none !important; }`
+		});
 	}
 
 	if (options.clickElement) {
@@ -383,7 +374,7 @@ module.exports.buffer = async (url, options) => captureWebsite(url, {...options,
 
 module.exports.base64 = async (url, options) => captureWebsite(url, {...options, encoding: 'base64'});
 
-module.exports.devices = Object.values(devices).map(device => device.name);
+module.exports.devices = Object.values(puppeteer.devices).map(device => device.name);
 
 if (process.env.NODE_ENV === 'test') {
 	module.exports._startBrowser = puppeteer.launch.bind(puppeteer);

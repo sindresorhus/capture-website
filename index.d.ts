@@ -1,5 +1,4 @@
 /// <reference lib="dom"/>
-/// <reference types="puppeteer"/>
 import {SetCookie, LaunchOptions, Page, Browser} from 'puppeteer';
 
 declare namespace captureWebsite {
@@ -147,7 +146,7 @@ declare namespace captureWebsite {
 		/**
 		Scroll to the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 		*/
-		readonly scrollToElement?: string | captureWebsite.ScrollToElementOptions
+		readonly scrollToElement?: string | ScrollToElementOptions;
 
 		/**
 		Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
@@ -201,7 +200,7 @@ declare namespace captureWebsite {
 
 		Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
 		*/
-		readonly cookies?: (string | SetCookie)[];
+		readonly cookies?: Array<string | SetCookie>;
 
 		/**
 		Credentials for [HTTP authentication](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication).
@@ -277,11 +276,11 @@ declare const captureWebsite: {
 	})();
 	```
 	*/
-	file(
+	file: (
 		input: string,
 		outputFilePath: string,
 		options?: captureWebsite.FileOptions
-	): Promise<void>;
+	) => Promise<void>;
 
 	/**
 	Capture a screenshot of the given `input`.
@@ -289,7 +288,7 @@ declare const captureWebsite: {
 	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@returns The screenshot as binary.
 	*/
-	buffer(input: string, options?: captureWebsite.Options): Promise<Buffer>;
+	buffer: (input: string, options?: captureWebsite.Options) => Promise<Buffer>;
 
 	/**
 	Capture a screenshot of the given `input`.
@@ -297,7 +296,7 @@ declare const captureWebsite: {
 	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@returns The screenshot as [Base64](https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding).
 	*/
-	base64(input: string, options?: captureWebsite.Options): Promise<string>;
+	base64: (input: string, options?: captureWebsite.Options) => Promise<string>;
 };
 
 export = captureWebsite;
