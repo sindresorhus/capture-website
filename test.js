@@ -156,6 +156,31 @@ test('`fullPage` option', async t => {
 	t.true(size.height > 100);
 });
 
+test('`fullPage` option - lazy loading', async t => {
+	const server = await createTestServer();
+	const imageCount = 50;
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body>
+				<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+					${[...new Array(imageCount).keys()].map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy">`).join('')}
+				</div>
+			</body>
+		`);
+	});
+
+	const size = imageSize(await instance(server.url, {
+		width: 200,
+		height: 300,
+		scaleFactor: 1,
+		fullPage: true
+	}));
+
+	t.is(size.width, 200);
+	t.true(size.height > 150);
+});
+
 test('`timeout` option', async t => {
 	const server = await createTestServer();
 

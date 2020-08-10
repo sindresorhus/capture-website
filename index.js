@@ -119,6 +119,8 @@ const parseCookie = (url, cookie) => {
 	return returnValue;
 };
 
+const imagesHaveLoaded = () => [...document.images].map(element => element.complete);
+
 const captureWebsite = async (input, options) => {
 	options = {
 		inputType: 'url',
@@ -314,6 +316,39 @@ const captureWebsite = async (input, options) => {
 
 	if (options.beforeScreenshot) {
 		await options.beforeScreenshot(page, browser);
+	}
+
+	if (screenshotOptions.fullPage) {
+		// Get the height of the rendered page
+		const bodyHandle = await page.$('body');
+		const bodyBoundingHeight = await bodyHandle.boundingBox();
+		await bodyHandle.dispose();
+
+		// Scroll one viewport at a time, pausing to let content load
+		const viewportHeight = viewportOptions.height;
+		let viewportIncrement = 0;
+		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
+			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
+			/* eslint-disable no-await-in-loop */
+			await page.evaluate(_viewportHeight => {
+				/* eslint-disable no-undef */
+				window.scrollBy(0, _viewportHeight);
+				/* eslint-enable no-undef */
+			}, viewportHeight);
+			await navigationPromise;
+			/* eslint-enable no-await-in-loop */
+			viewportIncrement += viewportHeight;
+		}
+
+		// Scroll back to top
+		await page.evaluate(_ => {
+			/* eslint-disable no-undef */
+			window.scrollTo(0, 0);
+			/* eslint-enable no-undef */
+		});
+
+		// Some extra delay to let images load
+		await page.waitForFunction(imagesHaveLoaded, {timeout: 60});
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
