@@ -156,15 +156,15 @@ test('`fullPage` option', async t => {
 	t.true(size.height > 100);
 });
 
-test('`fullPage` option - lazyloading', async t => {
+test('`fullPage` option - lazy loading', async t => {
 	const server = await createTestServer();
-	const imageAmount = 50;
+	const imageCount = 50;
 
 	server.get('/', async (request, response) => {
 		response.end(`
 			<body>
-				<div style="display: grid; grid-template-columns: repeat( auto-fill, minmax(150px, 1fr) );">
-				   ${[...new Array(imageAmount).keys()].map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy" />`).join('')}
+				<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+				   ${[...new Array(imageCount).keys()].map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy">`).join('')}
 				</div>
 			</body>
 		`);
