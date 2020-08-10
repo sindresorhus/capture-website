@@ -164,7 +164,7 @@ test('`fullPage` option - lazy loading', async t => {
 		response.end(`
 			<body>
 				<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
-				   ${[...new Array(imageCount).keys()].map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy">`).join('')}
+					${[...new Array(imageCount).keys()].map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy">`).join('')}
 				</div>
 			</body>
 		`);
