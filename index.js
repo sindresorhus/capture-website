@@ -342,9 +342,10 @@ const captureWebsite = async (input, options) => {
 		await page.evaluate(async _ => {
 			const selectors = [...document.images];
 			await Promise.all(selectors.map(img => {
-				if (img.complete) { 
+				if (img.complete) {
 					return;
 				}
+				
 				return new Promise((resolve, reject) => {
 					img.addEventListener('load', resolve);
 					img.addEventListener('error', reject);
