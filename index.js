@@ -345,7 +345,7 @@ const captureWebsite = async (input, options) => {
 				if (img.complete) {
 					return;
 				}
-				
+
 				return new Promise((resolve, reject) => {
 					img.addEventListener('load', resolve);
 					img.addEventListener('error', reject);
