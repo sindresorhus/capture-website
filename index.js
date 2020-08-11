@@ -339,7 +339,7 @@ const captureWebsite = async (input, options) => {
 		}
 
 		// Wait for images to be complete and scroll back to top 
-		await page.evaluate(_ => {
+		await page.evaluate(async _ => {
 			const selectors = Array.from(document.images);
 			await Promise.all(selectors.map(img => {
 				if (img.complete) return;
