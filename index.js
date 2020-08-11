@@ -119,8 +119,6 @@ const parseCookie = (url, cookie) => {
 	return returnValue;
 };
 
-const imagesHaveLoaded = () => [...document.images].map(element => element.complete);
-
 const captureWebsite = async (input, options) => {
 	options = {
 		inputType: 'url',
@@ -340,15 +338,20 @@ const captureWebsite = async (input, options) => {
 			viewportIncrement += viewportHeight;
 		}
 
-		// Scroll back to top
+		// Wait for images to be complete and scroll back to top 
 		await page.evaluate(_ => {
+			const selectors = Array.from(document.images);
+			await Promise.all(selectors.map(img => {
+				if (img.complete) return;
+				return new Promise((resolve, reject) => {
+					img.addEventListener('load', resolve);
+					img.addEventListener('error', reject);
+				});
+			}));
 			/* eslint-disable no-undef */
 			window.scrollTo(0, 0);
 			/* eslint-enable no-undef */
 		});
-
-		// Some extra delay to let images load
-		await page.waitForFunction(imagesHaveLoaded, {timeout: 60});
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
