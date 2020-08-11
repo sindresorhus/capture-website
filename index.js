@@ -338,11 +338,13 @@ const captureWebsite = async (input, options) => {
 			viewportIncrement += viewportHeight;
 		}
 
-		// Wait for images to be complete and scroll back to top 
+		// Wait for images to be complete and scroll back to top
 		await page.evaluate(async _ => {
-			const selectors = Array.from(document.images);
+			const selectors = [...document.images];
 			await Promise.all(selectors.map(img => {
-				if (img.complete) return;
+				if (img.complete) { 
+					return;
+				}
 				return new Promise((resolve, reject) => {
 					img.addEventListener('load', resolve);
 					img.addEventListener('error', reject);
