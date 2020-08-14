@@ -319,20 +319,18 @@ const captureWebsite = async (input, options) => {
 	if (screenshotOptions.fullPage) {
 		// Get the height of the rendered page
 		const bodyHandle = await page.$('body');
-		const bodyBoundingHeight = await bodyHandle.boundingBox();
+		const {height: bodyBoundingHeight} = await bodyHandle.boundingBox();
 		await bodyHandle.dispose();
 
 		// Scroll one viewport at a time, pausing to let content load
 		const viewportHeight = viewportOptions.height;
 		let viewportIncrement = 0;
 		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
-			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
 				/* eslint-disable-next-line no-undef */
 				window.scrollBy(0, _viewportHeight);
 			}, viewportHeight);
-			await navigationPromise;
 			/* eslint-enable no-await-in-loop */
 			viewportIncrement += viewportHeight;
 		}
