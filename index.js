@@ -329,9 +329,8 @@ const captureWebsite = async (input, options) => {
 			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
-				/* eslint-disable no-undef */
+				/* eslint-disable-next-line no-undef */
 				window.scrollBy(0, _viewportHeight);
-				/* eslint-enable no-undef */
 			}, viewportHeight);
 			await navigationPromise;
 			/* eslint-enable no-await-in-loop */
@@ -346,14 +345,14 @@ const captureWebsite = async (input, options) => {
 					return;
 				}
 
+				// eslint-disable-next-line no-unused-vars
 				return new Promise((resolve, reject) => {
-					img.addEventListener('load', resolve);
-					img.addEventListener('error', reject);
+					promisify(img.addEventListener)('load');
+					promisify(img.addEventListener)('error');
 				});
 			}));
-			/* eslint-disable no-undef */
+			/* eslint-disable-next-line no-undef */
 			window.scrollTo(0, 0);
-			/* eslint-enable no-undef */
 		});
 	}
 
