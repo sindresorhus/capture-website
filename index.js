@@ -327,15 +327,15 @@ const captureWebsite = async (input, options) => {
 		// Scroll one viewport at a time, pausing to let content load
 		const viewportHeight = viewportOptions.height;
 		let viewportIncrement = 0;
-		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
-			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
+
+		// TODO: Wait for AJAX requests
+		while (viewportIncrement + viewportHeight < bodyBoundingHeight.height) {
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
 				/* eslint-disable no-undef */
 				window.scrollBy(0, _viewportHeight);
 				/* eslint-enable no-undef */
 			}, viewportHeight);
-			await navigationPromise;
 			/* eslint-enable no-await-in-loop */
 			viewportIncrement += viewportHeight;
 		}
@@ -347,8 +347,12 @@ const captureWebsite = async (input, options) => {
 			/* eslint-enable no-undef */
 		});
 
-		// Some extra delay to let images load
-		await page.waitForFunction(imagesHaveLoaded, {timeout: 60});
+		try {
+			// Some extra delay to let images load
+			await page.waitForFunction(imagesHaveLoaded, {timeout: timeoutInSeconds});
+		} catch (error) {
+			console.warn('Error on loading images', error);
+		}
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
