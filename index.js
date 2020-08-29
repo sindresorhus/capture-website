@@ -246,7 +246,7 @@ const captureWebsite = async (input, options) => {
 
 	if (options.removeElements) {
 		await page.addStyleTag({
-			content: `${options.removeElements.join(' ')} { display: none !important; }`
+			content: `${options.removeElements.join(', ')} { display: none !important; }`
 		});
 	}
 
