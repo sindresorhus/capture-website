@@ -338,16 +338,12 @@ const captureWebsite = async (input, options) => {
 		// Wait for images to be complete and scroll back to top
 		await page.evaluate(async _ => {
 			const selectors = [...document.images];
-			await Promise.all(selectors.map(img => {
-				if (img.complete) {
-					return;
-				}
 
-				// eslint-disable-next-line no-unused-vars
-				return new Promise((resolve, reject) => {
-					promisify(img.addEventListener)('load');
-					promisify(img.addEventListener)('error');
-				});
+			await Promise.all(selectors.filter(img => !img.complete).map(img => {
+				return Promise.race([
+					promisify(img.addEventListener)('load'),
+					promisify(img.addEventListener)('error')
+				]);
 			}));
 			/* eslint-disable-next-line no-undef */
 			window.scrollTo(0, 0);
