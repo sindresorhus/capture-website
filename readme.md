@@ -6,7 +6,7 @@ It uses [Puppeteer](https://github.com/GoogleChrome/puppeteer) (Chrome) under th
 
 See [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) for the command-line tool.
 
-## Install
+## Install - An Amazing Project
 
 ```
 $ npm install capture-website
