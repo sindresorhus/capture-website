@@ -106,6 +106,7 @@ test('captureWebsite.base64()', async t => {
 		height: 100
 	});
 
+	t.is(typeof screenshot, 'string');
 	t.true(isPng(Buffer.from(screenshot, 'base64')));
 });
 

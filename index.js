@@ -370,9 +370,12 @@ module.exports.file = async (url, filePath, options = {}) => {
 	});
 };
 
-module.exports.buffer = async (url, options) => captureWebsite(url, {...options, encoding: 'binary'});
+module.exports.buffer = async (url, options) => captureWebsite(url, options);
 
-module.exports.base64 = async (url, options) => captureWebsite(url, {...options, encoding: 'base64'});
+module.exports.base64 = async (url, options) => {
+	const screenshot = await captureWebsite(url, options);
+	return screenshot.toString('base64');
+};
 
 module.exports.devices = Object.values(puppeteer.devices).map(device => device.name);
 
