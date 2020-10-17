@@ -303,7 +303,7 @@ const captureWebsite = async (input, options) => {
 	}
 
 	if (options.delay) {
-		await page.waitFor(options.delay * 1000);
+		await page.waitForTimeout(options.delay * 1000);
 	}
 
 	if (options.scrollToElement) {

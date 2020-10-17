@@ -37,21 +37,21 @@
 	],
 	"dependencies": {
 		"file-url": "^3.0.0",
-		"puppeteer": "^5.2.0",
+		"puppeteer": "^5.3.1",
 		"tough-cookie": "^4.0.0"
 	},
 	"devDependencies": {
-		"@types/puppeteer": "^3.0.1",
+		"@types/puppeteer": "^3.0.2",
 		"ava": "^2.4.0",
 		"create-test-server": "^3.0.1",
-		"delay": "^4.1.0",
-		"image-size": "^0.8.3",
+		"delay": "^4.4.0",
+		"image-size": "^0.9.1",
 		"is-jpg": "^2.0.0",
 		"is-png": "^2.0.0",
 		"pify": "^5.0.0",
 		"png-js": "^1.0.0",
-		"tempy": "^0.5.0",
+		"tempy": "^1.0.0",
 		"tsd": "^0.13.1",
-		"xo": "^0.32.1"
+		"xo": "^0.33.1"
 	}
 }
