@@ -1,6 +1,6 @@
 {
 	"name": "capture-website",
-	"version": "1.2.3",
+	"version": "1.2.4",
 	"description": "Capture screenshots of websites",
 	"license": "MIT",
 	"repository": "sindresorhus/capture-website",
