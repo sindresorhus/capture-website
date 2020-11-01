@@ -122,7 +122,7 @@ The default is what you would get if you captured a normal screenshot on a compu
 ##### emulateDevice
 
 Type: `string`\
-Values: [Devices](https://github.com/GoogleChrome/puppeteer/blob/master/lib/DeviceDescriptors.js) *(Use the `name` property)*
+Values: [Devices](https://github.com/puppeteer/puppeteer/blob/main/src/common/DeviceDescriptors.ts) *(Use the `name` property)*
 
 Make it look like the screenshot was taken on the specified device.
 
