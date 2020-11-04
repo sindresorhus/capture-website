@@ -136,6 +136,7 @@ const captureWebsite = async (input, options) => {
 		launchOptions: {},
 		_keepAlive: false,
 		isJavaScriptEnabled: true,
+		inset: 0,
 		...options
 	};
 
@@ -349,6 +350,43 @@ const captureWebsite = async (input, options) => {
 
 		// Some extra delay to let images load
 		await page.waitForFunction(imagesHaveLoaded, {timeout: timeoutInSeconds});
+	}
+
+	if (options.inset && !screenshotOptions.fullPage) {
+		const inset = {top: 0, right: 0, bottom: 0, left: 0};
+		for (const key of Object.keys(inset)) {
+			if (typeof options.inset === 'number') {
+				inset[key] = options.inset;
+			} else {
+				inset[key] = options.inset[key] || 0;
+			}
+		}
+
+		let clipOptions = screenshotOptions.clip;
+
+		if (!clipOptions) {
+			clipOptions = await page.evaluate(() => ({
+				x: 0,
+				y: 0,
+				/* eslint-disable no-undef */
+				height: window.innerHeight,
+				width: window.innerWidth
+				/* eslint-enable no-undef */
+			}));
+		}
+
+		const x = clipOptions.x + inset.left;
+		const y = clipOptions.y + inset.top;
+		const width = clipOptions.width - (inset.left + inset.right);
+		const height = clipOptions.height - (inset.top + inset.bottom);
+
+		if (width === 0 || height === 0) {
+			await page.close();
+
+			throw new Error('When using "clip" option the width or height of the screenshot cannot be equal to 0');
+		}
+
+		screenshotOptions.clip = {x, y, width, height};
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
