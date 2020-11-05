@@ -436,7 +436,7 @@ Positive values (e.g. `inset: 10`) will decrease the size of the screenshot.
 Negative values (e.g. `inset: { left: -10 }`) will increase the size of the screenshot.
 
 Note: This option is ignored if option `fullPage` is set to `true`. Can be combined with `element` option.
-Note: When the `width` or `height` of the screenshot are equal to `0` an error is thrown.
+Note: When the `width` or `height` of the screenshot is equal to `0` an error is thrown.
 
 Example: Include 10 pixels around element.
 
