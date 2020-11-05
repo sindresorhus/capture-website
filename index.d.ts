@@ -244,7 +244,7 @@ declare namespace captureWebsite {
 		Positive values (e.g. `inset: { top: 10 }`) will decrease the size of the screenshot.
 		Negative values (e.g. `inset: { left: -10 }`) will increase the size of the screenshot.
 
-		When the `width` or `height` of the box are equal to `0` an error is thrown.
+		When the `width` or `height` of the box is equal to `0` an error is thrown.
 
 		Note: Ignored when `fullPage` option is set to `true`. Can be combined with "element" option.
 		@default 0
