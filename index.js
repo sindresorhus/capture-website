@@ -1,4 +1,4 @@
-/* global document */
+/* global document, window */
 'use strict';
 const {promisify} = require('util');
 const fs = require('fs');
@@ -319,36 +319,39 @@ const captureWebsite = async (input, options) => {
 	}
 
 	if (screenshotOptions.fullPage) {
-		// Get the height of the rendered page
-		const bodyHandle = await page.$('body');
-		const bodyBoundingHeight = await bodyHandle.boundingBox();
-		await bodyHandle.dispose();
+		const autoScroll = async () => {
+			const isBottom = await page.evaluate(() => {
+				window.scrollBy(0, window.innerHeight);
+				return window.scrollY >= document.body.clientHeight - window.innerHeight;
+			});
 
-		// Scroll one viewport at a time, pausing to let content load
-		const viewportHeight = viewportOptions.height;
-		let viewportIncrement = 0;
-		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
-			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
-			/* eslint-disable no-await-in-loop */
-			await page.evaluate(_viewportHeight => {
-				/* eslint-disable no-undef */
-				window.scrollBy(0, _viewportHeight);
-				/* eslint-enable no-undef */
-			}, viewportHeight);
-			await navigationPromise;
-			/* eslint-enable no-await-in-loop */
-			viewportIncrement += viewportHeight;
+			await page.waitForFunction(imagesHaveLoaded, {timeout: timeoutInSeconds});
+
+			return !isBottom;
+		};
+
+		while (await autoScroll()) { /* eslint-disable-line no-await-in-loop */
+			// noop
 		}
 
-		// Scroll back to top
-		await page.evaluate(_ => {
-			/* eslint-disable no-undef */
-			window.scrollTo(0, 0);
-			/* eslint-enable no-undef */
-		});
+		// Chromium Height Limitations:  https://bugs.chromium.org/p/chromium/issues/detail?id=770769#c12
+		const height = await page.evaluate(() => document.body.clientHeight);
+		const maxTextureSize = 14 * 1024;
+		let maxScaleFactor = 1;
 
-		// Some extra delay to let images load
-		await page.waitForFunction(imagesHaveLoaded, {timeout: timeoutInSeconds});
+		if (height < maxTextureSize) {
+			maxScaleFactor = Number.parseFloat(Math.sqrt(maxTextureSize / height).toFixed(1));
+		} else {
+			maxScaleFactor = (maxTextureSize / height / 2);
+		}
+
+		// Adjust device scale to fit entire page
+		if (viewportOptions.deviceScaleFactor > maxScaleFactor) {
+			await page.setViewport({
+				...viewportOptions,
+				deviceScaleFactor: maxScaleFactor
+			});
+		}
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
