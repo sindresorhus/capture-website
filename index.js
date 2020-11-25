@@ -334,18 +334,16 @@ const captureWebsite = async (input, options) => {
 			// noop
 		}
 
-		// Chromium Height Limitations:  https://bugs.chromium.org/p/chromium/issues/detail?id=770769#c12
-		const height = await page.evaluate(() => document.body.clientHeight);
-		const maxTextureSize = 14 * 1024;
-		let maxScaleFactor = 1;
+		// Workaround for chromium height limitations:  https://bugs.chromium.org/p/chromium/issues/detail?id=770769#c12
+		const height = await page.evaluate(() => document.documentElement.scrollHeight);
+		const maxTextureSize = await page.evaluate(() => {
+			const canvas = document.createElement('canvas');
+			const webGL = canvas.getContext('webgl');
+			return webGL.getParameter(webGL.MAX_TEXTURE_SIZE);
+		});
 
-		if (height < maxTextureSize) {
-			maxScaleFactor = Number.parseFloat(Math.sqrt(maxTextureSize / height).toFixed(1));
-		} else {
-			maxScaleFactor = (maxTextureSize / height / 2);
-		}
-
-		// Adjust device scale to fit entire page
+		// Adjust screenshot to fit entire page within max canvas dimensions
+		const maxScaleFactor = Number.parseFloat((maxTextureSize / height).toFixed(2));
 		if (viewportOptions.deviceScaleFactor > maxScaleFactor) {
 			await page.setViewport({
 				...viewportOptions,
