@@ -317,23 +317,21 @@ const captureWebsite = async (input, options) => {
 	}
 
 	if (screenshotOptions.fullPage) {
-		const idleCallbackToken = 'CAPTURE_WEBSITE_SCROLL_READY';
 		const autoScroll = async () => {
-			// Scroll and check if done
-			const isBottom = await page.evaluate(idleCallbackToken => {
-				window[idleCallbackToken] = false;
+			// Scroll and check if page is at bottom
+			const isBottom = await page.evaluate(() => {
 				window.scrollBy(0, window.innerHeight);
-
-				// Wait for idle event loop to ensure client-side rendering is complete
-				window.requestIdleCallback(() => {
-					window[idleCallbackToken] = true;
-				}, {timeout: 100});
-
 				return window.scrollY >= document.body.clientHeight - window.innerHeight;
-			}, idleCallbackToken);
+			});
 
-			// Once the event loop is idle, ensure images are done loading
-			await page.waitForFunction(`window.${idleCallbackToken} === true`);
+			// Wait for idle event loop to ensure client-side rendering is complete
+			await page.evaluate(async () => {
+				return new Promise(resolve => {
+					window.requestIdleCallback(resolve, {timeout: 100});
+				});
+			});
+
+			// Ensure images are done loading
 			await page.waitForFunction(() => [...document.images].every(element => element.complete));
 
 			return !isBottom;
