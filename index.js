@@ -136,6 +136,7 @@ const captureWebsite = async (input, options) => {
 		launchOptions: {},
 		_keepAlive: false,
 		isJavaScriptEnabled: true,
+		preload: undefined,
 		...options
 	};
 
@@ -178,6 +179,10 @@ const captureWebsite = async (input, options) => {
 
 	const browser = options._browser || await puppeteer.launch(launchOptions);
 	const page = await browser.newPage();
+
+	if (options.preload) {
+		await page.evaluateOnNewDocument(options.preload);
+	}
 
 	await page.setJavaScriptEnabled(options.isJavaScriptEnabled);
 
