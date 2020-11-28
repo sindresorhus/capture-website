@@ -1,5 +1,5 @@
 /// <reference lib="dom"/>
-import {SetCookie, LaunchOptions, Page, Browser} from 'puppeteer';
+import {SetCookie, LaunchOptions, Page, Browser, Headers} from 'puppeteer';
 
 declare namespace captureWebsite {
 	interface Authentication {
