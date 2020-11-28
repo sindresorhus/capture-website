@@ -163,6 +163,11 @@ declare namespace captureWebsite {
 		@default true
 		*/
 		readonly isJavaScriptEnabled?: boolean;
+		
+		/**
+		Inject a function to be executed prior to navigation; useful for [altering the JavaScript environment](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageevaluateonnewdocumentpagefunction-args).
+		*/
+		readonly preload?: EvaluateFn;
 
 		/**
 		Inject [JavaScript modules](https://developers.google.com/web/fundamentals/primers/modules) into the page.
@@ -238,11 +243,6 @@ declare namespace captureWebsite {
 		@default {}
 		*/
 		readonly launchOptions?: LaunchOptions;
-
-		/**
-		 * Inject a function to be executed prior to navigation; useful for [altering the JavaScript environment](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageevaluateonnewdocumentpagefunction-args).
-		 */
-		readonly preload?: EvaluateFn;
 	}
 
 	interface FileOptions extends Options {
