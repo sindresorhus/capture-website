@@ -36,12 +36,12 @@
 		"jpg"
 	],
 	"dependencies": {
+		"@types/puppeteer": "^3.0.2",
 		"file-url": "^3.0.0",
 		"puppeteer": "^5.3.1",
 		"tough-cookie": "^4.0.0"
 	},
 	"devDependencies": {
-		"@types/puppeteer": "^3.0.2",
 		"ava": "^2.4.0",
 		"create-test-server": "^3.0.1",
 		"delay": "^4.4.0",
