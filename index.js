@@ -294,6 +294,10 @@ const captureWebsite = async (input, options) => {
 		});
 	}
 
+	if (options.beforeScreenshot) {
+		await options.beforeScreenshot(page, browser);
+	}
+
 	if (options.element) {
 		await page.waitForSelector(options.element, {
 			visible: true,
@@ -313,10 +317,6 @@ const captureWebsite = async (input, options) => {
 		} else {
 			await page.$eval(options.scrollToElement, scrollToElement);
 		}
-	}
-
-	if (options.beforeScreenshot) {
-		await options.beforeScreenshot(page, browser);
 	}
 
 	if (screenshotOptions.fullPage) {
