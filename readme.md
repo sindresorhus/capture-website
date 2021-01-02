@@ -1,4 +1,4 @@
-# capture-website [![Build Status](https://travis-ci.com/sindresorhus/capture-website.svg?branch=master)](https://travis-ci.com/sindresorhus/capture-website)
+# capture-website
 
 > Capture screenshots of websites
 
