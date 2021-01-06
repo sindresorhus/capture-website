@@ -208,7 +208,8 @@ declare namespace captureWebsite {
 		readonly authentication?: Authentication;
 
 		/**
-		The specified function is called right before the screenshot is captured. It gives you a lot of power to do custom stuff. The function can be async.
+		The specified function is called right before the screenshot is captured and before the bounding rectangle of `options.element` is calculated.
+		It gives you a lot of power to do custom stuff. The function can be async.
 
 		Note: Make sure to not call `page.close()` or `browser.close()`.
 		*/
