@@ -383,7 +383,7 @@ const captureWebsite = async (input, options) => {
 		if (width === 0 || height === 0) {
 			await page.close();
 
-			throw new Error('When using "clip" option the width or height of the screenshot cannot be equal to 0');
+			throw new Error('When using the `clip` option, the width or height of the screenshot cannot be equal to 0.');
 		}
 
 		screenshotOptions.clip = {x, y, width, height};
