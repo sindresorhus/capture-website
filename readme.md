@@ -426,7 +426,7 @@ Emulate preference of dark color scheme ([`prefers-color-scheme`](https://develo
 
 ##### inset
 
-Type: `object | number`
+Type: `object | number`\
 Default: 0
 
 Accepts an object `{ top?: number; right?: number; bottom?: number; left?: number }` or a `number` as a shorthand for all directions.
