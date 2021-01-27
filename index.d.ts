@@ -240,16 +240,33 @@ declare namespace captureWebsite {
 		readonly launchOptions?: LaunchOptions;
 
 		/**
-		Used to modify the bounding box of the screenshot.
-		Positive values (e.g. `inset: { top: 10 }`) will decrease the size of the screenshot.
+		Accepts an object `{ top?: number; right?: number; bottom?: number; left?: number }` or a `number` as a shorthand for all directions.
+
+		Modifies the bounding box of the screenshot.
+		Positive values (e.g. `inset: 10`) will decrease the size of the screenshot.
 		Negative values (e.g. `inset: { left: -10 }`) will increase the size of the screenshot.
 
-		When the `width` or `height` of the box is equal to `0` an error is thrown.
+		Note: This option is ignored if option `fullPage` is set to `true`. Can be combined with `element` option.
+		Note: When the `width` or `height` of the screenshot is equal to `0` an error is thrown.
 
-		Note: Ignored when `fullPage` option is set to `true`. Can be combined with "element" option.
+		Example: Include 10 pixels around element.
+
+		```js
+		(async () => {
+			await captureWebsite.file('index.html', 'screenshot.png', { element: '.logo', inset: -10 });
+		})();
+		```
+
+		Example: Ignore 15 pixels from top of the viewport.
+		```js
+		(async () => {
+			await captureWebsite.file('index.html', 'screenshot.png', { inset: { top: 15 } });
+		})();
+		```
+
 		@default 0
 		*/
-		readonly inset?: InsetOptions;
+		readonly inset?: number | Partial<Record<'top' | 'right' | 'bottom' | 'left', number>>;
 	}
 
 	interface FileOptions extends Options {
@@ -260,8 +277,6 @@ declare namespace captureWebsite {
 		*/
 		readonly overwrite?: boolean;
 	}
-
-	type InsetOptions = number | Partial<Record<'top' | 'right' | 'bottom' | 'left', number>>;
 }
 
 declare const captureWebsite: {
