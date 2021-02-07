@@ -181,6 +181,10 @@ const captureWebsite = async (input, options) => {
 	const browser = options._browser || await puppeteer.launch(launchOptions);
 	const page = await browser.newPage();
 
+	if (options.preloadFunction) {
+		await page.evaluateOnNewDocument(options.preloadFunction);
+	}
+
 	await page.setJavaScriptEnabled(options.isJavaScriptEnabled);
 
 	if (options.debug) {

@@ -1,3 +1,4 @@
+/* global document, window */
 import fs from 'fs';
 import test from 'ava';
 import imageSize from 'image-size';
@@ -851,4 +852,35 @@ test('`inset` option', async t => {
 			inset: 50
 		});
 	});
+});
+
+test('`preloadFunction` option', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div style="background-color: black; width: 100px; height: 100px;"></div>
+				<script>
+					window.toRed();
+				</script>
+			</body>
+		`);
+	});
+
+	const pixels = await getPngPixels(await instance(server.url, {
+		width: 100,
+		height: 100,
+		preloadFunction: () => {
+			window.toRed = () => {
+				document.querySelector('div').style.backgroundColor = 'red';
+			};
+		}
+	}));
+
+	t.is(pixels[0], 255);
+	t.is(pixels[1], 0);
+	t.is(pixels[2], 0);
+
+	await server.close();
 });
