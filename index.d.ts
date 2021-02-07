@@ -241,7 +241,7 @@ declare namespace captureWebsite {
 
 		/**
 		Inset the bounding box of the screenshot.
-		
+
 		@default 0
 
 		Accepts an object `{top?: number; right?: number; bottom?: number; left?: number}` or a `number` as a shorthand for all directions.
