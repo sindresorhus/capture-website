@@ -429,9 +429,10 @@ Emulate preference of dark color scheme ([`prefers-color-scheme`](https://develo
 Type: `object | number`\
 Default: `0`
 
+Inset the bounding box of the screenshot.
+
 Accepts an object `{top?: number; right?: number; bottom?: number; left?: number}` or a `number` as a shorthand for all directions.
 
-Modifies the bounding box of the screenshot.
 Positive values, for example `inset: 10`, will decrease the size of the screenshot.
 Negative values, for example `inset: {left: -10}`, will increase the size of the screenshot.
 
