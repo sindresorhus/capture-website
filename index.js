@@ -313,6 +313,7 @@ const captureWebsite = async (input, options) => {
 	}
 
 	if (options.scrollToElement) {
+		// eslint-disable-next-line unicorn/prefer-ternary
 		if (typeof options.scrollToElement === 'object') {
 			await page.$eval(options.scrollToElement.element, scrollToElement, options.scrollToElement);
 		} else {

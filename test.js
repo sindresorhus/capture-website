@@ -11,7 +11,7 @@ import delay from 'delay';
 import toughCookie from 'tough-cookie';
 import fileUrl from 'file-url';
 import puppeteer from 'puppeteer';
-import captureWebsite, {_startBrowser} from '.';
+import captureWebsite, {_startBrowser} from './index.js';
 
 const defaultResponse = (() => {
 	const style = 'background-color: black; width: 100px; height: 100px;';

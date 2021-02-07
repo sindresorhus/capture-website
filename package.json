@@ -36,7 +36,7 @@
 		"jpg"
 	],
 	"dependencies": {
-		"@types/puppeteer": "^3.0.2",
+		"@types/puppeteer": "^5.4.3",
 		"file-url": "^3.0.0",
 		"puppeteer": "^5.3.1",
 		"tough-cookie": "^4.0.0"
@@ -44,14 +44,14 @@
 	"devDependencies": {
 		"ava": "^2.4.0",
 		"create-test-server": "^3.0.1",
-		"delay": "^4.4.0",
-		"image-size": "^0.9.1",
+		"delay": "^5.0.0",
+		"image-size": "^0.9.3",
 		"is-jpg": "^2.0.0",
 		"is-png": "^2.0.0",
 		"pify": "^5.0.0",
 		"png-js": "^1.0.0",
 		"tempy": "^1.0.0",
-		"tsd": "^0.13.1",
-		"xo": "^0.33.1"
+		"tsd": "^0.14.0",
+		"xo": "^0.37.1"
 	}
 }
