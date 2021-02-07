@@ -424,6 +424,40 @@ Default: `false`
 
 Emulate preference of dark color scheme ([`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)).
 
+##### inset
+
+Type: `object | number`\
+Default: `0`
+
+Inset the bounding box of the screenshot.
+
+Accepts an object `{top?: number; right?: number; bottom?: number; left?: number}` or a `number` as a shorthand for all directions.
+
+Positive values, for example `inset: 10`, will decrease the size of the screenshot.
+Negative values, for example `inset: {left: -10}`, will increase the size of the screenshot.
+
+Note: This option is ignored if the `fullPage` option is set to `true`. Can be combined with the `element` option.
+Note: When the `width` or `height` of the screenshot is equal to `0` an error is thrown.
+
+Example: Include 10 pixels around the element.
+
+```js
+await captureWebsite.file('index.html', 'screenshot.png', {
+	element: '.logo',
+	inset: -10
+});
+```
+
+Example: Ignore 15 pixels from the top of the viewport.
+
+```js
+await captureWebsite.file('index.html', 'screenshot.png', {
+	inset: {
+		top: 15
+	}
+});
+```
+
 ##### launchOptions
 
 Type: `object`\

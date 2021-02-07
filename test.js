@@ -754,6 +754,8 @@ test('`darkMode` option', async t => {
 	}));
 
 	t.is(pixels[0], 255);
+	t.is(pixels[1], 255);
+	t.is(pixels[2], 255);
 
 	const pixels2 = await getPngPixels(await instance(server.url, {
 		width: 100,
@@ -762,6 +764,91 @@ test('`darkMode` option', async t => {
 	}));
 
 	t.is(pixels2[0], 0);
+	t.is(pixels2[1], 0);
+	t.is(pixels2[2], 0);
 
 	await server.close();
+});
+
+test('`inset` option', async t => {
+	const viewportOptions = {
+		scaleFactor: 1,
+		width: 100,
+		height: 100
+	};
+	// The `inset` and `fullPage` options are exclusive.
+	// See: https://github.com/puppeteer/puppeteer/blob/e45acce928429d0d1572e16943307a73ebd38d8a/src/common/Page.ts#L1620
+	// In such cases, the `inset` option should be ignored.
+	const withFullPageOption = await getPngPixels(await instance(server.url, {
+		...viewportOptions,
+		fullPage: true,
+		inset: 10
+	}));
+	// First pixel should be black. Image should have resolution 100x100.
+	t.is(withFullPageOption[0], 0);
+	t.is(withFullPageOption[1], 0);
+	t.is(withFullPageOption[2], 0);
+	t.true(withFullPageOption.length / 4 === 100 * 100);
+
+	// A document with black body with margin 10px containing
+	// two full-width `div` elements stacked on top of each other.
+	// First `div` element is red and has height of 20px.
+	// Second `div` element is white and has height of 500px.
+	const fixture = 'fixtures/inset-option.html';
+
+	// The `element` option overwrites the `fullPage` option,
+	// therefore should behave as if `fullPage` option was `false`.
+	const withElementOption = await getPngPixels(await instance(fixture, {
+		...viewportOptions,
+		element: 'body',
+		fullPage: true,
+		inset: 10
+	}));
+	// First pixel should be red. Image should have resolution 80*520.
+	t.is(withElementOption[0], 255);
+	t.is(withElementOption[1], 0);
+	t.is(withElementOption[2], 0);
+	t.true(withElementOption.length / 4 === 80 * 520);
+
+	const viewportPixels = await getPngPixels(await instance(fixture, {
+		...viewportOptions,
+		inset: 10
+	}));
+
+	// First pixel should be red. Image should have resolution 80x80.
+	t.is(viewportPixels[0], 255);
+	t.is(viewportPixels[1], 0);
+	t.is(viewportPixels[2], 0);
+	t.true(viewportPixels.length / 4 === 80 * 80);
+
+	const withTopInset = await getPngPixels(await instance(fixture, {
+		...viewportOptions,
+		inset: {top: 30, left: 10}
+	}));
+
+	// First pixel should be white. The image resolution should be 90x70.
+	t.is(withTopInset[0], 255);
+	t.is(withTopInset[1], 255);
+	t.is(withTopInset[2], 255);
+	t.true(withTopInset.length / 4 === 90 * 70);
+
+	const withNegativeInset = await getPngPixels(await instance(fixture, {
+		...viewportOptions,
+		element: '.header',
+		inset: -10
+	}));
+
+	// First pixel should be black. The image resolution should be 100x40.
+	t.is(withNegativeInset[0], 0);
+	t.is(withNegativeInset[1], 0);
+	t.is(withNegativeInset[2], 0);
+	t.true(withNegativeInset.length / 4 === 100 * 40);
+
+	// Should throw if `inset` width or height values are 0.
+	await t.throwsAsync(async () => {
+		await instance(fixture, {
+			...viewportOptions,
+			inset: 50
+		});
+	});
 });
