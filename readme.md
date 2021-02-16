@@ -476,6 +476,15 @@ Overwrite the destination file if it exists instead of throwing an error.
 
 *This option applies only to `captureWebsite.file()`.*
 
+##### preloadFunction
+
+Type: `string | Function`\
+Default: `undefined`
+
+Inject a function to be executed prior to navigation.
+
+This can be useful for [altering the JavaScript environment](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageevaluateonnewdocumentpagefunction-args). For example, you could define a global method on the `window`, overwrite `navigator.languages` to change the language presented by the browser, or mock `Math.random` to return a fixed value.
+
 ### captureWebsite.devices
 
 Type: `string[]`
