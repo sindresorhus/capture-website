@@ -1,4 +1,4 @@
-/* global document */
+/* global document, window */
 'use strict';
 const {promisify} = require('util');
 const fs = require('fs');
@@ -119,8 +119,6 @@ const parseCookie = (url, cookie) => {
 
 	return returnValue;
 };
-
-const imagesHaveLoaded = () => [...document.images].map(element => element.complete);
 
 const captureWebsite = async (input, options) => {
 	options = {
@@ -326,36 +324,46 @@ const captureWebsite = async (input, options) => {
 	}
 
 	if (screenshotOptions.fullPage) {
-		// Get the height of the rendered page
-		const bodyHandle = await page.$('body');
-		const bodyBoundingHeight = await bodyHandle.boundingBox();
-		await bodyHandle.dispose();
+		const autoScroll = async () => {
+			// Scroll and check if page is at bottom
+			const isBottom = await page.evaluate(() => {
+				window.scrollBy(0, window.innerHeight);
+				return window.scrollY >= document.body.clientHeight - window.innerHeight;
+			});
 
-		// Scroll one viewport at a time, pausing to let content load
-		const viewportHeight = viewportOptions.height;
-		let viewportIncrement = 0;
-		while (viewportIncrement + viewportHeight < bodyBoundingHeight) {
-			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
-			/* eslint-disable no-await-in-loop */
-			await page.evaluate(_viewportHeight => {
-				/* eslint-disable no-undef */
-				window.scrollBy(0, _viewportHeight);
-				/* eslint-enable no-undef */
-			}, viewportHeight);
-			await navigationPromise;
-			/* eslint-enable no-await-in-loop */
-			viewportIncrement += viewportHeight;
+			// Wait for idle event loop to ensure client-side rendering is complete
+			await page.evaluate(async () => {
+				return new Promise(resolve => {
+					window.requestIdleCallback(resolve, {timeout: 100});
+				});
+			});
+
+			// Ensure images are done loading
+			await page.waitForFunction(() => [...document.images].every(element => element.complete));
+
+			return !isBottom;
+		};
+
+		while (await autoScroll()) { /* eslint-disable-line no-await-in-loop */
+			// noop
 		}
 
-		// Scroll back to top
-		await page.evaluate(_ => {
-			/* eslint-disable no-undef */
-			window.scrollTo(0, 0);
-			/* eslint-enable no-undef */
+		// Workaround for chromium height limitations:  https://bugs.chromium.org/p/chromium/issues/detail?id=770769#c12
+		const height = await page.evaluate(() => document.documentElement.scrollHeight);
+		const maxTextureSize = await page.evaluate(() => {
+			const canvas = document.createElement('canvas');
+			const webGL = canvas.getContext('webgl');
+			return webGL.getParameter(webGL.MAX_TEXTURE_SIZE);
 		});
 
-		// Some extra delay to let images load
-		await page.waitForFunction(imagesHaveLoaded, {timeout: timeoutInSeconds});
+		// Adjust screenshot to fit entire page within max canvas dimensions
+		const maxScaleFactor = Number.parseFloat((maxTextureSize / height).toFixed(2));
+		if (viewportOptions.deviceScaleFactor > maxScaleFactor) {
+			await page.setViewport({
+				...viewportOptions,
+				deviceScaleFactor: maxScaleFactor
+			});
+		}
 	}
 
 	if (options.inset && !screenshotOptions.fullPage) {
