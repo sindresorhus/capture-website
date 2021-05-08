@@ -1,5 +1,5 @@
 /* global document, window */
-import fs from 'fs';
+import fs from 'node:fs';
 import test from 'ava';
 import imageSize from 'image-size';
 import isJpg from 'is-jpg';
@@ -12,7 +12,7 @@ import delay from 'delay';
 import toughCookie from 'tough-cookie';
 import fileUrl from 'file-url';
 import puppeteer from 'puppeteer';
-import captureWebsite, {_startBrowser} from './index.js';
+import captureWebsite from './index.js';
 
 const defaultResponse = (() => {
 	const style = 'background-color: black; width: 100px; height: 100px;';
@@ -40,7 +40,7 @@ let browser;
 let instance;
 test.before(async () => {
 	server = await createDefaultServer();
-	browser = await _startBrowser();
+	browser = await captureWebsite._startBrowser();
 
 	instance = (url, options) => captureWebsite.buffer(url, {
 		...options,
@@ -166,7 +166,7 @@ test('`fullPage` option - lazy loading', async t => {
 		response.end(`
 			<body>
 				<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
-					${[...new Array(imageCount).keys()].map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy">`).join('')}
+					${[...Array.from({length: imageCount}).keys()].map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy">`).join('')}
 				</div>
 			</body>
 		`);
@@ -195,7 +195,7 @@ test('`timeout` option', async t => {
 		width: 100,
 		height: 100,
 		timeout: 1
-	}), /1000 ms exceeded/);
+	}), {message: /1000 ms exceeded/});
 
 	await server.close();
 });

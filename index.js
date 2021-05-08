@@ -1,12 +1,8 @@
 /* global document */
-'use strict';
-const {promisify} = require('util');
-const fs = require('fs');
-const fileUrl = require('file-url');
-const puppeteer = require('puppeteer');
-const toughCookie = require('tough-cookie');
-
-const writeFile = promisify(fs.writeFile);
+import {promises as fs} from 'node:fs';
+import fileUrl from 'file-url';
+import puppeteer from 'puppeteer';
+import toughCookie from 'tough-cookie';
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
@@ -122,7 +118,7 @@ const parseCookie = (url, cookie) => {
 
 const imagesHaveLoaded = () => [...document.images].map(element => element.complete);
 
-const captureWebsite = async (input, options) => {
+const internalCaptureWebsite = async (input, options) => {
 	options = {
 		inputType: 'url',
 		width: 1280,
@@ -406,23 +402,27 @@ const captureWebsite = async (input, options) => {
 	return buffer;
 };
 
-module.exports.file = async (url, filePath, options = {}) => {
-	const screenshot = await captureWebsite(url, options);
+const captureWebsite = {};
 
-	await writeFile(filePath, screenshot, {
+captureWebsite.file = async (url, filePath, options = {}) => {
+	const screenshot = await internalCaptureWebsite(url, options);
+
+	await fs.writeFile(filePath, screenshot, {
 		flag: options.overwrite ? 'w' : 'wx'
 	});
 };
 
-module.exports.buffer = async (url, options) => captureWebsite(url, options);
+captureWebsite.buffer = async (url, options) => internalCaptureWebsite(url, options);
 
-module.exports.base64 = async (url, options) => {
-	const screenshot = await captureWebsite(url, options);
+captureWebsite.base64 = async (url, options) => {
+	const screenshot = await internalCaptureWebsite(url, options);
 	return screenshot.toString('base64');
 };
 
-module.exports.devices = Object.values(puppeteer.devices).map(device => device.name);
-
 if (process.env.NODE_ENV === 'test') {
-	module.exports._startBrowser = puppeteer.launch.bind(puppeteer);
+	captureWebsite._startBrowser = puppeteer.launch.bind(puppeteer);
 }
+
+export default captureWebsite;
+
+export const devices = Object.values(puppeteer.devices).map(device => device.name);

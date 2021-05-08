@@ -1,5 +1,4 @@
-'use strict';
-const captureWebsite = require('.');
+import captureWebsite from './index.js';
 
 // Run this file with `$ node example.js`
 

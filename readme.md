@@ -17,11 +17,9 @@ Note to Linux users: If you get a sandbox-related error, you need to enable [sys
 ## Usage
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
-})();
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
 ```
 
 ## API
@@ -51,11 +49,9 @@ Type: `string`
 The URL, file URL, data URL, local file path to the website, or HTML.
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('index.html', 'local-file.png');
-})();
+await captureWebsite.file('index.html', 'local-file.png');
 ```
 
 #### options
@@ -71,13 +67,11 @@ Values: `'url'` `'html'`
 Set it to `html` to treat `input` as HTML content.
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('<h1>Awesome!</h1>', 'screenshot.png', {
-		inputType: 'html'
-	});
-})();
+await captureWebsite.file('<h1>Awesome!</h1>', 'screenshot.png', {
+	inputType: 'html'
+});
 ```
 
 ##### width
@@ -129,13 +123,11 @@ Make it look like the screenshot was taken on the specified device.
 This overrides the `width`, `height`, `scaleFactor`, and `userAgent` options.
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-		emulateDevice: 'iPhone X'
-	});
-})();
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+	emulateDevice: 'iPhone X'
+});
 ```
 
 ##### fullPage
@@ -195,16 +187,14 @@ Can be useful for cleaning up the page.
 This sets [`visibility: hidden`](https://stackoverflow.com/a/133064/64949) on the matched elements.
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-		hideElements: [
-			'#sidebar',
-			'img.ad'
-		]
-	});
-})();
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+	hideElements: [
+		'#sidebar',
+		'img.ad'
+	]
+});
 ```
 
 ##### removeElements
@@ -271,19 +261,17 @@ Inject [JavaScript modules](https://developers.google.com/web/fundamentals/prime
 Accepts an array of inline code, absolute URLs, and local file paths (must have a `.js` extension).
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-		modules: [
-			'https://sindresorhus.com/remote-file.js',
-			'local-file.js',
-			`
-			document.body.style.backgroundColor = 'red';
-			`
-		]
-	});
-})();
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+	modules: [
+		'https://sindresorhus.com/remote-file.js',
+		'local-file.js',
+		`
+		document.body.style.backgroundColor = 'red';
+		`
+	]
+});
 ```
 
 ##### scripts
@@ -301,21 +289,19 @@ Inject CSS styles into the page.
 Accepts an array of inline code, absolute URLs, and local file paths (must have a `.css` extension).
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-		styles: [
-			'https://sindresorhus.com/remote-file.css',
-			'local-file.css',
-			`
-			body {
-				background-color: red;
-			}
-			`
-		]
-	});
-})();
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+	styles: [
+		'https://sindresorhus.com/remote-file.css',
+		'local-file.css',
+		`
+		body {
+			background-color: red;
+		}
+		`
+	]
+});
 ```
 
 ##### headers
@@ -326,15 +312,13 @@ Default: `{}`
 Set custom [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-		headers: {
-			'x-powered-by': 'https://github.com/sindresorhus/capture-website'
-		}
-	});
-})();
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+	headers: {
+		'x-powered-by': 'https://github.com/sindresorhus/capture-website'
+	}
+});
 ```
 
 ##### userAgent
@@ -352,23 +336,21 @@ Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/
 Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-		cookies: [
-			// This format is useful for when you copy it from the browser
-			'id=unicorn; Expires=Wed, 21 Oct 2018 07:28:00 GMT;',
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+	cookies: [
+		// This format is useful for when you copy it from the browser
+		'id=unicorn; Expires=Wed, 21 Oct 2018 07:28:00 GMT;',
 
-			// This format is useful for when you have to manually create a cookie
-			{
-				name: 'id',
-				value: 'unicorn',
-				expires: Math.round(new Date('2018-10-21').getTime() / 1000)
-			}
-		]
-	});
-})();
+		// This format is useful for when you have to manually create a cookie
+		{
+			name: 'id',
+			value: 'unicorn',
+			expires: Math.round(new Date('2018-10-21').getTime() / 1000)
+		}
+	]
+});
 ```
 
 ##### authentication
@@ -394,18 +376,16 @@ The specified function is called right before the screenshot is captured, as wel
 Note: Make sure to not call `page.close()` or `browser.close()`.
 
 ```js
-const captureWebsite = require('capture-website');
-const checkSomething = require('./check-something');
+import captureWebsite from 'capture-website';
+import checkSomething from './check-something.js';
 
-(async () => {
-	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-		beforeScreenshot: async (page, browser) => {
-			await checkSomething();
-			await page.click('#activate-button');
-			await page.waitForSelector('.finished');
-		}
-	});
-})();
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+	beforeScreenshot: async (page, browser) => {
+		await checkSomething();
+		await page.click('#activate-button');
+		await page.waitForSelector('.finished');
+	}
+});
 ```
 
 ##### debug
@@ -442,6 +422,8 @@ Note: When the `width` or `height` of the screenshot is equal to `0` an error is
 Example: Include 10 pixels around the element.
 
 ```js
+import captureWebsite from 'capture-website';
+
 await captureWebsite.file('index.html', 'screenshot.png', {
 	element: '.logo',
 	inset: -10
@@ -451,6 +433,8 @@ await captureWebsite.file('index.html', 'screenshot.png', {
 Example: Ignore 15 pixels from the top of the viewport.
 
 ```js
+import captureWebsite from 'capture-website';
+
 await captureWebsite.file('index.html', 'screenshot.png', {
 	inset: {
 		top: 15
@@ -496,7 +480,7 @@ Devices supported by the `emulateDevice` option.
 ### Capturing multiple screenshots
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
 const options = {
 	width: 1920,
@@ -509,11 +493,9 @@ const items = [
 	// …
 ];
 
-(async () => {
-	await Promise.all(items.map(([url, filename]) => {
-		return captureWebsite.file(url, `${filename}.png`, options);
-	}));
-})();
+await Promise.all(items.map(([url, filename]) => {
+	return captureWebsite.file(url, `${filename}.png`, options);
+}));
 ```
 
 *Check out [`filenamify-url`](https://github.com/sindresorhus/filenamify-url) if you need to create a filename from the URL.*
@@ -527,18 +509,16 @@ If you get an error like `No usable sandbox!` or `Running as root without --no-s
 Alternatively, if you completely trust the content, you can disable sandboxing (strongly discouraged):
 
 ```js
-const captureWebsite = require('capture-website');
+import captureWebsite from 'capture-website';
 
-(async () => {
-	await captureWebsite.file('…', '…', {
-		launchOptions: {
-			args: [
-				'--no-sandbox',
-				'--disable-setuid-sandbox'
-			]
-		}
-	});
-})();
+await captureWebsite.file('…', '…', {
+	launchOptions: {
+		args: [
+			'--no-sandbox',
+			'--disable-setuid-sandbox'
+		]
+	}
+});
 ```
 
 ### How is this different from your [Pageres](https://github.com/sindresorhus/pageres) project?

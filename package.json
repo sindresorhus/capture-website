@@ -10,10 +10,13 @@
 		"email": "sindresorhus@gmail.com",
 		"url": "https://sindresorhus.com"
 	},
+	"type": "module",
+	"exports": "./index.js",
 	"engines": {
-		"node": ">=10"
+		"node": ">=12.20"
 	},
 	"scripts": {
+		"//test": "xo && ava",
 		"test": "xo && ava && tsd"
 	},
 	"files": [
@@ -36,22 +39,29 @@
 		"jpg"
 	],
 	"dependencies": {
-		"@types/puppeteer": "^5.4.3",
-		"file-url": "^3.0.0",
-		"puppeteer": "^5.3.1",
+		"file-url": "^4.0.0",
+		"puppeteer": "^9.1.1",
 		"tough-cookie": "^4.0.0"
 	},
 	"devDependencies": {
-		"ava": "^2.4.0",
+		"ava": "^3.15.0",
 		"create-test-server": "^3.0.1",
 		"delay": "^5.0.0",
-		"image-size": "^0.9.3",
+		"image-size": "^1.0.0",
 		"is-jpg": "^2.0.0",
-		"is-png": "^2.0.0",
+		"is-png": "^3.0.0",
 		"pify": "^5.0.0",
 		"png-js": "^1.0.0",
-		"tempy": "^1.0.0",
+		"tempy": "^1.0.1",
 		"tsd": "^0.14.0",
-		"xo": "^0.37.1"
+		"xo": "^0.39.1"
+	},
+	"tsd": {
+		"compilerOptions": {
+			"lib": [
+				"dom",
+				"es2019"
+			]
+		}
 	}
 }

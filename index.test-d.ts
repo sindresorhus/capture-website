@@ -1,5 +1,5 @@
 import {expectType} from 'tsd';
-import captureWebsite = require('.');
+import captureWebsite, {devices} from './index.js';
 
 expectType<Promise<void>>(
 	captureWebsite.file('https://github.com/sindresorhus/capture-website#readme', './page.png', {
@@ -21,4 +21,4 @@ expectType<Promise<Buffer>>(
 	captureWebsite.buffer('https://github.com/sindresorhus/capture-website#readme')
 );
 
-expectType<string[]>(captureWebsite.devices);
+expectType<string[]>(devices);
