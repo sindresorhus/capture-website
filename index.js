@@ -178,7 +178,7 @@ const internalCaptureWebsite = async (input, options) => {
 	const page = await browser.newPage();
 
 	if (options.preloadFunction) {
-		await page.evaluateOnNewDocument(options.preloadFunction);
+		options.preloadFunction(page.evaluateOnNewDocument);
 	}
 
 	await page.setJavaScriptEnabled(options.isJavaScriptEnabled);
