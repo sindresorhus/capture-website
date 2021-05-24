@@ -462,7 +462,7 @@ Overwrite the destination file if it exists instead of throwing an error.
 
 ##### preloadFunction
 
-Type: `Function`\
+Type: `Function | string | [Function, props]`\
 Default: `undefined`
 
 Inject a function to be executed prior to navigation.
