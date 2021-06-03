@@ -240,13 +240,13 @@ const internalCaptureWebsite = async (input, options) => {
 		await page.evaluate(disableAnimations, options.disableAnimations);
 	}
 
-	if (options.hideElements) {
+	if (Array.isArray(options.hideElements) && options.hideElements.length > 0) {
 		await page.addStyleTag({
 			content: `${options.hideElements.join(', ')} { visibility: hidden !important; }`
 		});
 	}
 
-	if (options.removeElements) {
+	if (Array.isArray(options.removeElements) && options.removeElements.length > 0) {
 		await page.addStyleTag({
 			content: `${options.removeElements.join(', ')} { display: none !important; }`
 		});
