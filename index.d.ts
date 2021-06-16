@@ -1,4 +1,20 @@
-import {LaunchOptions, Page, Browser, EvaluateFn, Protocol} from 'puppeteer';
+import {
+	LaunchOptions as PuppeteerLaunchOptions,
+	BrowserLaunchArgumentOptions,
+	BrowserConnectOptions,
+	Page,
+	Browser,
+	EvaluateFn,
+	Protocol,
+	Product
+} from 'puppeteer';
+
+export type LaunchOptions = PuppeteerLaunchOptions &
+BrowserLaunchArgumentOptions &
+BrowserConnectOptions & {
+	product?: Product;
+	extraPrefsFirefox?: Record<string, unknown>;
+};
 
 export interface Authentication {
 	readonly username: string;
