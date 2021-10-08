@@ -1,4 +1,5 @@
 /* global document */
+import process from 'node:process';
 import {promises as fs} from 'node:fs';
 import fileUrl from 'file-url';
 import puppeteer from 'puppeteer';
@@ -7,12 +8,10 @@ import toughCookie from 'tough-cookie';
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
 const scrollToElement = (element, options) => {
-	const isOverflown = element => {
-		return (
-			element.scrollHeight > element.clientHeight ||
-			element.scrollWidth > element.clientWidth
-		);
-	};
+	const isOverflown = element => (
+		element.scrollHeight > element.clientHeight
+			|| element.scrollWidth > element.clientWidth
+	);
 
 	const findScrollParent = element => {
 		if (element === undefined) {
@@ -30,7 +29,7 @@ const scrollToElement = (element, options) => {
 		if (options === undefined) {
 			return {
 				x: rect.left,
-				y: rect.top
+				y: rect.top,
 			};
 		}
 
@@ -40,22 +39,22 @@ const scrollToElement = (element, options) => {
 			case 'top':
 				return {
 					x: rect.left,
-					y: rect.top + offset
+					y: rect.top + offset,
 				};
 			case 'right':
 				return {
 					x: rect.left - offset,
-					y: rect.top
+					y: rect.top,
 				};
 			case 'bottom':
 				return {
 					x: rect.left,
-					y: rect.top - offset
+					y: rect.top - offset,
 				};
 			case 'left':
 				return {
 					x: rect.left + offset,
-					y: rect.top
+					y: rect.top,
 				};
 			default:
 				throw new Error('Invalid `scrollToElement.offsetFrom` value');
@@ -121,7 +120,7 @@ const imagesHaveLoaded = () => [...document.images].map(element => element.compl
 const internalCaptureWebsite = async (input, options) => {
 	options = {
 		launchOptions: {},
-		...options
+		...options,
 	};
 	const {launchOptions} = options;
 
@@ -162,7 +161,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		_keepAlive: false,
 		isJavaScriptEnabled: true,
 		inset: 0,
-		...options
+		...options,
 	};
 
 	const isHTMLContent = options.inputType === 'html';
@@ -174,7 +173,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	const viewportOptions = {
 		width: options.width,
 		height: options.height,
-		deviceScaleFactor: options.scaleFactor
+		deviceScaleFactor: options.scaleFactor,
 	};
 
 	const screenshotOptions = {};
@@ -246,12 +245,12 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 
 	await page.emulateMediaFeatures([{
 		name: 'prefers-color-scheme',
-		value: options.darkMode ? 'dark' : 'light'
+		value: options.darkMode ? 'dark' : 'light',
 	}]);
 
 	await page[isHTMLContent ? 'setContent' : 'goto'](input, {
 		timeout: timeoutInMilliseconds,
-		waitUntil: 'networkidle2'
+		waitUntil: 'networkidle2',
 	});
 
 	if (options.disableAnimations) {
@@ -260,13 +259,13 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 
 	if (Array.isArray(options.hideElements) && options.hideElements.length > 0) {
 		await page.addStyleTag({
-			content: `${options.hideElements.join(', ')} { visibility: hidden !important; }`
+			content: `${options.hideElements.join(', ')} { visibility: hidden !important; }`,
 		});
 	}
 
 	if (Array.isArray(options.removeElements) && options.removeElements.length > 0) {
 		await page.addStyleTag({
-			content: `${options.removeElements.join(', ')} { display: none !important; }`
+			content: `${options.removeElements.join(', ')} { display: none !important; }`,
 		});
 	}
 
@@ -282,34 +281,28 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (options.modules) {
-		await Promise.all(options.modules.map(module_ => {
-			return page.addScriptTag({
-				[getInjectKey('js', module_)]: module_,
-				type: 'module'
-			});
-		}));
+		await Promise.all(options.modules.map(module_ => page.addScriptTag({
+			[getInjectKey('js', module_)]: module_,
+			type: 'module',
+		})));
 	}
 
 	if (options.scripts) {
-		await Promise.all(options.scripts.map(script => {
-			return page.addScriptTag({
-				[getInjectKey('js', script)]: script
-			});
-		}));
+		await Promise.all(options.scripts.map(script => page.addScriptTag({
+			[getInjectKey('js', script)]: script,
+		})));
 	}
 
 	if (options.styles) {
-		await Promise.all(options.styles.map(style => {
-			return page.addStyleTag({
-				[getInjectKey('css', style)]: style
-			});
-		}));
+		await Promise.all(options.styles.map(style => page.addStyleTag({
+			[getInjectKey('css', style)]: style,
+		})));
 	}
 
 	if (options.waitForElement) {
 		await page.waitForSelector(options.waitForElement, {
 			visible: true,
-			timeout: timeoutInMilliseconds
+			timeout: timeoutInMilliseconds,
 		});
 	}
 
@@ -320,7 +313,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	if (options.element) {
 		await page.waitForSelector(options.element, {
 			visible: true,
-			timeout: timeoutInMilliseconds
+			timeout: timeoutInMilliseconds,
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		screenshotOptions.fullPage = false;
@@ -390,7 +383,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 				y: 0,
 				/* eslint-disable no-undef */
 				height: window.innerHeight,
-				width: window.innerWidth
+				width: window.innerWidth,
 				/* eslint-enable no-undef */
 			}));
 		}
@@ -418,7 +411,7 @@ captureWebsite.file = async (url, filePath, options = {}) => {
 	const screenshot = await internalCaptureWebsite(url, options);
 
 	await fs.writeFile(filePath, screenshot, {
-		flag: options.overwrite ? 'w' : 'wx'
+		flag: options.overwrite ? 'w' : 'wx',
 	});
 };
 

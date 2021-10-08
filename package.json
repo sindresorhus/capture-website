@@ -40,7 +40,7 @@
 	],
 	"dependencies": {
 		"file-url": "^4.0.0",
-		"puppeteer": "^9.1.1",
+		"puppeteer": "^10.4.0",
 		"tough-cookie": "^4.0.0"
 	},
 	"devDependencies": {
@@ -48,13 +48,13 @@
 		"create-test-server": "^3.0.1",
 		"delay": "^5.0.0",
 		"image-size": "^1.0.0",
-		"is-jpg": "^2.0.0",
-		"is-png": "^3.0.0",
+		"is-jpg": "^3.0.0",
+		"is-png": "^3.0.1",
 		"pify": "^5.0.0",
 		"png-js": "^1.0.0",
-		"tempy": "^1.0.1",
-		"tsd": "^0.14.0",
-		"xo": "^0.39.1"
+		"tempy": "^2.0.0",
+		"tsd": "^0.17.0",
+		"xo": "^0.45.0"
 	},
 	"tsd": {
 		"compilerOptions": {

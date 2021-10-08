@@ -1,3 +1,4 @@
+import {Buffer} from 'node:buffer';
 import {
 	LaunchOptions as PuppeteerLaunchOptions,
 	BrowserLaunchArgumentOptions,
@@ -6,7 +7,7 @@ import {
 	Browser,
 	EvaluateFn,
 	Protocol,
-	Product
+	Product,
 } from 'puppeteer';
 
 export type LaunchOptions = PuppeteerLaunchOptions &

@@ -1,4 +1,5 @@
 /* global document, window */
+import {Buffer} from 'node:buffer';
 import fs from 'node:fs';
 import test from 'ava';
 import imageSize from 'image-size';
@@ -45,7 +46,7 @@ test.before(async () => {
 	instance = (url, options) => captureWebsite.buffer(url, {
 		...options,
 		_browser: browser,
-		_keepAlive: true
+		_keepAlive: true,
 	});
 });
 
@@ -57,28 +58,28 @@ test.after(async () => {
 test('capture screenshot - from url', async t => {
 	t.true(isPng(await instance(server.url, {
 		width: 100,
-		height: 100
+		height: 100,
 	})));
 });
 
 test('capture screenshot - from local file', async t => {
 	t.true(isPng(await instance('fixtures/local-file.html', {
 		width: 100,
-		height: 100
+		height: 100,
 	})));
 });
 
 test('capture screenshot - from file URL', async t => {
 	t.true(isPng(await instance(fileUrl('fixtures/local-file.html'), {
 		width: 100,
-		height: 100
+		height: 100,
 	})));
 });
 
 test('capture screenshot - from data URL', async t => {
 	t.true(isPng(await instance('data:text/html,<h1>Awesome!</h1>', {
 		width: 100,
-		height: 100
+		height: 100,
 	})));
 });
 
@@ -86,7 +87,7 @@ test('capture screenshot - from HTML content', async t => {
 	t.true(isPng(await instance('<h1>Awesome!</h1>', {
 		inputType: 'html',
 		width: 100,
-		height: 100
+		height: 100,
 	})));
 });
 
@@ -95,7 +96,7 @@ test('captureWebsite.file()', async t => {
 
 	await captureWebsite.file(server.url, filePath, {
 		width: 100,
-		height: 100
+		height: 100,
 	});
 
 	t.true(isPng(fs.readFileSync(filePath)));
@@ -104,7 +105,7 @@ test('captureWebsite.file()', async t => {
 test('captureWebsite.base64()', async t => {
 	const screenshot = await captureWebsite.base64(server.url, {
 		width: 100,
-		height: 100
+		height: 100,
 	});
 
 	t.is(typeof screenshot, 'string');
@@ -115,7 +116,7 @@ test('`type` option', async t => {
 	t.true(isJpg(await instance(server.url, {
 		width: 100,
 		height: 100,
-		type: 'jpeg'
+		type: 'jpeg',
 	})));
 });
 
@@ -127,7 +128,7 @@ test('`scaleFactor` option', async t => {
 	const size = imageSize(await instance(server.url, {
 		width: sizeOption,
 		height: sizeOption,
-		scaleFactor
+		scaleFactor,
 	}));
 
 	t.is(size.width, expectedSize);
@@ -138,7 +139,7 @@ test('`emulateDevice` option', async t => {
 	const device = puppeteer.devices['iPhone X'];
 
 	const size = imageSize(await instance(server.url, {
-		emulateDevice: device.name
+		emulateDevice: device.name,
 	}));
 
 	const {viewport} = device;
@@ -151,7 +152,7 @@ test('`fullPage` option', async t => {
 		width: 100,
 		height: 200,
 		scaleFactor: 1,
-		fullPage: true
+		fullPage: true,
 	}));
 
 	t.is(size.width, 100);
@@ -176,7 +177,7 @@ test('`fullPage` option - lazy loading', async t => {
 		width: 200,
 		height: 300,
 		scaleFactor: 1,
-		fullPage: true
+		fullPage: true,
 	}));
 
 	t.is(size.width, 200);
@@ -194,7 +195,7 @@ test('`timeout` option', async t => {
 	await t.throwsAsync(instance(server.url, {
 		width: 100,
 		height: 100,
-		timeout: 1
+		timeout: 1,
 	}), {message: /1000 ms exceeded/});
 
 	await server.close();
@@ -205,7 +206,7 @@ test('`element` option - capture DOM element', async t => {
 		width: 400,
 		height: 400,
 		scaleFactor: 1,
-		element: 'div'
+		element: 'div',
 	}));
 
 	t.is(size.width, 100);
@@ -232,7 +233,7 @@ test('`element` option - wait for DOM element', async t => {
 		width: 400,
 		height: 400,
 		scaleFactor: 1,
-		element: 'div'
+		element: 'div',
 	}));
 
 	t.is(size.width, 100);
@@ -246,8 +247,8 @@ test('`hideElements` option', async t => {
 		width: 100,
 		height: 100,
 		hideElements: [
-			'div'
-		]
+			'div',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -258,8 +259,8 @@ test('`removeElements` option', async t => {
 		width: 100,
 		height: 100,
 		removeElements: [
-			'div'
-		]
+			'div',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -284,7 +285,7 @@ test('`clickElement` option', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
-		clickElement: 'div'
+		clickElement: 'div',
 	}));
 
 	t.is(pixels[0], 255);
@@ -315,7 +316,7 @@ test('`scrollToElement` option as string', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
-		scrollToElement: '#black'
+		scrollToElement: '#black',
 	}));
 
 	t.is(pixels[0], 0);
@@ -349,8 +350,8 @@ test('`scrollToElement` option as object', async t => {
 		scrollToElement: {
 			element: '#green',
 			offsetFrom: 'top',
-			offset: 100
-		}
+			offset: 100,
+		},
 	}));
 
 	t.is(pixels[0], 0);
@@ -378,7 +379,7 @@ test('`disableAnimations` option', async t => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
-		disableAnimations: true
+		disableAnimations: true,
 	}));
 
 	t.is(pixels[0], 0);
@@ -408,7 +409,7 @@ test('`isJavaScriptEnabled: false` option', async t => {
 		width: 100,
 		height: 100,
 		delay: 1,
-		isJavaScriptEnabled: false
+		isJavaScriptEnabled: false,
 	}));
 
 	t.is(pixels[0], 0);
@@ -424,8 +425,8 @@ test('`isJavaScriptEnabled: false` works with the `scripts` option', async t => 
 		height: 100,
 		isJavaScriptEnabled: false,
 		scripts: [
-			'document.querySelector(\'div\').style.backgroundColor = \'red\';'
-		]
+			'document.querySelector(\'div\').style.backgroundColor = \'red\';',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -439,8 +440,8 @@ test('`isJavaScriptEnabled: false` works with the `modules` option', async t => 
 		height: 100,
 		isJavaScriptEnabled: false,
 		modules: [
-			'document.querySelector(\'div\').style.backgroundColor = \'red\';'
-		]
+			'document.querySelector(\'div\').style.backgroundColor = \'red\';',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -453,8 +454,8 @@ test('`modules` option - inline', async t => {
 		width: 100,
 		height: 100,
 		modules: [
-			'document.querySelector(\'div\').style.backgroundColor = \'red\';'
-		]
+			'document.querySelector(\'div\').style.backgroundColor = \'red\';',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -467,8 +468,8 @@ test('`modules` option - file', async t => {
 		width: 100,
 		height: 100,
 		modules: [
-			'fixtures/script.js'
-		]
+			'fixtures/script.js',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -492,8 +493,8 @@ test('`modules` option - url', async t => {
 		width: 100,
 		height: 100,
 		modules: [
-			`${server.url}/module.js`
-		]
+			`${server.url}/module.js`,
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -506,8 +507,8 @@ test('`scripts` option - inline', async t => {
 		width: 100,
 		height: 100,
 		scripts: [
-			'document.querySelector(\'div\').style.backgroundColor = \'red\';'
-		]
+			'document.querySelector(\'div\').style.backgroundColor = \'red\';',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -520,8 +521,8 @@ test('`scripts` option - file', async t => {
 		width: 100,
 		height: 100,
 		scripts: [
-			'fixtures/script.js'
-		]
+			'fixtures/script.js',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -545,8 +546,8 @@ test('`scripts` option - url', async t => {
 		width: 100,
 		height: 100,
 		scripts: [
-			`${server.url}/script.js`
-		]
+			`${server.url}/script.js`,
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -559,8 +560,8 @@ test('`styles` option - inline', async t => {
 		width: 100,
 		height: 100,
 		styles: [
-			'div { background-color: red !important; }'
-		]
+			'div { background-color: red !important; }',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -573,8 +574,8 @@ test('`styles` option - file', async t => {
 		width: 100,
 		height: 100,
 		styles: [
-			'fixtures/style.css'
-		]
+			'fixtures/style.css',
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -598,8 +599,8 @@ test('`styles` option - url', async t => {
 		width: 100,
 		height: 100,
 		styles: [
-			`${server.url}/style.css`
-		]
+			`${server.url}/style.css`,
+		],
 	}));
 
 	t.is(pixels[0], 255);
@@ -621,8 +622,8 @@ test('`headers` option', async t => {
 		width: 100,
 		height: 100,
 		headers: {
-			fixture
-		}
+			fixture,
+		},
 	});
 
 	t.is(headers.fixture, fixture);
@@ -655,9 +656,9 @@ test('`cookies` option', async t => {
 			{
 				name: 'color',
 				value: 'black',
-				domain: 'localhost'
-			}
-		]
+				domain: 'localhost',
+			},
+		],
 	}));
 
 	t.is(pixels[0], 0);
@@ -666,8 +667,8 @@ test('`cookies` option', async t => {
 		width: 100,
 		height: 100,
 		cookies: [
-			'color=black'
-		]
+			'color=black',
+		],
 	}));
 
 	t.is(pixels2[0], 0);
@@ -678,13 +679,13 @@ test('`cookies` option', async t => {
 test('`authentication` option', async t => {
 	const authentication = {
 		username: 'foo',
-		password: 'bar'
+		password: 'bar',
 	};
 
 	const url = `https://httpbin.org/basic-auth/${authentication.username}/${authentication.password}`;
 
 	t.true(isPng(await instance(url, {
-		authentication
+		authentication,
 	})));
 });
 
@@ -694,13 +695,13 @@ test('`overwrite` option', async t => {
 	await t.notThrowsAsync(async () => {
 		await captureWebsite.file(server.url, filePath, {
 			width: 100,
-			height: 100
+			height: 100,
 		});
 
 		await captureWebsite.file(server.url, filePath, {
 			width: 100,
 			height: 100,
-			overwrite: true
+			overwrite: true,
 		});
 	});
 });
@@ -718,7 +719,7 @@ test('handle redirects', async t => {
 
 	const pixels = await getPngPixels(await instance(`${server.url}/redirect`, {
 		width: 100,
-		height: 100
+		height: 100,
 	}));
 
 	t.is(pixels[0], 0);
@@ -751,7 +752,7 @@ test('`darkMode` option', async t => {
 
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
-		height: 100
+		height: 100,
 	}));
 
 	t.is(pixels[0], 255);
@@ -761,7 +762,7 @@ test('`darkMode` option', async t => {
 	const pixels2 = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
-		darkMode: true
+		darkMode: true,
 	}));
 
 	t.is(pixels2[0], 0);
@@ -775,7 +776,7 @@ test('`inset` option', async t => {
 	const viewportOptions = {
 		scaleFactor: 1,
 		width: 100,
-		height: 100
+		height: 100,
 	};
 	// The `inset` and `fullPage` options are exclusive.
 	// See: https://github.com/puppeteer/puppeteer/blob/e45acce928429d0d1572e16943307a73ebd38d8a/src/common/Page.ts#L1620
@@ -783,7 +784,7 @@ test('`inset` option', async t => {
 	const withFullPageOption = await getPngPixels(await instance(server.url, {
 		...viewportOptions,
 		fullPage: true,
-		inset: 10
+		inset: 10,
 	}));
 	// First pixel should be black. Image should have resolution 100x100.
 	t.is(withFullPageOption[0], 0);
@@ -803,7 +804,7 @@ test('`inset` option', async t => {
 		...viewportOptions,
 		element: 'body',
 		fullPage: true,
-		inset: 10
+		inset: 10,
 	}));
 	// First pixel should be red. Image should have resolution 80*520.
 	t.is(withElementOption[0], 255);
@@ -813,7 +814,7 @@ test('`inset` option', async t => {
 
 	const viewportPixels = await getPngPixels(await instance(fixture, {
 		...viewportOptions,
-		inset: 10
+		inset: 10,
 	}));
 
 	// First pixel should be red. Image should have resolution 80x80.
@@ -824,7 +825,7 @@ test('`inset` option', async t => {
 
 	const withTopInset = await getPngPixels(await instance(fixture, {
 		...viewportOptions,
-		inset: {top: 30, left: 10}
+		inset: {top: 30, left: 10},
 	}));
 
 	// First pixel should be white. The image resolution should be 90x70.
@@ -836,7 +837,7 @@ test('`inset` option', async t => {
 	const withNegativeInset = await getPngPixels(await instance(fixture, {
 		...viewportOptions,
 		element: '.header',
-		inset: -10
+		inset: -10,
 	}));
 
 	// First pixel should be black. The image resolution should be 100x40.
@@ -849,7 +850,7 @@ test('`inset` option', async t => {
 	await t.throwsAsync(async () => {
 		await instance(fixture, {
 			...viewportOptions,
-			inset: 50
+			inset: 50,
 		});
 	});
 });
@@ -875,7 +876,7 @@ test('`preloadFunction` option', async t => {
 			window.toRed = () => {
 				document.querySelector('div').style.backgroundColor = 'red';
 			};
-		}
+		},
 	}));
 
 	t.is(pixels[0], 255);
