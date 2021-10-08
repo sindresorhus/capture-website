@@ -130,8 +130,8 @@ const internalCaptureWebsite = async (input, options) => {
 		launchOptions.slowMo = 100;
 	}
 
-	let browser = null;
-	let page = null;
+	let browser;
+	let page;
 	try {
 		browser = options._browser || await puppeteer.launch(launchOptions);
 		page = await browser.newPage();
