@@ -91,7 +91,7 @@ Page height.
 ##### type
 
 Type: `string`\
-Values: `'png'` `'jpeg'`\
+Values: `'png'` `'jpeg'` `'webp'`\
 Default: `'png'`
 
 Image type.
