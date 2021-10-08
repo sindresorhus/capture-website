@@ -71,7 +71,7 @@ export interface Options {
 	readonly type?: 'png' | 'jpeg' | 'webp';
 
 	/**
-	Image quality. Only for {type: 'jpeg'}.
+	Image quality. Only for `{type: 'jpeg'}` and `{type: 'webp'}`.
 
 	@default 1
 	*/

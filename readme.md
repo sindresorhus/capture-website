@@ -102,7 +102,7 @@ Type: `number`\
 Values: `0...1`\
 Default: `1`
 
-Image quality. Only for `{type: 'jpeg'}`.
+Image quality. Only for `{type: 'jpeg'}` and `{type: 'webp'}`.
 
 ##### scaleFactor
 
