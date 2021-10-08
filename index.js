@@ -120,6 +120,35 @@ const imagesHaveLoaded = () => [...document.images].map(element => element.compl
 
 const internalCaptureWebsite = async (input, options) => {
 	options = {
+		launchOptions: {},
+		...options
+	};
+	const {launchOptions} = options;
+
+	if (options.debug) {
+		launchOptions.headless = false;
+		launchOptions.slowMo = 100;
+	}
+
+	let browser;
+	let page;
+	try {
+		browser = options._browser || await puppeteer.launch(launchOptions);
+		page = await browser.newPage();
+		return await internalCaptureWebsiteCore(input, options, page, browser);
+	} finally {
+		if (page) {
+			await page.close();
+		}
+
+		if (browser && !options._keepAlive) {
+			await browser.close();
+		}
+	}
+};
+
+const internalCaptureWebsiteCore = async (input, options, page, browser) => {
+	options = {
 		inputType: 'url',
 		width: 1280,
 		height: 800,
@@ -130,7 +159,6 @@ const internalCaptureWebsite = async (input, options) => {
 		delay: 0,
 		debug: false,
 		darkMode: false,
-		launchOptions: {},
 		_keepAlive: false,
 		isJavaScriptEnabled: true,
 		inset: 0,
@@ -141,7 +169,7 @@ const internalCaptureWebsite = async (input, options) => {
 
 	input = isHTMLContent || isUrl(input) ? input : fileUrl(input);
 
-	const timeoutInSeconds = options.timeout * 1000;
+	const timeoutInMilliseconds = options.timeout * 1000;
 
 	const viewportOptions = {
 		width: options.width,
@@ -166,16 +194,6 @@ const internalCaptureWebsite = async (input, options) => {
 	if (typeof options.defaultBackground === 'boolean') {
 		screenshotOptions.omitBackground = !options.defaultBackground;
 	}
-
-	const launchOptions = {...options.launchOptions};
-
-	if (options.debug) {
-		launchOptions.headless = false;
-		launchOptions.slowMo = 100;
-	}
-
-	const browser = options._browser || await puppeteer.launch(launchOptions);
-	const page = await browser.newPage();
 
 	if (options.preloadFunction) {
 		await page.evaluateOnNewDocument(options.preloadFunction);
@@ -232,7 +250,7 @@ const internalCaptureWebsite = async (input, options) => {
 	}]);
 
 	await page[isHTMLContent ? 'setContent' : 'goto'](input, {
-		timeout: timeoutInSeconds,
+		timeout: timeoutInMilliseconds,
 		waitUntil: 'networkidle2'
 	});
 
@@ -291,7 +309,7 @@ const internalCaptureWebsite = async (input, options) => {
 	if (options.waitForElement) {
 		await page.waitForSelector(options.waitForElement, {
 			visible: true,
-			timeout: timeoutInSeconds
+			timeout: timeoutInMilliseconds
 		});
 	}
 
@@ -302,7 +320,7 @@ const internalCaptureWebsite = async (input, options) => {
 	if (options.element) {
 		await page.waitForSelector(options.element, {
 			visible: true,
-			timeout: timeoutInSeconds
+			timeout: timeoutInMilliseconds
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		screenshotOptions.fullPage = false;
@@ -351,7 +369,7 @@ const internalCaptureWebsite = async (input, options) => {
 		});
 
 		// Some extra delay to let images load
-		await page.waitForFunction(imagesHaveLoaded, {timeout: timeoutInSeconds});
+		await page.waitForFunction(imagesHaveLoaded, {timeout: timeoutInMilliseconds});
 	}
 
 	if (options.inset && !screenshotOptions.fullPage) {
@@ -383,8 +401,6 @@ const internalCaptureWebsite = async (input, options) => {
 		const height = clipOptions.height - (inset.top + inset.bottom);
 
 		if (width === 0 || height === 0) {
-			await page.close();
-
 			throw new Error('When using the `clip` option, the width or height of the screenshot cannot be equal to 0.');
 		}
 
@@ -392,12 +408,6 @@ const internalCaptureWebsite = async (input, options) => {
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
-
-	await page.close();
-
-	if (!options._keepAlive) {
-		await browser.close();
-	}
 
 	return buffer;
 };
