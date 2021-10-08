@@ -123,28 +123,29 @@ const internalCaptureWebsite = async (input, options) => {
 		launchOptions: {},
 		...options
 	};
-	const launchOptions = options.launchOptions;
+	const {launchOptions} = options;
 
 	if (options.debug) {
 		launchOptions.headless = false;
 		launchOptions.slowMo = 100;
 	}
 
-	var browser = null;
-	var page = null;
+	let browser = null;
+	let page = null;
 	try {
 		browser = options._browser || await puppeteer.launch(launchOptions);
 		page = await browser.newPage();
-		return await internalCaptureWebsiteCore(input, options, page, browser)
+		return await internalCaptureWebsiteCore(input, options, page, browser);
 	} finally {
-		if(page) {
+		if (page) {
 			await page.close();
 		}
+
 		if (browser && !options._keepAlive) {
 			await browser.close();
 		}
-	}	
-}
+	}
+};
 
 const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	options = {
