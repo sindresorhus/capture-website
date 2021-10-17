@@ -115,8 +115,6 @@ const parseCookie = (url, cookie) => {
 	return returnValue;
 };
 
-const imagesHaveLoaded = () => [...document.images].map(element => element.complete);
-
 const internalCaptureWebsite = async (input, options) => {
 	options = {
 		launchOptions: {},
@@ -360,9 +358,6 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 			window.scrollTo(0, 0);
 			/* eslint-enable no-undef */
 		});
-
-		// Some extra delay to let images load
-		await page.waitForFunction(imagesHaveLoaded, {timeout: timeoutInMilliseconds});
 	}
 
 	if (options.inset && !screenshotOptions.fullPage) {
