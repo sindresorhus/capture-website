@@ -180,8 +180,65 @@ test('`fullPage` option - lazy loading', async t => {
 		fullPage: true,
 	}));
 
-	t.is(size.width, 200);
+	t.is(size.width, 208);
 	t.true(size.height > 150);
+});
+
+test('`fullPage` option - fixed', async t => {
+	const server = await createTestServer();
+
+	server.get('/', async (request, response) => {
+		response.end(`
+			<html>
+			<head>
+			    <style>
+			        .fixed {
+			            position: fixed;
+			            left: 0px;
+			            top: 0px;
+			            width: 100px;
+			            height: 100px;
+			            background: blue;
+			        }
+			        .wide {
+			            width: 2048px;
+			            height: 200px;
+			            background: green;
+			            border: dashed pink 3px;
+			        }
+			        .high {
+			            width: 200px;
+			            height: 2048px;
+			            background: red;
+			        }
+			    </style>
+			</head>
+			<body>
+			    <div class="fixed">
+			        This is fixed.
+			    </div>
+			    <div class="container">
+			        <div class="wide">
+			            This is wide.
+			        </div>
+			        <div class="high">
+			            This is high.
+			        </div>
+			    </div>
+			</body>
+			</html>
+		`);
+	});
+
+	const size = imageSize(await instance(server.url, {
+		width: 200,
+		height: 300,
+		scaleFactor: 1,
+		fullPage: true,
+	}));
+
+	t.is(size.width, 2070);
+	t.is(size.height, 2270);
 });
 
 test('`timeout` option', async t => {

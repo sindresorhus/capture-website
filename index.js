@@ -330,6 +330,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		}
 	}
 
+	const {fullPage} = screenshotOptions;
 	if (screenshotOptions.fullPage) {
 		// Get the height of the rendered page
 		const bodyHandle = await page.$('body');
@@ -358,9 +359,30 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 			window.scrollTo(0, 0);
 			/* eslint-enable no-undef */
 		});
+
+		// Include body border using clip
+		screenshotOptions.fullPage = false;
+		/* eslint-disable arrow-body-style */
+		viewportOptions.width = await page.evaluate(_ => {
+			return document.body.scrollWidth;
+		});
+		viewportOptions.height = await page.evaluate(_ => {
+			return document.body.scrollHeight;
+		});
+		const bodyMarginRight = await page.evaluate(_ => {
+			/* eslint-disable no-undef */
+			return window.getComputedStyle(document.body).getPropertyValue('margin-right');
+			/* eslint-enable no-undef */
+		});
+		/* eslint-enable arrow-body-style */
+		const x = 0;
+		const y = 0;
+		const width = viewportOptions.width + Number.parseFloat(bodyMarginRight);
+		const {height} = viewportOptions;
+		screenshotOptions.clip = {x, y, width, height};
 	}
 
-	if (options.inset && !screenshotOptions.fullPage) {
+	if (options.inset && !fullPage) {
 		const inset = {top: 0, right: 0, bottom: 0, left: 0};
 		for (const key of Object.keys(inset)) {
 			if (typeof options.inset === 'number') {
