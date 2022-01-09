@@ -243,6 +243,14 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		await page.setUserAgent(options.userAgent);
 	}
 
+	if (options.clip) {
+		viewportOptions.width = options.clip.width;
+		viewportOptions.height = options.clip.height;
+		viewportOptions.deviceScaleFactor = 1;
+
+		screenshotOptions.clip = options.clip;
+	}
+
 	await page.setViewport(viewportOptions);
 
 	if (options.emulateDevice) {
@@ -327,10 +335,6 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		});
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		screenshotOptions.fullPage = false;
-	}
-
-	if (options.clip) {
-		screenshotOptions.clip = options.clip;
 	}
 
 	if (options.delay) {
