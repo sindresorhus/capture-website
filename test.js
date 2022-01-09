@@ -892,8 +892,8 @@ test('`clip` option', async t => {
 			x: 10,
 			y: 30,
 			width: 500,
-			height: 300
-		}
+			height: 300,
+		},
 	}));
 	t.is(size.width, 500);
 	t.is(size.height, 300);
@@ -907,8 +907,8 @@ test('option validation - The `clip` and `element` option are mutually exclusive
 			x: 1,
 			y: 10,
 			width: 10,
-			height: 100
-		}
+			height: 100,
+		},
 	};
 	const error = await t.throwsAsync(captureWebsite.base64(server.url, options));
 

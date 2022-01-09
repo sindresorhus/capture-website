@@ -11,7 +11,7 @@ const assert = (value, message) => {
 	if (!value) {
 		throw new Error(message);
 	}
-}
+};
 
 const validateOptions = options => {
 	assert(!(options.clip && options.element), 'The `clip` and `element` option are mutually exclusive');
