@@ -888,8 +888,6 @@ test('`preloadFunction` option', async t => {
 
 test('`clip` option', async t => {
 	const size = imageSize(await instance(server.url, {
-		width: 100,
-		height: 200,
 		scaleFactor: 1,
 		clip: {
 			x: 10,
@@ -905,8 +903,6 @@ test('`clip` option', async t => {
 test('option validation - The `clip` and `element` option are mutually exclusive', async t => {
 	const expectedErrorMessage = 'The `clip` and `element` option are mutually exclusive';
 	const options = {
-		width: 100,
-		height: 100,
 		element: 'html',
 		clip: {
 			x: 1,
