@@ -4,6 +4,8 @@ import {promises as fs} from 'node:fs';
 import fileUrl from 'file-url';
 import puppeteer from 'puppeteer';
 import toughCookie from 'tough-cookie';
+import {PuppeteerBlocker} from '@cliqz/adblocker-puppeteer';
+import fetch from 'node-fetch';
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
@@ -145,6 +147,15 @@ const internalCaptureWebsite = async (input, options) => {
 	try {
 		browser = options._browser || await puppeteer.launch(launchOptions);
 		page = await browser.newPage();
+
+		const blocker = await PuppeteerBlocker.fromPrebuiltFull(fetch, {
+			path: 'engine.bin',
+			read: fs.readFile,
+			write: fs.writeFile,
+		});
+
+		await blocker.enableBlockingInPage(page);
+
 		return await internalCaptureWebsiteCore(input, options, page, browser);
 	} finally {
 		if (page) {

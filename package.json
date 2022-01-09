@@ -39,8 +39,10 @@
 		"jpg"
 	],
 	"dependencies": {
+		"@cliqz/adblocker-puppeteer": "^1.23.2",
 		"file-url": "^4.0.0",
 		"puppeteer": "^13.1.1",
+		"node-fetch": "^3.1.0",
 		"tough-cookie": "^4.0.0"
 	},
 	"devDependencies": {
