@@ -914,3 +914,19 @@ test('option validation - The `clip` and `element` option are mutually exclusive
 
 	t.is(error.message, expectedErrorMessage);
 });
+
+test('option validation - The `clip` and `fullPage` option are mutually exclusive', async t => {
+	const expectedErrorMessage = 'The `clip` and `fullPage` option are mutually exclusive';
+	const options = {
+		fullPage: true,
+		clip: {
+			x: 1,
+			y: 10,
+			width: 10,
+			height: 100,
+		},
+	};
+	const error = await t.throwsAsync(captureWebsite.base64(server.url, options));
+
+	t.is(error.message, expectedErrorMessage);
+});

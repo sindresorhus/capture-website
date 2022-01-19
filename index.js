@@ -15,6 +15,7 @@ const assert = (value, message) => {
 
 const validateOptions = options => {
 	assert(!(options.clip && options.element), 'The `clip` and `element` option are mutually exclusive');
+	assert(!(options.clip && options.fullPage), 'The `clip` and `fullPage` option are mutually exclusive');
 };
 
 const scrollToElement = (element, options) => {
