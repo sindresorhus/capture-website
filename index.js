@@ -245,8 +245,6 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (options.clip) {
-		viewportOptions.deviceScaleFactor = options.clip.scaleFactor;
-
 		screenshotOptions.clip = options.clip;
 	}
 
