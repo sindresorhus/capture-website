@@ -475,6 +475,8 @@ Type: `object`
 
 Define the screenshot's position and size (clipping region).
 
+The position can be specified through `x`, `y` coordinates which starts from left-top.
+
 This can be useful when you only need a part of the page.
 
 You can also consider using `element` option when you have a [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
