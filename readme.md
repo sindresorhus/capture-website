@@ -474,20 +474,23 @@ This can be useful for [altering the JavaScript environment](https://github.com/
 Type: `object`
 
 Define the screenshot's position and size (clipping region).
+
 This can be useful when you only need a part of the page.
+
 You can also consider using `element` option when you have a [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
-Note that `clip` and `element`, `fullPage` options are mutually exclusive.
 
-- **x** - x-coordinate where the screenshot starts
+Note that `clip` is mutually exclusive with the `element` and `fullPage` options.
+
+- **x** - X-coordinate where the screenshot starts.
 Type: `number`
-- **y** - y-coordinate where the screenshot starts
+- **y** - Y-coordinate where the screenshot starts.
 Type: `number`
-- **width** - Width of the screenshot
+- **width** - The width of the screenshot.
 Type: `number`
-- **height** - Height of the screenshot
+- **height** - The height of the screenshot.
 Type: `number`
 
-Example: Define the screenshot's `width`, and `height` to 400 from 0, 0
+For example, define the screenshot's `width` and `height` to 400 at position (0, 0):
 
 ```js
 import captureWebsite from 'capture-website';
