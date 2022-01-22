@@ -475,7 +475,7 @@ Type: `object`
 
 Define the screenshot's position and size (clipping region).
 
-The position can be specified through `x`, `y` coordinates which starts from left-top.
+The position can be specified through `x` and `y` coordinates which starts from the top-left.
 
 This can be useful when you only need a part of the page.
 
