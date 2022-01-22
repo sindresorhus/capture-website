@@ -150,22 +150,13 @@ export interface Options {
 	/**
 	Define the screenshot's position and size (clipping region).
 
-	The position can be specified through `x`, `y` coordinates which starts from left-top.
+	The position can be specified through `x` and `y` coordinates which starts from the top-left.
 
 	This can be useful when you only need a part of the page.
 
 	You can also consider using `element` option when you have a [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 
 	Note that `clip` is mutually exclusive with the `element` and `fullPage` options.
-
-	- **x** - X-coordinate where the screenshot starts.
-	Type: `number`
-	- **y** - Y-coordinate where the screenshot starts.
-	Type: `number`
-	- **width** - The width of the screenshot.
-	Type: `number`
-	- **height** - The height of the screenshot.
-	Type: `number`
 
 	@example
 	```
