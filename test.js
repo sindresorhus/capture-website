@@ -888,6 +888,7 @@ test('`preloadFunction` option', async t => {
 
 test('`clip` option', async t => {
 	const size = imageSize(await instance(server.url, {
+		scaleFactor: 1,
 		clip: {
 			x: 10,
 			y: 30,
