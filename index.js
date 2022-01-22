@@ -7,6 +7,17 @@ import toughCookie from 'tough-cookie';
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
+const assert = (value, message) => {
+	if (!value) {
+		throw new Error(message);
+	}
+};
+
+const validateOptions = options => {
+	assert(!(options.clip && options.element), 'The `clip` and `element` option are mutually exclusive');
+	assert(!(options.clip && options.fullPage), 'The `clip` and `fullPage` option are mutually exclusive');
+};
+
 const scrollToElement = (element, options) => {
 	const isOverflown = element => (
 		element.scrollHeight > element.clientHeight
@@ -122,6 +133,8 @@ const internalCaptureWebsite = async (input, options) => {
 	};
 	const {launchOptions} = options;
 
+	validateOptions(options);
+
 	if (options.debug) {
 		launchOptions.headless = false;
 		launchOptions.slowMo = 100;
@@ -229,6 +242,10 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 
 	if (options.userAgent) {
 		await page.setUserAgent(options.userAgent);
+	}
+
+	if (options.clip) {
+		screenshotOptions.clip = options.clip;
 	}
 
 	await page.setViewport(viewportOptions);

@@ -8,6 +8,7 @@ import {
 	EvaluateFn,
 	Protocol,
 	Product,
+	BoundingBox,
 } from 'puppeteer';
 
 export type LaunchOptions = PuppeteerLaunchOptions &
@@ -145,6 +146,33 @@ export interface Options {
 	Capture the DOM element matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors). It will wait for the element to appear in the page and to be visible. It times out after `options.timeout` seconds. Any actions performed as part of `options.beforeScreenshot` occur before this.
 	*/
 	readonly element?: string;
+
+	/**
+	Define the screenshot's position and size (clipping region).
+
+	The position can be specified through `x` and `y` coordinates which starts from the top-left.
+
+	This can be useful when you only need a part of the page.
+
+	You can also consider using `element` option when you have a [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+
+	Note that `clip` is mutually exclusive with the `element` and `fullPage` options.
+
+	@example
+	```
+	import captureWebsite from 'capture-website';
+
+	await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+		clip: {
+			x: 0,
+			y: 0,
+			width: 400,
+			height: 400
+		}
+	});
+	```
+	*/
+	readonly clip?: BoundingBox;
 
 	/**
 	Hide DOM elements matching the given [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).

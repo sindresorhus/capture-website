@@ -469,6 +469,44 @@ Inject a function to be executed prior to navigation.
 
 This can be useful for [altering the JavaScript environment](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageevaluateonnewdocumentpagefunction-args). For example, you could define a global method on the `window`, overwrite `navigator.languages` to change the language presented by the browser, or mock `Math.random` to return a fixed value.
 
+##### clip
+
+Type: `object`
+
+Define the screenshot's position and size (clipping region).
+
+The position can be specified through `x` and `y` coordinates which starts from the top-left.
+
+This can be useful when you only need a part of the page.
+
+You can also consider using `element` option when you have a [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
+
+Note that `clip` is mutually exclusive with the `element` and `fullPage` options.
+
+- **x** - X-coordinate where the screenshot starts.
+Type: `number`
+- **y** - Y-coordinate where the screenshot starts.
+Type: `number`
+- **width** - The width of the screenshot.
+Type: `number`
+- **height** - The height of the screenshot.
+Type: `number`
+
+For example, define the screenshot's `width` and `height` to 400 at position (0, 0):
+
+```js
+import captureWebsite from 'capture-website';
+
+await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
+	clip: {
+		x: 0,
+		y: 0,
+		width: 400,
+		height: 400
+	}
+});
+```
+
 ### captureWebsite.devices
 
 Type: `string[]`

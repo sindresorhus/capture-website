@@ -885,3 +885,49 @@ test('`preloadFunction` option', async t => {
 
 	await server.close();
 });
+
+test('`clip` option', async t => {
+	const size = imageSize(await instance(server.url, {
+		scaleFactor: 1,
+		clip: {
+			x: 10,
+			y: 30,
+			width: 500,
+			height: 300,
+		},
+	}));
+	t.is(size.width, 500);
+	t.is(size.height, 300);
+});
+
+test('option validation - The `clip` and `element` option are mutually exclusive', async t => {
+	const expectedErrorMessage = 'The `clip` and `element` option are mutually exclusive';
+	const options = {
+		element: 'html',
+		clip: {
+			x: 1,
+			y: 10,
+			width: 10,
+			height: 100,
+		},
+	};
+	const error = await t.throwsAsync(captureWebsite.base64(server.url, options));
+
+	t.is(error.message, expectedErrorMessage);
+});
+
+test('option validation - The `clip` and `fullPage` option are mutually exclusive', async t => {
+	const expectedErrorMessage = 'The `clip` and `fullPage` option are mutually exclusive';
+	const options = {
+		fullPage: true,
+		clip: {
+			x: 1,
+			y: 10,
+			width: 10,
+			height: 100,
+		},
+	};
+	const error = await t.throwsAsync(captureWebsite.base64(server.url, options));
+
+	t.is(error.message, expectedErrorMessage);
+});
