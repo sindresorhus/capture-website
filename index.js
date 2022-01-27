@@ -148,13 +148,15 @@ const internalCaptureWebsite = async (input, options) => {
 		browser = options._browser || await puppeteer.launch(launchOptions);
 		page = await browser.newPage();
 
-		const blocker = await PuppeteerBlocker.fromPrebuiltFull(fetch, {
-			path: 'engine.bin',
-			read: fs.readFile,
-			write: fs.writeFile,
-		});
+		if (!options.disableAdBlocker) {
+			const blocker = await PuppeteerBlocker.fromPrebuiltFull(fetch, {
+				path: 'engine.bin',
+				read: fs.readFile,
+				write: fs.writeFile,
+			});
 
-		await blocker.enableBlockingInPage(page);
+			await blocker.enableBlockingInPage(page);
+		}
 
 		return await internalCaptureWebsiteCore(input, options, page, browser);
 	} finally {
@@ -182,6 +184,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		darkMode: false,
 		_keepAlive: false,
 		isJavaScriptEnabled: true,
+		disableAdBlocker: false,
 		inset: 0,
 		...options,
 	};

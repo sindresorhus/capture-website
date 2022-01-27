@@ -220,6 +220,13 @@ export interface Options {
 	readonly disableAnimations?: boolean;
 
 	/**
+	Disable [Ad Blocker](https://github.com/ghostery/adblocker/blob/master/packages/adblocker-puppeteer/README.md).
+
+	@default false
+	*/
+	readonly disableAdBlocker?: boolean;
+
+	/**
 	Whether JavaScript on the website should be executed.
 
 	This does not affect the `scripts` and `modules` options.
