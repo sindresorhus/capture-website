@@ -243,12 +243,12 @@ Default: `false`
 
 Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animation) and [transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition).
 
-##### disableAdBlocker
+##### blockAds
 
 Type: `boolean`\
-Default: `false`
+Default: `true`
 
-Disable [Ad Blocker](https://github.com/ghostery/adblocker/blob/master/packages/adblocker-puppeteer/README.md).
+Enable [Ad Blocker](https://github.com/ghostery/adblocker/blob/master/packages/adblocker-puppeteer/README.md).
 
 ##### isJavaScriptEnabled
 

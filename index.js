@@ -148,7 +148,7 @@ const internalCaptureWebsite = async (input, options) => {
 		browser = options._browser || await puppeteer.launch(launchOptions);
 		page = await browser.newPage();
 
-		if (!options.disableAdBlocker) {
+		if (options.blockAds) {
 			const blocker = await PuppeteerBlocker.fromPrebuiltFull(fetch, {
 				path: 'engine.bin',
 				read: fs.readFile,
@@ -184,7 +184,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		darkMode: false,
 		_keepAlive: false,
 		isJavaScriptEnabled: true,
-		disableAdBlocker: false,
+		blockAds: true,
 		inset: 0,
 		...options,
 	};
