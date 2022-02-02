@@ -220,9 +220,9 @@ export interface Options {
 	readonly disableAnimations?: boolean;
 
 	/**
-	Enable [Ad Blocker](https://github.com/ghostery/adblocker/blob/master/packages/adblocker-puppeteer/README.md).
+	[Ad blocking.](https://github.com/ghostery/adblocker/blob/master/packages/adblocker-puppeteer/README.md)
 
-	@default false
+	@default true
 	*/
 	readonly blockAds?: boolean;
 
