@@ -248,7 +248,7 @@ Disable CSS [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/animat
 Type: `boolean`\
 Default: `true`
 
-Enable [Ad Blocker](https://github.com/ghostery/adblocker/blob/master/packages/adblocker-puppeteer/README.md).
+[Ad blocking.](https://github.com/ghostery/adblocker/blob/master/packages/adblocker-puppeteer/README.md)
 
 ##### isJavaScriptEnabled
 
