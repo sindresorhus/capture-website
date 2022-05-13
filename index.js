@@ -223,6 +223,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		await page.evaluateOnNewDocument(options.preloadFunction);
 	}
 
+	await page.setBypassCSP(true);
 	await page.setJavaScriptEnabled(options.isJavaScriptEnabled);
 
 	if (options.debug) {
