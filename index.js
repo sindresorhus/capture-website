@@ -340,15 +340,18 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		await options.beforeScreenshot(page, browser);
 	}
 
-	if (options.delay) {
-		await page.waitForTimeout(options.delay * 1000);
-	}
-
 	if (options.element) {
 		await page.waitForSelector(options.element, {
 			visible: true,
 			timeout: timeoutInMilliseconds,
 		});
+	}
+
+	if (options.delay) {
+		await page.waitForTimeout(options.delay * 1000);
+	}
+
+	if (options.element) {
 		screenshotOptions.clip = await page.$eval(options.element, getBoundingClientRect);
 		screenshotOptions.fullPage = false;
 	}
