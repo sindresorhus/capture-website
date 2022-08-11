@@ -8,8 +8,8 @@ See [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) f
 
 ## Install
 
-```
-$ npm install capture-website
+```sh
+npm install capture-website
 ```
 
 Note to Linux users: If you get a sandbox-related error, you need to enable [system sandboxing](#im-getting-a-sandbox-related-error).

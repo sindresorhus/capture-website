@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import {Buffer} from 'node:buffer';
 import {
 	LaunchOptions as PuppeteerLaunchOptions,
@@ -5,7 +6,7 @@ import {
 	BrowserConnectOptions,
 	Page,
 	Browser,
-	EvaluateFn,
+	EvaluateFunc,
 	Protocol,
 	Product,
 	BoundingBox,
@@ -240,7 +241,7 @@ export interface Options {
 
 	This can be useful for [altering the JavaScript environment](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageevaluateonnewdocumentpagefunction-args). For example, you could define a global method on the `window`, overwrite `navigator.languages` to change the language presented by the browser, or mock `Math.random` to return a fixed value.
 	*/
-	readonly preloadFunction?: EvaluateFn;
+	readonly preloadFunction?: EvaluateFunc<unknown[]>;
 
 	/**
 	Inject [JavaScript modules](https://developers.google.com/web/fundamentals/primers/modules) into the page.
