@@ -27,7 +27,7 @@ const scrollToElement = (element, options) => {
 	);
 
 	const findScrollParent = element => {
-		if (element === undefined) {
+		if (element === null) {
 			return;
 		}
 
