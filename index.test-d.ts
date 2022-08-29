@@ -1,4 +1,4 @@
-import {Buffer} from 'node:buffer';
+import type {Buffer} from 'node:buffer';
 import {expectType} from 'tsd';
 import captureWebsite, {devices} from './index.js';
 

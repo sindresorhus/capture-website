@@ -39,14 +39,14 @@
 		"jpeg"
 	],
 	"dependencies": {
-		"@cliqz/adblocker-puppeteer": "^1.23.8",
+		"@cliqz/adblocker-puppeteer": "^1.24.0",
 		"file-url": "^4.0.0",
-		"puppeteer": "^16.1.0",
+		"puppeteer": "^17.0.0",
 		"node-fetch": "^3.2.10",
-		"tough-cookie": "^4.0.0"
+		"tough-cookie": "^4.1.2"
 	},
 	"devDependencies": {
-		"ava": "^4.3.1",
+		"ava": "^4.3.3",
 		"create-test-server": "^3.0.1",
 		"delay": "^5.0.0",
 		"image-size": "^1.0.2",
@@ -55,8 +55,8 @@
 		"pify": "^6.0.0",
 		"png-js": "^1.0.0",
 		"tempy": "^3.0.0",
-		"tsd": "^0.22.0",
-		"xo": "^0.51.0"
+		"tsd": "^0.23.0",
+		"xo": "^0.52.2"
 	},
 	"tsd": {
 		"compilerOptions": {

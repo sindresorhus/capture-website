@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
-import {Buffer} from 'node:buffer';
-import {
+import type {Buffer} from 'node:buffer';
+import type {
 	LaunchOptions as PuppeteerLaunchOptions,
 	BrowserLaunchArgumentOptions,
 	BrowserConnectOptions,
@@ -19,14 +19,14 @@ BrowserConnectOptions & {
 	extraPrefsFirefox?: Record<string, unknown>;
 };
 
-export interface Authentication {
+export type Authentication = {
 	readonly username: string;
 	readonly password?: string;
-}
+};
 
 export type BeforeScreenshot = (page: Page, browser: Browser) => void;
 
-export interface ScrollToElementOptions {
+export type ScrollToElementOptions = {
 	/**
 	A [CSS selector](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors).
 	*/
@@ -41,9 +41,9 @@ export interface ScrollToElementOptions {
 	Offset in pixels.
 	*/
 	readonly offset: number;
-}
+};
 
-export interface Options {
+export type Options = {
 	/**
 	Input type.
 
@@ -429,16 +429,16 @@ export interface Options {
 	```
 	*/
 	readonly inset?: number | Partial<Record<'top' | 'right' | 'bottom' | 'left', number>>;
-}
+};
 
-export interface FileOptions extends Options {
+export type FileOptions = {
 	/**
 	Overwrite the destination file if it exists instead of throwing an error.
 
 	@default false
 	*/
 	readonly overwrite?: boolean;
-}
+} & Options;
 
 /**
 Devices supported by the `emulateDevice` option.
