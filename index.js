@@ -1,6 +1,7 @@
 /* global document */
 import process from 'node:process';
 import {promises as fs} from 'node:fs';
+import path from 'node:path';
 import fileUrl from 'file-url';
 import puppeteer from 'puppeteer';
 import toughCookie from 'tough-cookie';
@@ -439,6 +440,8 @@ const captureWebsite = {};
 
 captureWebsite.file = async (url, filePath, options = {}) => {
 	const screenshot = await internalCaptureWebsite(url, options);
+
+	await fs.mkdir(path.dirname(filePath), {recursive: true});
 
 	await fs.writeFile(filePath, screenshot, {
 		flag: options.overwrite ? 'w' : 'wx',

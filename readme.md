@@ -28,6 +28,8 @@ await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
 
 Capture a screenshot of the given `input` and save it to the given `outputFilePath`.
 
+Intermediate directories are created for you if they do not exist.
+
 Returns a `Promise<void>` that resolves when the screenshot is written.
 
 ### captureWebsite.buffer(input, options?)
