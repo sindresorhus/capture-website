@@ -16,7 +16,7 @@
 		"node": ">=14.16"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd"
+		"test": "xo && ava --timeout=10m && tsd"
 	},
 	"files": [
 		"index.js",
@@ -39,31 +39,23 @@
 		"jpeg"
 	],
 	"dependencies": {
-		"@cliqz/adblocker-puppeteer": "^1.24.0",
+		"@cliqz/adblocker-puppeteer": "^1.25.1",
 		"file-url": "^4.0.0",
-		"puppeteer": "^17.0.0",
+		"puppeteer": "^19.2.0",
 		"node-fetch": "^3.2.10",
 		"tough-cookie": "^4.1.2"
 	},
 	"devDependencies": {
-		"ava": "^4.3.3",
+		"ava": "^5.0.1",
 		"create-test-server": "^3.0.1",
 		"delay": "^5.0.0",
 		"image-size": "^1.0.2",
 		"is-jpg": "^3.0.0",
 		"is-png": "^3.0.1",
-		"pify": "^6.0.0",
+		"pify": "^6.1.0",
 		"png-js": "^1.0.0",
 		"tempy": "^3.0.0",
-		"tsd": "^0.23.0",
-		"xo": "^0.52.2"
-	},
-	"tsd": {
-		"compilerOptions": {
-			"lib": [
-				"dom",
-				"es2020"
-			]
-		}
+		"tsd": "^0.24.1",
+		"xo": "^0.52.4"
 	}
 }

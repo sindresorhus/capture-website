@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import type {Buffer} from 'node:buffer';
 import type {
-	LaunchOptions as PuppeteerLaunchOptions,
-	BrowserLaunchArgumentOptions,
-	BrowserConnectOptions,
+	PuppeteerLaunchOptions,
 	Page,
 	Browser,
 	EvaluateFunc,
@@ -11,13 +9,6 @@ import type {
 	Product,
 	BoundingBox,
 } from 'puppeteer';
-
-export type LaunchOptions = PuppeteerLaunchOptions &
-BrowserLaunchArgumentOptions &
-BrowserConnectOptions & {
-	product?: Product;
-	extraPrefsFirefox?: Record<string, unknown>;
-};
 
 export type Authentication = {
 	readonly username: string;
@@ -239,7 +230,7 @@ export type Options = {
 	/**
 	Inject a function to be executed prior to navigation.
 
-	This can be useful for [altering the JavaScript environment](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageevaluateonnewdocumentpagefunction-args). For example, you could define a global method on the `window`, overwrite `navigator.languages` to change the language presented by the browser, or mock `Math.random` to return a fixed value.
+	This can be useful for [altering the JavaScript environment](https://pptr.dev/api/puppeteer.page.evaluateonnewdocument). For example, you could define a global method on the `window`, overwrite `navigator.languages` to change the language presented by the browser, or mock `Math.random` to return a fixed value.
 	*/
 	readonly preloadFunction?: EvaluateFunc<unknown[]>;
 
@@ -318,7 +309,7 @@ export type Options = {
 	readonly userAgent?: string;
 
 	/**
-	Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetcookiecookies).
+	Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://pptr.dev/api/puppeteer.page.setcookie).
 
 	Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
 
@@ -349,7 +340,7 @@ export type Options = {
 	readonly authentication?: Authentication;
 
 	/**
-	The specified function is called right before the screenshot is captured, as well as before any bounding rectangle is calculated as part of `options.element`. It receives the Puppeteer [`Page` instance](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-page) as the first argument and the [`browser` instance](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-browser) as the second argument. This gives you a lot of power to do custom stuff. The function can be async.
+	The specified function is called right before the screenshot is captured, as well as before any bounding rectangle is calculated as part of `options.element`. It receives the Puppeteer [`Page` instance](https://pptr.dev/api/puppeteer.page) as the first argument and the [`browser` instance](https://pptr.dev/api/puppeteer.browser) as the second argument. This gives you a lot of power to do custom stuff. The function can be async.
 
 	Note: Make sure to not call `page.close()` or `browser.close()`.
 
@@ -386,13 +377,13 @@ export type Options = {
 	readonly darkMode?: boolean;
 
 	/**
-	Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+	Options passed to [`puppeteer.launch()`](https://pptr.dev/api/puppeteer.puppeteernodelaunchoptions).
 
 	Note: Some of the launch options are overridden by the `debug` option.
 
 	@default {}
 	*/
-	readonly launchOptions?: LaunchOptions;
+	readonly launchOptions?: PuppeteerLaunchOptions;
 
 	/**
 	Inset the bounding box of the screenshot.
@@ -488,3 +479,5 @@ declare const captureWebsite: {
 };
 
 export default captureWebsite;
+
+export {type PuppeteerLaunchOptions as LaunchOptions} from 'puppeteer';

@@ -12,7 +12,7 @@ import {temporaryFile} from 'tempy';
 import delay from 'delay';
 import toughCookie from 'tough-cookie';
 import fileUrl from 'file-url';
-import puppeteer from 'puppeteer';
+import {KnownDevices} from 'puppeteer';
 import captureWebsite from './index.js';
 
 const defaultResponse = (() => {
@@ -136,7 +136,7 @@ test('`scaleFactor` option', async t => {
 });
 
 test('`emulateDevice` option', async t => {
-	const device = puppeteer.devices['iPhone X'];
+	const device = KnownDevices['iPhone X'];
 
 	const size = imageSize(await instance(server.url, {
 		emulateDevice: device.name,

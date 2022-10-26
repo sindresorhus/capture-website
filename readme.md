@@ -340,7 +340,7 @@ Set a custom [user agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Head
 
 Type: `Array<string | object>`
 
-Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#pagesetcookiecookies).
+Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://pptr.dev/api/puppeteer.page.setcookie).
 
 Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
 
@@ -380,7 +380,7 @@ Type: `string`
 
 Type: `Function`
 
-The specified function is called right before the screenshot is captured, as well as before any bounding rectangle is calculated as part of `options.element`. It receives the Puppeteer [`Page` instance](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-page) as the first argument and the [`browser` instance](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#class-browser) as the second argument. This gives you a lot of power to do custom stuff. The function can be async.
+The specified function is called right before the screenshot is captured, as well as before any bounding rectangle is calculated as part of `options.element`. It receives the Puppeteer [`Page` instance](https://pptr.dev/api/puppeteer.page) as the first argument and the [`browser` instance](https://pptr.dev/api/puppeteer.browser) as the second argument. This gives you a lot of power to do custom stuff. The function can be async.
 
 Note: Make sure to not call `page.close()` or `browser.close()`.
 
@@ -456,7 +456,7 @@ await captureWebsite.file('index.html', 'screenshot.png', {
 Type: `object`\
 Default: `{}`
 
-Options passed to [`puppeteer.launch()`](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
+Options passed to [`puppeteer.launch()`](https://pptr.dev/api/puppeteer.puppeteernodelaunchoptions).
 
 Note: Some of the launch options are overridden by the `debug` option.
 
@@ -476,7 +476,7 @@ Default: `undefined`
 
 Inject a function to be executed prior to navigation.
 
-This can be useful for [altering the JavaScript environment](https://github.com/puppeteer/puppeteer/blob/main/docs/api.md#pageevaluateonnewdocumentpagefunction-args). For example, you could define a global method on the `window`, overwrite `navigator.languages` to change the language presented by the browser, or mock `Math.random` to return a fixed value.
+This can be useful for [altering the JavaScript environment](https://pptr.dev/api/puppeteer.page.evaluateonnewdocument). For example, you could define a global method on the `window`, overwrite `navigator.languages` to change the language presented by the browser, or mock `Math.random` to return a fixed value.
 
 ##### clip
 
@@ -551,7 +551,7 @@ await Promise.all(items.map(([url, filename]) => {
 
 ### I'm getting a sandbox-related error
 
-If you get an error like `No usable sandbox!` or `Running as root without --no-sandbox is not supported`, you need to properly [set up sandboxing](https://github.com/GoogleChrome/puppeteer/blob/master/docs/troubleshooting.md#setting-up-chrome-linux-sandbox) on your Linux instance.
+If you get an error like `No usable sandbox!` or `Running as root without --no-sandbox is not supported`, you need to properly [set up sandboxing](https://pptr.dev/troubleshooting#setting-up-chrome-linux-sandbox) on your Linux instance.
 
 Alternatively, if you completely trust the content, you can disable sandboxing (strongly discouraged):
 

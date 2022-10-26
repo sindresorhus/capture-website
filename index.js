@@ -3,10 +3,10 @@ import process from 'node:process';
 import {promises as fs} from 'node:fs';
 import path from 'node:path';
 import fileUrl from 'file-url';
-import puppeteer from 'puppeteer';
+import puppeteer, {KnownDevices} from 'puppeteer';
 import toughCookie from 'tough-cookie';
 import {PuppeteerBlocker} from '@cliqz/adblocker-puppeteer';
-import fetch from 'node-fetch';
+import fetch from 'node-fetch'; // TODO: Use the core Fetch method when targeting Node.js 18.
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
@@ -267,11 +267,11 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	await page.setViewport(viewportOptions);
 
 	if (options.emulateDevice) {
-		if (!(options.emulateDevice in puppeteer.devices)) {
+		if (!(options.emulateDevice in KnownDevices)) {
 			throw new Error(`The device name \`${options.emulateDevice}\` is not supported`);
 		}
 
-		await page.emulate(puppeteer.devices[options.emulateDevice]);
+		await page.emulate(KnownDevices[options.emulateDevice]);
 	}
 
 	await page.emulateMediaFeatures([{
@@ -461,4 +461,4 @@ if (process.env.NODE_ENV === 'test') {
 
 export default captureWebsite;
 
-export const devices = Object.values(puppeteer.devices).map(device => device.name);
+export const devices = Object.values(KnownDevices).map(device => device.name);
