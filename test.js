@@ -2,7 +2,7 @@
 import {Buffer} from 'node:buffer';
 import fs from 'node:fs';
 import test from 'ava';
-import imageSize from 'image-size';
+import {imageDimensionsFromData} from 'image-dimensions';
 import isJpg from 'is-jpg';
 import isPng from 'is-png';
 import pify from 'pify';
@@ -125,7 +125,7 @@ test('`scaleFactor` option', async t => {
 	const scaleFactor = 4;
 	const expectedSize = sizeOption * scaleFactor;
 
-	const size = imageSize(await instance(server.url, {
+	const size = imageDimensionsFromData(await instance(server.url, {
 		width: sizeOption,
 		height: sizeOption,
 		scaleFactor,
@@ -138,7 +138,7 @@ test('`scaleFactor` option', async t => {
 test('`emulateDevice` option', async t => {
 	const device = KnownDevices['iPhone X'];
 
-	const size = imageSize(await instance(server.url, {
+	const size = imageDimensionsFromData(await instance(server.url, {
 		emulateDevice: device.name,
 	}));
 
@@ -148,7 +148,7 @@ test('`emulateDevice` option', async t => {
 });
 
 test('`fullPage` option', async t => {
-	const size = imageSize(await instance(server.url, {
+	const size = imageDimensionsFromData(await instance(server.url, {
 		width: 100,
 		height: 200,
 		scaleFactor: 1,
@@ -173,7 +173,7 @@ test('`fullPage` option - lazy loading', async t => {
 		`);
 	});
 
-	const size = imageSize(await instance(server.url, {
+	const size = imageDimensionsFromData(await instance(server.url, {
 		width: 200,
 		height: 300,
 		scaleFactor: 1,
@@ -202,7 +202,7 @@ test('`timeout` option', async t => {
 });
 
 test('`element` option - capture DOM element', async t => {
-	const size = imageSize(await instance(server.url, {
+	const size = imageDimensionsFromData(await instance(server.url, {
 		width: 400,
 		height: 400,
 		scaleFactor: 1,
@@ -229,7 +229,7 @@ test('`element` option - wait for DOM element', async t => {
 		`);
 	});
 
-	const size = imageSize(await instance(server.url, {
+	const size = imageDimensionsFromData(await instance(server.url, {
 		width: 400,
 		height: 400,
 		scaleFactor: 1,
@@ -887,7 +887,7 @@ test.failing('`preloadFunction` option', async t => {
 });
 
 test('`clip` option', async t => {
-	const size = imageSize(await instance(server.url, {
+	const size = imageDimensionsFromData(await instance(server.url, {
 		scaleFactor: 1,
 		clip: {
 			x: 10,

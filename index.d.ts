@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 import type {Buffer} from 'node:buffer';
 import type {
 	PuppeteerLaunchOptions,

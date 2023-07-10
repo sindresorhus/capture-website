@@ -64,7 +64,7 @@ Type: `object`
 
 Type: `string`\
 Default: `'url'`\
-Values: `'url'` `'html'`
+Values: `'url' | 'html'`
 
 Set it to `html` to treat `input` as HTML content.
 
@@ -93,7 +93,7 @@ Page height.
 ##### type
 
 Type: `string`\
-Values: `'png'` `'jpeg'` `'webp'`\
+Values: `'png' | 'jpeg' | 'webp'`\
 Default: `'png'`
 
 Image type.

@@ -1,12 +1,11 @@
 /* global document */
 import process from 'node:process';
-import {promises as fs} from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import fileUrl from 'file-url';
 import puppeteer, {KnownDevices} from 'puppeteer';
 import toughCookie from 'tough-cookie';
 import {PuppeteerBlocker} from '@cliqz/adblocker-puppeteer';
-import fetch from 'node-fetch'; // TODO: Use the core Fetch method when targeting Node.js 18.
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
 
@@ -50,28 +49,37 @@ const scrollToElement = (element, options) => {
 		const offset = options.offset || 0;
 
 		switch (options.offsetFrom) {
-			case 'top':
+			case 'top': {
 				return {
 					x: rect.left,
 					y: rect.top + offset,
 				};
-			case 'right':
+			}
+
+			case 'right': {
 				return {
 					x: rect.left - offset,
 					y: rect.top,
 				};
-			case 'bottom':
+			}
+
+			case 'bottom': {
 				return {
 					x: rect.left,
 					y: rect.top - offset,
 				};
-			case 'left':
+			}
+
+			case 'left': {
 				return {
 					x: rect.left + offset,
 					y: rect.top,
 				};
-			default:
+			}
+
+			default: {
 				throw new Error('Invalid `scrollToElement.offsetFrom` value');
+			}
 		}
 	};
 
@@ -399,11 +407,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	if (options.inset && !screenshotOptions.fullPage) {
 		const inset = {top: 0, right: 0, bottom: 0, left: 0};
 		for (const key of Object.keys(inset)) {
-			if (typeof options.inset === 'number') {
-				inset[key] = options.inset;
-			} else {
-				inset[key] = options.inset[key] || 0;
-			}
+			inset[key] = typeof options.inset === 'number' ? options.inset : options.inset[key] || 0;
 		}
 
 		let clipOptions = screenshotOptions.clip;
