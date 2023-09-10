@@ -574,4 +574,4 @@ The biggest difference is that Pageres supports capturing multiple screenshots i
 
 ## Related
 
-- [capture-website-cli](https://github.com/rdwz/capture-website-cli) - CLI for this module
+- [@redwerkz/capture-website-cli](https://github.com/rdwz/capture-website-cli) - CLI for this module
