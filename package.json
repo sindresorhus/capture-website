@@ -16,7 +16,7 @@
 		"node": ">=16.20"
 	},
 	"scripts": {
-		"test": "xo && ava --timeout=10m && tsd"
+		"test": "standard && ava --timeout=10m && tsd"
 	},
 	"files": [
 		"index.js",
@@ -41,8 +41,8 @@
 	"dependencies": {
 		"@cliqz/adblocker-puppeteer": "^1.25.1",
 		"file-url": "^4.0.0",
-		"puppeteer": "^19.2.0",
 		"node-fetch": "^3.2.10",
+		"puppeteer": "^19.2.0",
 		"tough-cookie": "^4.1.2"
 	},
 	"devDependencies": {
@@ -54,8 +54,8 @@
 		"is-png": "^3.0.1",
 		"pify": "^6.1.0",
 		"png-js": "^1.0.0",
+		"standard": "^17.1.0",
 		"tempy": "^3.0.0",
-		"tsd": "^0.24.1",
-		"xo": "^0.52.4"
+		"tsd": "^0.24.1"
 	}
 }
