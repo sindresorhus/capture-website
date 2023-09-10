@@ -1,15 +1,21 @@
 {
-	"name": "capture-website",
-	"version": "3.2.0",
+	"name": "@rdwz/capture-website",
+	"version": "3.3.0",
 	"description": "Capture screenshots of websites",
 	"license": "MIT",
-	"repository": "sindresorhus/capture-website",
-	"funding": "https://github.com/sponsors/sindresorhus",
-	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "https://sindresorhus.com"
-	},
+	"repository": "rdwz/capture-website",
+	"authors": [
+		{
+			"name": "Marc Redwerkz",
+			"email": "redwerkz@gmail.com",
+			"url": "https://github.com/rdwz"
+		},
+		{
+			"name": "Sindre Sorhus",
+			"email": "sindresorhus@gmail.com",
+			"url": "https://sindresorhus.com"
+		}
+	],
 	"type": "module",
 	"exports": "./index.js",
 	"engines": {
