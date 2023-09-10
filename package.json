@@ -1,6 +1,6 @@
 {
 	"name": "@rdwz/capture-website",
-	"version": "3.3.0",
+	"version": "4.0.0",
 	"description": "Capture screenshots of websites",
 	"license": "MIT",
 	"repository": "rdwz/capture-website",
