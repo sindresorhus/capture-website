@@ -72,7 +72,7 @@ Set it to `html` to treat `input` as HTML content.
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('<h1>Awesome!</h1>', 'screenshot.png', {
-	inputType: 'html'
+  inputType: 'html'
 });
 ```
 
@@ -128,7 +128,7 @@ This overrides the `width`, `height`, `scaleFactor`, and `userAgent` options.
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-	emulateDevice: 'iPhone X'
+  emulateDevice: 'iPhone X'
 });
 ```
 
@@ -192,10 +192,10 @@ This sets [`visibility: hidden`](https://stackoverflow.com/a/133064/64949) on th
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-	hideElements: [
-		'#sidebar',
-		'img.ad'
-	]
+  hideElements: [
+    '#sidebar',
+    'img.ad'
+  ]
 });
 ```
 
@@ -273,13 +273,13 @@ Accepts an array of inline code, absolute URLs, and local file paths (must have 
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-	modules: [
-		'https://sindresorhus.com/remote-file.js',
-		'local-file.js',
-		`
-		document.body.style.backgroundColor = 'red';
-		`
-	]
+  modules: [
+    'https://sindresorhus.com/remote-file.js',
+    'local-file.js',
+    `
+    document.body.style.backgroundColor = 'red';
+    `
+  ]
 });
 ```
 
@@ -301,15 +301,15 @@ Accepts an array of inline code, absolute URLs, and local file paths (must have 
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-	styles: [
-		'https://sindresorhus.com/remote-file.css',
-		'local-file.css',
-		`
-		body {
-			background-color: red;
-		}
-		`
-	]
+  styles: [
+    'https://sindresorhus.com/remote-file.css',
+    'local-file.css',
+    `
+    body {
+      background-color: red;
+    }
+    `
+  ]
 });
 ```
 
@@ -324,9 +324,9 @@ Set custom [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Head
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-	headers: {
-		'x-powered-by': 'https://github.com/sindresorhus/capture-website'
-	}
+  headers: {
+    'x-powered-by': 'https://github.com/sindresorhus/capture-website'
+  }
 });
 ```
 
@@ -348,17 +348,17 @@ Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](h
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-	cookies: [
-		// This format is useful for when you copy it from the browser
-		'id=unicorn; Expires=Wed, 21 Oct 2018 07:28:00 GMT;',
+  cookies: [
+    // This format is useful for when you copy it from the browser
+    'id=unicorn; Expires=Wed, 21 Oct 2018 07:28:00 GMT;',
 
-		// This format is useful for when you have to manually create a cookie
-		{
-			name: 'id',
-			value: 'unicorn',
-			expires: Math.round(new Date('2018-10-21').getTime() / 1000)
-		}
-	]
+    // This format is useful for when you have to manually create a cookie
+    {
+      name: 'id',
+      value: 'unicorn',
+      expires: Math.round(new Date('2018-10-21').getTime() / 1000)
+    }
+  ]
 });
 ```
 
@@ -389,11 +389,11 @@ import captureWebsite from 'capture-website';
 import checkSomething from './check-something.js';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-	beforeScreenshot: async (page, browser) => {
-		await checkSomething();
-		await page.click('#activate-button');
-		await page.waitForSelector('.finished');
-	}
+  beforeScreenshot: async (page, browser) => {
+    await checkSomething();
+    await page.click('#activate-button');
+    await page.waitForSelector('.finished');
+  }
 });
 ```
 
@@ -434,8 +434,8 @@ Example: Include 10 pixels around the element.
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('index.html', 'screenshot.png', {
-	element: '.logo',
-	inset: -10
+  element: '.logo',
+  inset: -10
 });
 ```
 
@@ -445,9 +445,9 @@ Example: Ignore 15 pixels from the top of the viewport.
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('index.html', 'screenshot.png', {
-	inset: {
-		top: 15
-	}
+  inset: {
+    top: 15
+  }
 });
 ```
 
@@ -507,12 +507,12 @@ For example, define the screenshot's `width` and `height` to 400 at position (0,
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
-	clip: {
-		x: 0,
-		y: 0,
-		width: 400,
-		height: 400
-	}
+  clip: {
+    x: 0,
+    y: 0,
+    width: 400,
+    height: 400
+  }
 });
 ```
 
@@ -530,18 +530,18 @@ Devices supported by the `emulateDevice` option.
 import captureWebsite from 'capture-website';
 
 const options = {
-	width: 1920,
-	height: 1000
+  width: 1920,
+  height: 1000
 };
 
 const items = [
-	['https://sindresorhus.com', 'sindresorhus'],
-	['https://github.com', 'github'],
-	// …
+  ['https://sindresorhus.com', 'sindresorhus'],
+  ['https://github.com', 'github'],
+  // …
 ];
 
 await Promise.all(items.map(([url, filename]) => {
-	return captureWebsite.file(url, `${filename}.png`, options);
+  return captureWebsite.file(url, `${filename}.png`, options);
 }));
 ```
 
@@ -559,12 +559,12 @@ Alternatively, if you completely trust the content, you can disable sandboxing (
 import captureWebsite from 'capture-website';
 
 await captureWebsite.file('…', '…', {
-	launchOptions: {
-		args: [
-			'--no-sandbox',
-			'--disable-setuid-sandbox'
-		]
-	}
+  launchOptions: {
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox'
+    ]
+  }
 });
 ```
 
