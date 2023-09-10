@@ -1,6 +1,6 @@
 {
 	"name": "@redwerkz/capture-website",
-	"version": "4.0.0",
+	"version": "5.0.0",
 	"description": "Capture screenshots of websites",
 	"license": "MIT",
 	"repository": "github:rdwz/capture-website",
@@ -9,7 +9,7 @@
 	"type": "module",
 	"exports": "./index.js",
 	"engines": {
-		"node": ">=16.20"
+		"node": ">=18.17"
 	},
 	"scripts": {
 		"test": "standard && ava --timeout=10m && tsd"
