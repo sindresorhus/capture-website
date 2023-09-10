@@ -1,15 +1,15 @@
-# capture-website
+# @redwerkz/capture-website
 
 > Capture screenshots of websites
 
 It uses [Puppeteer](https://github.com/GoogleChrome/puppeteer) (Chrome) under the hood.
 
-See [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) for the command-line tool.
+See [@redwerkz/capture-website-cli](https://github.com/rdwz/capture-website-cli) for the command-line tool.
 
 ## Install
 
 ```sh
-npm install capture-website
+npm install @redwerkz/capture-website
 ```
 
 Note to Linux users: If you get a sandbox-related error, you need to enable [system sandboxing](#im-getting-a-sandbox-related-error).
@@ -17,7 +17,7 @@ Note to Linux users: If you get a sandbox-related error, you need to enable [sys
 ## Usage
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png');
 ```
@@ -51,7 +51,7 @@ Type: `string`
 The URL, file URL, data URL, local file path to the website, or HTML.
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('index.html', 'local-file.png');
 ```
@@ -69,7 +69,7 @@ Values: `'url'` `'html'`
 Set it to `html` to treat `input` as HTML content.
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('<h1>Awesome!</h1>', 'screenshot.png', {
   inputType: 'html'
@@ -125,7 +125,7 @@ Make it look like the screenshot was taken on the specified device.
 This overrides the `width`, `height`, `scaleFactor`, and `userAgent` options.
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
   emulateDevice: 'iPhone X'
@@ -189,7 +189,7 @@ Can be useful for cleaning up the page.
 This sets [`visibility: hidden`](https://stackoverflow.com/a/133064/64949) on the matched elements.
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
   hideElements: [
@@ -270,7 +270,7 @@ Inject [JavaScript modules](https://developers.google.com/web/fundamentals/prime
 Accepts an array of inline code, absolute URLs, and local file paths (must have a `.js` extension).
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
   modules: [
@@ -298,7 +298,7 @@ Inject CSS styles into the page.
 Accepts an array of inline code, absolute URLs, and local file paths (must have a `.css` extension).
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
   styles: [
@@ -321,11 +321,11 @@ Default: `{}`
 Set custom [HTTP headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers).
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
   headers: {
-    'x-powered-by': 'https://github.com/sindresorhus/capture-website'
+    'x-powered-by': 'https://github.com/rdwz/capture-website'
   }
 });
 ```
@@ -345,7 +345,7 @@ Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/
 Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
   cookies: [
@@ -385,7 +385,7 @@ The specified function is called right before the screenshot is captured, as wel
 Note: Make sure to not call `page.close()` or `browser.close()`.
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 import checkSomething from './check-something.js';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
@@ -431,7 +431,7 @@ Note: When the `width` or `height` of the screenshot is equal to `0` an error is
 Example: Include 10 pixels around the element.
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('index.html', 'screenshot.png', {
   element: '.logo',
@@ -442,7 +442,7 @@ await captureWebsite.file('index.html', 'screenshot.png', {
 Example: Ignore 15 pixels from the top of the viewport.
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('index.html', 'screenshot.png', {
   inset: {
@@ -504,7 +504,7 @@ Type: `number`
 For example, define the screenshot's `width` and `height` to 400 at position (0, 0):
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
   clip: {
@@ -527,7 +527,7 @@ Devices supported by the `emulateDevice` option.
 ### Capturing multiple screenshots
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 const options = {
   width: 1920,
@@ -556,7 +556,7 @@ If you get an error like `No usable sandbox!` or `Running as root without --no-s
 Alternatively, if you completely trust the content, you can disable sandboxing (strongly discouraged):
 
 ```js
-import captureWebsite from 'capture-website';
+import captureWebsite from '@redwerkz/capture-website';
 
 await captureWebsite.file('…', '…', {
   launchOptions: {
@@ -574,5 +574,4 @@ The biggest difference is that Pageres supports capturing multiple screenshots i
 
 ## Related
 
-- [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) - CLI for this module
-- [pageres](https://github.com/sindresorhus/pageres) - A different take on screenshotting websites
+- [capture-website-cli](https://github.com/rdwz/capture-website-cli) - CLI for this module
