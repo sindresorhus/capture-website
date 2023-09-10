@@ -6,7 +6,6 @@ import fileUrl from 'file-url'
 import puppeteer, { KnownDevices } from 'puppeteer'
 import toughCookie from 'tough-cookie'
 import { PuppeteerBlocker } from '@cliqz/adblocker-puppeteer'
-import fetch from 'node-fetch' // TODO: Use the core Fetch method when targeting Node.js 18.
 
 const isUrl = (string) => /^(https?|file):\/\/|^data:/.test(string)
 
