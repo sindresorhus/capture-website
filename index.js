@@ -144,9 +144,9 @@ const internalCaptureWebsite = async (input, options) => {
   const { launchOptions } = options
 
   validateOptions(options)
+  launchOptions.headless = 'new'
 
   if (options.debug) {
-    launchOptions.headless = 'new'
     launchOptions.slowMo = 100
   }
 
