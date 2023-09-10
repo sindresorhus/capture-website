@@ -13,7 +13,7 @@
 	"type": "module",
 	"exports": "./index.js",
 	"engines": {
-		"node": ">=14.16"
+		"node": ">=16.20"
 	},
 	"scripts": {
 		"test": "xo && ava --timeout=10m && tsd"
