@@ -1,5 +1,4 @@
 /* global document */
-import {Buffer} from 'node:buffer';
 import fs from 'node:fs';
 import test from 'ava';
 import {imageDimensionsFromData} from 'image-dimensions';
@@ -13,6 +12,7 @@ import delay from 'delay';
 import toughCookie from 'tough-cookie';
 import fileUrl from 'file-url';
 import {KnownDevices} from 'puppeteer';
+import {base64ToUint8Array} from 'uint8array-extras';
 import captureWebsite from './index.js';
 
 const defaultResponse = (() => {
@@ -109,7 +109,7 @@ test('captureWebsite.base64()', async t => {
 	});
 
 	t.is(typeof screenshot, 'string');
-	t.true(isPng(Buffer.from(screenshot, 'base64')));
+	t.true(isPng(base64ToUint8Array(screenshot)));
 });
 
 test('`type` option', async t => {

@@ -1,4 +1,3 @@
-import type {Buffer} from 'node:buffer';
 import type {
 	PuppeteerLaunchOptions,
 	Page,
@@ -466,7 +465,7 @@ declare const captureWebsite: {
 	@param input - The URL, file URL, data URL, local file path to the website, or HTML.
 	@returns The screenshot as binary.
 	*/
-	buffer: (input: string, options?: Options) => Promise<Buffer>;
+	buffer: (input: string, options?: Options) => Promise<Uint8Array>;
 
 	/**
 	Capture a screenshot of the given `input`.

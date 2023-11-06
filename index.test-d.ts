@@ -1,4 +1,3 @@
-import type {Buffer} from 'node:buffer';
 import {expectType} from 'tsd';
 import captureWebsite, {devices} from './index.js';
 
@@ -18,7 +17,7 @@ expectType<Promise<string>>(
 	captureWebsite.base64('https://github.com/sindresorhus/capture-website#readme'),
 );
 
-expectType<Promise<Buffer>>(
+expectType<Promise<Uint8Array>>(
 	captureWebsite.buffer('https://github.com/sindresorhus/capture-website#readme'),
 );
 

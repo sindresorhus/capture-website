@@ -452,7 +452,7 @@ captureWebsite.file = async (url, filePath, options = {}) => {
 	});
 };
 
-captureWebsite.buffer = async (url, options) => internalCaptureWebsite(url, options);
+captureWebsite.buffer = async (url, options) => new Uint8Array(await internalCaptureWebsite(url, options));
 
 captureWebsite.base64 = async (url, options) => {
 	const screenshot = await internalCaptureWebsite(url, options);
