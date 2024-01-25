@@ -377,13 +377,13 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	if (screenshotOptions.fullPage) {
 		// Get the height of the rendered page
 		const bodyHandle = await page.$('body');
-		const bodyBoundingHeight = await bodyHandle.boundingBox();
+		const bodyBoundingBox = await bodyHandle.boundingBox();
 		await bodyHandle.dispose();
 
 		// Scroll one viewport at a time, pausing to let content load
 		const viewportHeight = viewportOptions.height;
 		let viewportIncrement = 0;
-		while (viewportIncrement + viewportHeight < bodyBoundingHeight.height) {
+		while (viewportIncrement + viewportHeight < bodyBoundingBox.height) {
 			const navigationPromise = page.waitForNetworkIdle();
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
