@@ -384,7 +384,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		const viewportHeight = viewportOptions.height;
 		let viewportIncrement = 0;
 		while (viewportIncrement + viewportHeight < bodyBoundingHeight.height) {
-			const navigationPromise = page.waitForNavigation({waitUntil: 'networkidle0'});
+			const navigationPromise = page.waitForNetworkIdle();
 			/* eslint-disable no-await-in-loop */
 			await page.evaluate(_viewportHeight => {
 				/* eslint-disable no-undef */
