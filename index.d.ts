@@ -379,7 +379,7 @@ export type Options = {
 
 	Note: Some of the launch options are overridden by the `debug` option.
 
-	@default { headless: 'new' }
+	@default {headless: 'new'}
 	*/
 	readonly launchOptions?: PuppeteerLaunchOptions;
 
