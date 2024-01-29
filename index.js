@@ -139,7 +139,7 @@ const parseCookie = (url, cookie) => {
 
 const internalCaptureWebsite = async (input, options) => {
 	options = {
-		launchOptions: {},
+		launchOptions: {headless: 'new'},
 		...options,
 	};
 	const {launchOptions} = options;
