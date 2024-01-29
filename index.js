@@ -216,7 +216,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		screenshotOptions.type = options.type;
 	}
 
-	if (options.quality) {
+	if (typeof options.quality === 'number' && options.type && options.type !== 'png') {
 		screenshotOptions.quality = options.quality * 100;
 	}
 
