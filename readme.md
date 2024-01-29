@@ -454,7 +454,7 @@ await captureWebsite.file('index.html', 'screenshot.png', {
 ##### launchOptions
 
 Type: `object`\
-Default: `{}`
+Default: `{ headless: 'new' }`
 
 Options passed to [`puppeteer.launch()`](https://pptr.dev/api/puppeteer.puppeteernodelaunchoptions).
 
