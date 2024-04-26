@@ -2,6 +2,7 @@
 import process from 'node:process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import {setTimeout} from 'node:timers/promises';
 import fileUrl from 'file-url';
 import puppeteer, {KnownDevices} from 'puppeteer';
 import toughCookie from 'tough-cookie';
@@ -111,7 +112,15 @@ const disableAnimations = () => {
 
 const getBoundingClientRect = element => {
 	const {top, left, height, width, x, y} = element.getBoundingClientRect();
-	return {top, left, height, width, x, y};
+
+	return {
+		top,
+		left,
+		height,
+		width,
+		x,
+		y,
+	};
 };
 
 const parseCookie = (url, cookie) => {
@@ -130,9 +139,7 @@ const parseCookie = (url, cookie) => {
 	returnValue.name = returnValue.key;
 	delete returnValue.key;
 
-	if (returnValue.expires) {
-		returnValue.expires = Math.floor(new Date(returnValue.expires) / 1000);
-	}
+	returnValue.expires &&= Math.floor(new Date(returnValue.expires) / 1000);
 
 	return returnValue;
 };
@@ -312,7 +319,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		await page.click(options.clickElement);
 	}
 
-	const getInjectKey = (ext, value) => isUrl(value) ? 'url' : (value.endsWith(`.${ext}`) ? 'path' : 'content');
+	const getInjectKey = (extension, value) => isUrl(value) ? 'url' : (value.endsWith(`.${extension}`) ? 'path' : 'content');
 
 	if (!options.isJavaScriptEnabled) {
 		// Enable JavaScript again for `modules` and `scripts`.
@@ -357,7 +364,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (options.delay) {
-		await page.waitForTimeout(options.delay * 1000);
+		await setTimeout(options.delay * 1000);
 	}
 
 	if (options.element) {
@@ -405,23 +412,27 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (options.inset && !screenshotOptions.fullPage) {
-		const inset = {top: 0, right: 0, bottom: 0, left: 0};
+		const inset = {
+			top: 0,
+			right: 0,
+			bottom: 0,
+			left: 0,
+		};
+
 		for (const key of Object.keys(inset)) {
-			inset[key] = typeof options.inset === 'number' ? options.inset : options.inset[key] || 0;
+			inset[key] = typeof options.inset === 'number' ? options.inset : (options.inset[key] ?? 0);
 		}
 
 		let clipOptions = screenshotOptions.clip;
 
-		if (!clipOptions) {
-			clipOptions = await page.evaluate(() => ({
-				x: 0,
-				y: 0,
-				/* eslint-disable no-undef */
-				height: window.innerHeight,
-				width: window.innerWidth,
-				/* eslint-enable no-undef */
-			}));
-		}
+		clipOptions ||= await page.evaluate(() => ({
+			x: 0,
+			y: 0,
+			/* eslint-disable no-undef */
+			height: window.innerHeight,
+			width: window.innerWidth,
+			/* eslint-enable no-undef */
+		}));
 
 		const x = clipOptions.x + inset.left;
 		const y = clipOptions.y + inset.top;
@@ -432,7 +443,12 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 			throw new Error('When using the `clip` option, the width or height of the screenshot cannot be equal to 0.');
 		}
 
-		screenshotOptions.clip = {x, y, width, height};
+		screenshotOptions.clip = {
+			x,
+			y,
+			width,
+			height,
+		};
 	}
 
 	const buffer = await page.screenshot(screenshotOptions);
