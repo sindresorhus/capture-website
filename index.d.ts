@@ -1,10 +1,9 @@
 import type {
-	PuppeteerLaunchOptions,
+	PuppeteerNodeLaunchOptions,
 	Page,
 	Browser,
 	EvaluateFunc,
 	Protocol,
-	Product,
 	BoundingBox,
 } from 'puppeteer';
 
@@ -381,7 +380,7 @@ export type Options = {
 
 	@default {headless: 'new'}
 	*/
-	readonly launchOptions?: PuppeteerLaunchOptions;
+	readonly launchOptions?: PuppeteerNodeLaunchOptions;
 
 	/**
 	Inset the bounding box of the screenshot.
@@ -478,4 +477,4 @@ declare const captureWebsite: {
 
 export default captureWebsite;
 
-export {type PuppeteerLaunchOptions as LaunchOptions} from 'puppeteer';
+export {type PuppeteerNodeLaunchOptions as LaunchOptions} from 'puppeteer';
