@@ -5,7 +5,7 @@ import path from 'node:path';
 import {setTimeout} from 'node:timers/promises';
 import fileUrl from 'file-url';
 import puppeteer, {KnownDevices} from 'puppeteer';
-import toughCookie from 'tough-cookie';
+import * as toughCookie from 'tough-cookie';
 import {PuppeteerBlocker} from '@ghostery/adblocker-puppeteer';
 
 const isUrl = string => /^(https?|file):\/\/|^data:/.test(string);
@@ -24,7 +24,7 @@ const validateOptions = options => {
 const scrollToElement = (element, options) => {
 	const isOverflown = element => (
 		element.scrollHeight > element.clientHeight
-			|| element.scrollWidth > element.clientWidth
+		|| element.scrollWidth > element.clientWidth
 	);
 
 	const findScrollParent = element => {
@@ -146,7 +146,7 @@ const parseCookie = (url, cookie) => {
 
 const internalCaptureWebsite = async (input, options) => {
 	options = {
-		launchOptions: {headless: 'new'},
+		launchOptions: {headless: true},
 		...options,
 	};
 	const {launchOptions} = options;

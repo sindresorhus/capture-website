@@ -1,2 +1,2 @@
-/* eslint-env browser */
+/* globals document */
 document.querySelector('div').style.backgroundColor = 'red';

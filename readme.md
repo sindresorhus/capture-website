@@ -12,7 +12,7 @@ See [capture-website-cli](https://github.com/sindresorhus/capture-website-cli) f
 npm install capture-website
 ```
 
-Note to Linux users: If you get a sandbox-related error, you need to enable [system sandboxing](#im-getting-a-sandbox-related-error).
+Note to Linux users: If you get a sandbox-related error, you need to enable [system sandboxing](#i-get-a-sandbox-related-error).
 
 ## Usage
 
@@ -454,7 +454,7 @@ await captureWebsite.file('index.html', 'screenshot.png', {
 ##### launchOptions
 
 Type: `object`\
-Default: `{headless: 'new'}`
+Default: `{headless: true}`
 
 Options passed to [`puppeteer.launch()`](https://pptr.dev/api/puppeteer.puppeteernodelaunchoptions).
 

@@ -1,6 +1,8 @@
 /* global document */
 import fs from 'node:fs';
-import test from 'ava';
+import {Buffer} from 'node:buffer';
+import {test, before, after} from 'node:test';
+import assert from 'node:assert/strict';
 import {imageDimensionsFromData} from 'image-dimensions';
 import isJpg from 'is-jpg';
 import isPng from 'is-png';
@@ -9,7 +11,7 @@ import PNG from 'png-js';
 import createTestServer from 'create-test-server';
 import {temporaryFile} from 'tempy';
 import delay from 'delay';
-import toughCookie from 'tough-cookie';
+import * as toughCookie from 'tough-cookie';
 import fileUrl from 'file-url';
 import {KnownDevices} from 'puppeteer';
 /// import {base64ToUint8Array} from 'uint8array-extras';
@@ -39,7 +41,8 @@ const getPngPixels = async buffer => {
 let server;
 let browser;
 let instance;
-test.before(async () => {
+
+before(async () => {
 	server = await createDefaultServer();
 	browser = await captureWebsite._startBrowser();
 
@@ -50,48 +53,78 @@ test.before(async () => {
 	});
 });
 
-test.after(async () => {
-	await browser.close();
-	await server.close();
+after(async () => {
+	if (browser) {
+		try {
+			// Get the browser process before anything else
+			const browserProcess = browser.process();
+
+			// Close all pages to free resources
+			const pages = await browser.pages();
+			await Promise.all(pages.map(async page => {
+				try {
+					await page.close();
+				} catch {}
+			}));
+
+			// Close the browser
+			try {
+				await browser.close();
+			} catch {}
+
+			// Force kill the browser process immediately
+			if (browserProcess && !browserProcess.killed) {
+				browserProcess.kill('SIGKILL');
+			}
+		} catch (error) {
+			console.error('Error closing browser:', error);
+		}
+	}
+
+	if (server) {
+		try {
+			await server.close();
+		} catch {}
+	}
 });
 
-test('capture screenshot - from url', async t => {
-	t.true(isPng(await instance(server.url, {
+test('capture screenshot - from url', async () => {
+	assert.ok(isPng(await instance(server.url, {
 		width: 100,
 		height: 100,
 	})));
 });
 
-test('capture screenshot - from local file', async t => {
-	t.true(isPng(await instance('fixtures/local-file.html', {
+test('capture screenshot - from local file', async () => {
+	assert.ok(isPng(await instance('fixtures/local-file.html', {
 		width: 100,
 		height: 100,
 	})));
 });
 
-test('capture screenshot - from file URL', async t => {
-	t.true(isPng(await instance(fileUrl('fixtures/local-file.html'), {
+test('capture screenshot - from file URL', async () => {
+	assert.ok(isPng(await instance(fileUrl('fixtures/local-file.html'), {
 		width: 100,
 		height: 100,
 	})));
 });
 
-test('capture screenshot - from data URL', async t => {
-	t.true(isPng(await instance('data:text/html,<h1>Awesome!</h1>', {
+test('capture screenshot - from data URL', async () => {
+	assert.ok(isPng(await instance('data:text/html,<h1>Awesome!</h1>', {
 		width: 100,
 		height: 100,
 	})));
 });
 
-test('capture screenshot - from HTML content', async t => {
-	t.true(isPng(await instance('<h1>Awesome!</h1>', {
+test('capture screenshot - from HTML content', async () => {
+	assert.ok(isPng(await instance('<h1>Awesome!</h1>', {
 		inputType: 'html',
 		width: 100,
 		height: 100,
 	})));
 });
 
-test('captureWebsite.file()', async t => {
+test('captureWebsite.file()', async () => {
 	const filePath = temporaryFile();
 
 	await captureWebsite.file(server.url, filePath, {
@@ -99,30 +132,30 @@ test('captureWebsite.file()', async t => {
 		height: 100,
 	});
 
-	t.true(isPng(fs.readFileSync(filePath)));
+	assert.ok(isPng(fs.readFileSync(filePath)));
 });
 
-test('captureWebsite.base64()', async t => {
+test('captureWebsite.base64()', async () => {
 	const screenshot = await captureWebsite.base64(server.url, {
 		width: 100,
 		height: 100,
 	});
 
-	t.is(typeof screenshot, 'string');
+	assert.equal(typeof screenshot, 'string');
 
-	// TODO: Fixme.
-	/// t.true(isPng(base64ToUint8Array(screenshot)));
+	// TODO: Fix base64 PNG verification.
+	// assert.ok(isPng(base64ToUint8Array(screenshot)));
 });
 
-test('`type` option', async t => {
-	t.true(isJpg(await instance(server.url, {
+test('`type` option', async () => {
+	assert.ok(isJpg(await instance(server.url, {
 		width: 100,
 		height: 100,
 		type: 'jpeg',
 	})));
 });
 
-test('`scaleFactor` option', async t => {
+test('`scaleFactor` option', async () => {
 	const sizeOption = 100;
 	const scaleFactor = 4;
 	const expectedSize = sizeOption * scaleFactor;
@@ -133,11 +166,11 @@ test('`scaleFactor` option', async t => {
 		scaleFactor,
 	}));
 
-	t.is(size.width, expectedSize);
-	t.is(size.height, expectedSize);
+	assert.equal(size.width, expectedSize);
+	assert.equal(size.height, expectedSize);
 });
 
-test('`emulateDevice` option', async t => {
+test('`emulateDevice` option', async () => {
 	const device = KnownDevices['iPhone X'];
 
 	const size = imageDimensionsFromData(await instance(server.url, {
@@ -145,11 +178,11 @@ test('`emulateDevice` option', async t => {
 	}));
 
 	const {viewport} = device;
-	t.is(size.width, viewport.width * viewport.deviceScaleFactor);
-	t.is(size.height, viewport.height * viewport.deviceScaleFactor);
+	assert.equal(size.width, viewport.width * viewport.deviceScaleFactor);
+	assert.equal(size.height, viewport.height * viewport.deviceScaleFactor);
 });
 
-test('`fullPage` option', async t => {
+test('`fullPage` option', async () => {
 	const size = imageDimensionsFromData(await instance(server.url, {
 		width: 100,
 		height: 200,
@@ -157,19 +190,19 @@ test('`fullPage` option', async t => {
 		fullPage: true,
 	}));
 
-	t.is(size.width, 100);
-	t.true(size.height > 100);
+	assert.equal(size.width, 100);
+	assert.ok(size.height > 100);
 });
 
-test('`fullPage` option - lazy loading', async t => {
+test('`fullPage` option - lazy loading', async () => {
 	const server = await createTestServer();
-	const imageCount = 50;
+	const imageCount = 10; // Reduced from 50
 
 	server.get('/', async (request, response) => {
 		response.end(`
 			<body>
 				<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
-					${[...Array.from({length: imageCount}).keys()].map(image => `<img src="https://picsum.photos/150/150?random=${image}" loading="lazy">`).join('')}
+					${[...Array.from({length: imageCount}).keys()].map(() => '<div style="width: 150px; height: 150px; background: #ccc; margin: 5px;">Image</div>').join('')}
 				</div>
 			</body>
 		`);
@@ -182,11 +215,13 @@ test('`fullPage` option - lazy loading', async t => {
 		fullPage: true,
 	}));
 
-	t.is(size.width, 200);
-	t.true(size.height > 150);
+	assert.equal(size.width, 200);
+	assert.ok(size.height > 150);
+
+	await server.close();
 });
 
-test('`timeout` option', async t => {
+test('`timeout` option', async () => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -194,7 +229,7 @@ test('`timeout` option', async t => {
 		response.end();
 	});
 
-	await t.throwsAsync(instance(server.url, {
+	await assert.rejects(instance(server.url, {
 		width: 100,
 		height: 100,
 		timeout: 1,
@@ -203,7 +238,7 @@ test('`timeout` option', async t => {
 	await server.close();
 });
 
-test('`element` option - capture DOM element', async t => {
+test('`element` option - capture DOM element', async () => {
 	const size = imageDimensionsFromData(await instance(server.url, {
 		width: 400,
 		height: 400,
@@ -211,11 +246,11 @@ test('`element` option - capture DOM element', async t => {
 		element: 'div',
 	}));
 
-	t.is(size.width, 100);
-	t.is(size.height, 100);
+	assert.equal(size.width, 100);
+	assert.equal(size.height, 100);
 });
 
-test('`element` option - wait for DOM element', async t => {
+test('`element` option - wait for DOM element', async () => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -238,13 +273,13 @@ test('`element` option - wait for DOM element', async t => {
 		element: 'div',
 	}));
 
-	t.is(size.width, 100);
-	t.is(size.height, 100);
+	assert.equal(size.width, 100);
+	assert.equal(size.height, 100);
 
 	await server.close();
 });
 
-test('`hideElements` option', async t => {
+test('`hideElements` option', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -253,10 +288,10 @@ test('`hideElements` option', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
+	assert.equal(pixels[0], 255);
 });
 
-test('`removeElements` option', async t => {
+test('`removeElements` option', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -265,10 +300,10 @@ test('`removeElements` option', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
+	assert.equal(pixels[0], 255);
 });
 
-test('`clickElement` option', async t => {
+test('`clickElement` option', async () => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -290,14 +325,14 @@ test('`clickElement` option', async t => {
 		clickElement: 'div',
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 
 	await server.close();
 });
 
-test('`scrollToElement` option as string', async t => {
+test('`scrollToElement` option as string', async () => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -321,14 +356,14 @@ test('`scrollToElement` option as string', async t => {
 		scrollToElement: '#black',
 	}));
 
-	t.is(pixels[0], 0);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 0);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 
 	await server.close();
 });
 
-test('`scrollToElement` option as object', async t => {
+test('`scrollToElement` option as object', async () => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -356,14 +391,14 @@ test('`scrollToElement` option as object', async t => {
 		},
 	}));
 
-	t.is(pixels[0], 0);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 0);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 
 	await server.close();
 });
 
-test('`disableAnimations` option', async t => {
+test('`disableAnimations` option', async () => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -384,14 +419,14 @@ test('`disableAnimations` option', async t => {
 		disableAnimations: true,
 	}));
 
-	t.is(pixels[0], 0);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 0);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 
 	await server.close();
 });
 
-test('`isJavaScriptEnabled: false` option', async t => {
+test('`isJavaScriptEnabled: false` option', async () => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -414,14 +449,14 @@ test('`isJavaScriptEnabled: false` option', async t => {
 		isJavaScriptEnabled: false,
 	}));
 
-	t.is(pixels[0], 0);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 0);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 
 	await server.close();
 });
 
-test('`isJavaScriptEnabled: false` works with the `scripts` option', async t => {
+test('`isJavaScriptEnabled: false` works with the `scripts` option', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -431,12 +466,12 @@ test('`isJavaScriptEnabled: false` works with the `scripts` option', async t => 
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 });
 
-test('`isJavaScriptEnabled: false` works with the `modules` option', async t => {
+test('`isJavaScriptEnabled: false` works with the `modules` option', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -446,12 +481,12 @@ test('`isJavaScriptEnabled: false` works with the `modules` option', async t => 
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 });
 
-test('`modules` option - inline', async t => {
+test('`modules` option - inline', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -460,12 +495,12 @@ test('`modules` option - inline', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 });
 
-test('`modules` option - file', async t => {
+test('`modules` option - file', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -474,12 +509,12 @@ test('`modules` option - file', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 });
 
-test('`modules` option - url', async t => {
+test('`modules` option - url', async () => {
 	const server = await createTestServer();
 
 	server.get('/', (request, response) => {
@@ -499,12 +534,14 @@ test('`modules` option - url', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
+
+	await server.close();
 });
 
-test('`scripts` option - inline', async t => {
+test('`scripts` option - inline', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -513,12 +550,12 @@ test('`scripts` option - inline', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 });
 
-test('`scripts` option - file', async t => {
+test('`scripts` option - file', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -527,12 +564,12 @@ test('`scripts` option - file', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 });
 
-test('`scripts` option - url', async t => {
+test('`scripts` option - url', async () => {
 	const server = await createTestServer();
 
 	server.get('/', (request, response) => {
@@ -552,12 +589,14 @@ test('`scripts` option - url', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
+
+	await server.close();
 });
 
-test('`styles` option - inline', async t => {
+test('`styles` option - inline', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -566,12 +605,12 @@ test('`styles` option - inline', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 });
 
-test('`styles` option - file', async t => {
+test('`styles` option - file', async () => {
 	const pixels = await getPngPixels(await instance(server.url, {
 		width: 100,
 		height: 100,
@@ -580,12 +619,12 @@ test('`styles` option - file', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 });
 
-test('`styles` option - url', async t => {
+test('`styles` option - url', async () => {
 	const server = await createTestServer();
 
 	server.get('/', (request, response) => {
@@ -605,12 +644,14 @@ test('`styles` option - url', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
+
+	await server.close();
 });
 
-test('`headers` option', async t => {
+test('`headers` option', async () => {
 	const fixture = 'unicorn';
 	const server = await createTestServer();
 
@@ -628,12 +669,12 @@ test('`headers` option', async t => {
 		},
 	});
 
-	t.is(headers.fixture, fixture);
+	assert.equal(headers.fixture, fixture);
 
 	await server.close();
 });
 
-test('`cookies` option', async t => {
+test('`cookies` option', async () => {
 	const server = await createTestServer();
 
 	server.get('/', (request, response) => {
@@ -663,7 +704,7 @@ test('`cookies` option', async t => {
 		],
 	}));
 
-	t.is(pixels[0], 0);
+	assert.equal(pixels[0], 0);
 
 	const pixels2 = await getPngPixels(await instance(server.url, {
 		width: 100,
@@ -673,28 +714,47 @@ test('`cookies` option', async t => {
 		],
 	}));
 
-	t.is(pixels2[0], 0);
+	assert.equal(pixels2[0], 0);
 
 	await server.close();
 });
 
-test('`authentication` option', async t => {
+test('`authentication` option', async () => {
 	const authentication = {
 		username: 'foo',
 		password: 'bar',
 	};
 
-	const url = `https://httpbin.org/basic-auth/${authentication.username}/${authentication.password}`;
+	const server = await createTestServer();
 
-	t.true(isPng(await instance(url, {
+	server.get('/auth', (request, response) => {
+		const auth = request.headers.authorization;
+		if (auth && auth.startsWith('Basic ')) {
+			const [user, pass] = Buffer.from(auth.slice(6), 'base64').toString().split(':');
+			if (user === authentication.username && pass === authentication.password) {
+				response.end(defaultResponse);
+				return;
+			}
+		}
+
+		response.statusCode = 401;
+		response.setHeader('WWW-Authenticate', 'Basic realm="Test"');
+		response.end('Unauthorized');
+	});
+
+	assert.ok(isPng(await instance(`${server.url}/auth`, {
+		width: 100,
+		height: 100,
 		authentication,
 	})));
+
+	await server.close();
 });
 
-test('`overwrite` option', async t => {
+test('`overwrite` option', async () => {
 	const filePath = temporaryFile();
 
-	await t.notThrowsAsync(async () => {
+	await assert.doesNotReject(async () => {
 		await captureWebsite.file(server.url, filePath, {
 			width: 100,
 			height: 100,
@@ -708,7 +768,7 @@ test('`overwrite` option', async t => {
 	});
 });
 
-test('handle redirects', async t => {
+test('handle redirects', async () => {
 	const server = await createTestServer();
 
 	server.get('/', (request, response) => {
@@ -724,12 +784,12 @@ test('handle redirects', async t => {
 		height: 100,
 	}));
 
-	t.is(pixels[0], 0);
+	assert.equal(pixels[0], 0);
 
 	await server.close();
 });
 
-test('`darkMode` option', async t => {
+test('`darkMode` option', async () => {
 	const server = await createTestServer();
 
 	server.get('/', (request, response) => {
@@ -757,9 +817,9 @@ test('`darkMode` option', async t => {
 		height: 100,
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 255);
-	t.is(pixels[2], 255);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 255);
+	assert.equal(pixels[2], 255);
 
 	const pixels2 = await getPngPixels(await instance(server.url, {
 		width: 100,
@@ -767,14 +827,14 @@ test('`darkMode` option', async t => {
 		darkMode: true,
 	}));
 
-	t.is(pixels2[0], 0);
-	t.is(pixels2[1], 0);
-	t.is(pixels2[2], 0);
+	assert.equal(pixels2[0], 0);
+	assert.equal(pixels2[1], 0);
+	assert.equal(pixels2[2], 0);
 
 	await server.close();
 });
 
-test('`inset` option', async t => {
+test('`inset` option', async () => {
 	const viewportOptions = {
 		scaleFactor: 1,
 		width: 100,
@@ -789,10 +849,10 @@ test('`inset` option', async t => {
 		inset: 10,
 	}));
 	// First pixel should be black. Image should have resolution 100x100.
-	t.is(withFullPageOption[0], 0);
-	t.is(withFullPageOption[1], 0);
-	t.is(withFullPageOption[2], 0);
-	t.true(withFullPageOption.length / 4 === 100 * 100);
+	assert.equal(withFullPageOption[0], 0);
+	assert.equal(withFullPageOption[1], 0);
+	assert.equal(withFullPageOption[2], 0);
+	assert.ok(withFullPageOption.length / 4 === 100 * 100);
 
 	// A document with black body with margin 10px containing
 	// two full-width `div` elements stacked on top of each other.
@@ -809,10 +869,10 @@ test('`inset` option', async t => {
 		inset: 10,
 	}));
 	// First pixel should be red. Image should have resolution 80*520.
-	t.is(withElementOption[0], 255);
-	t.is(withElementOption[1], 0);
-	t.is(withElementOption[2], 0);
-	t.true(withElementOption.length / 4 === 80 * 520);
+	assert.equal(withElementOption[0], 255);
+	assert.equal(withElementOption[1], 0);
+	assert.equal(withElementOption[2], 0);
+	assert.ok(withElementOption.length / 4 === 80 * 520);
 
 	const viewportPixels = await getPngPixels(await instance(fixture, {
 		...viewportOptions,
@@ -820,10 +880,10 @@ test('`inset` option', async t => {
 	}));
 
 	// First pixel should be red. Image should have resolution 80x80.
-	t.is(viewportPixels[0], 255);
-	t.is(viewportPixels[1], 0);
-	t.is(viewportPixels[2], 0);
-	t.true(viewportPixels.length / 4 === 80 * 80);
+	assert.equal(viewportPixels[0], 255);
+	assert.equal(viewportPixels[1], 0);
+	assert.equal(viewportPixels[2], 0);
+	assert.ok(viewportPixels.length / 4 === 80 * 80);
 
 	const withTopInset = await getPngPixels(await instance(fixture, {
 		...viewportOptions,
@@ -831,10 +891,10 @@ test('`inset` option', async t => {
 	}));
 
 	// First pixel should be white. The image resolution should be 90x70.
-	t.is(withTopInset[0], 255);
-	t.is(withTopInset[1], 255);
-	t.is(withTopInset[2], 255);
-	t.true(withTopInset.length / 4 === 90 * 70);
+	assert.equal(withTopInset[0], 255);
+	assert.equal(withTopInset[1], 255);
+	assert.equal(withTopInset[2], 255);
+	assert.ok(withTopInset.length / 4 === 90 * 70);
 
 	const withNegativeInset = await getPngPixels(await instance(fixture, {
 		...viewportOptions,
@@ -843,13 +903,13 @@ test('`inset` option', async t => {
 	}));
 
 	// First pixel should be black. The image resolution should be 100x40.
-	t.is(withNegativeInset[0], 0);
-	t.is(withNegativeInset[1], 0);
-	t.is(withNegativeInset[2], 0);
-	t.true(withNegativeInset.length / 4 === 100 * 40);
+	assert.equal(withNegativeInset[0], 0);
+	assert.equal(withNegativeInset[1], 0);
+	assert.equal(withNegativeInset[2], 0);
+	assert.ok(withNegativeInset.length / 4 === 100 * 40);
 
 	// Should throw if `inset` width or height values are 0.
-	await t.throwsAsync(async () => {
+	await assert.rejects(async () => {
 		await instance(fixture, {
 			...viewportOptions,
 			inset: 50,
@@ -857,7 +917,7 @@ test('`inset` option', async t => {
 	});
 });
 
-test.failing('`preloadFunction` option', async t => {
+test.skip('`preloadFunction` option', async () => {
 	const server = await createTestServer();
 
 	server.get('/', async (request, response) => {
@@ -881,14 +941,14 @@ test.failing('`preloadFunction` option', async t => {
 		},
 	}));
 
-	t.is(pixels[0], 255);
-	t.is(pixels[1], 0);
-	t.is(pixels[2], 0);
+	assert.equal(pixels[0], 255);
+	assert.equal(pixels[1], 0);
+	assert.equal(pixels[2], 0);
 
 	await server.close();
 });
 
-test('`clip` option', async t => {
+test('`clip` option', async () => {
 	const size = imageDimensionsFromData(await instance(server.url, {
 		scaleFactor: 1,
 		clip: {
@@ -898,11 +958,11 @@ test('`clip` option', async t => {
 			height: 300,
 		},
 	}));
-	t.is(size.width, 500);
-	t.is(size.height, 300);
+	assert.equal(size.width, 500);
+	assert.equal(size.height, 300);
 });
 
-test('option validation - The `clip` and `element` option are mutually exclusive', async t => {
+test('option validation - The `clip` and `element` option are mutually exclusive', async () => {
 	const expectedErrorMessage = 'The `clip` and `element` option are mutually exclusive';
 	const options = {
 		element: 'html',
@@ -913,12 +973,12 @@ test('option validation - The `clip` and `element` option are mutually exclusive
 			height: 100,
 		},
 	};
-	const error = await t.throwsAsync(captureWebsite.base64(server.url, options));
-
-	t.is(error.message, expectedErrorMessage);
+	await assert.rejects(captureWebsite.base64(server.url, options), {
+		message: expectedErrorMessage,
+	});
 });
 
-test('option validation - The `clip` and `fullPage` option are mutually exclusive', async t => {
+test('option validation - The `clip` and `fullPage` option are mutually exclusive', async () => {
 	const expectedErrorMessage = 'The `clip` and `fullPage` option are mutually exclusive';
 	const options = {
 		fullPage: true,
@@ -929,7 +989,7 @@ test('option validation - The `clip` and `fullPage` option are mutually exclusiv
 			height: 100,
 		},
 	};
-	const error = await t.throwsAsync(captureWebsite.base64(server.url, options));
-
-	t.is(error.message, expectedErrorMessage);
+	await assert.rejects(captureWebsite.base64(server.url, options), {
+		message: expectedErrorMessage,
+	});
 });

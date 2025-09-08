@@ -1,5 +1,5 @@
 import type {
-	PuppeteerNodeLaunchOptions,
+	LaunchOptions,
 	Page,
 	Browser,
 	EvaluateFunc,
@@ -378,9 +378,9 @@ export type Options = {
 
 	Note: Some of the launch options are overridden by the `debug` option.
 
-	@default {headless: 'new'}
+	@default {headless: true}
 	*/
-	readonly launchOptions?: PuppeteerNodeLaunchOptions;
+	readonly launchOptions?: LaunchOptions;
 
 	/**
 	Inset the bounding box of the screenshot.
@@ -477,4 +477,4 @@ declare const captureWebsite: {
 
 export default captureWebsite;
 
-export {type PuppeteerNodeLaunchOptions as LaunchOptions} from 'puppeteer';
+export {type LaunchOptions} from 'puppeteer';
