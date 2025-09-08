@@ -460,6 +460,16 @@ Options passed to [`puppeteer.launch()`](https://pptr.dev/api/puppeteer.puppetee
 
 Note: Some of the launch options are overridden by the `debug` option.
 
+To capture screenshots of websites with self-signed certificates, set `acceptInsecureCerts: true`:
+
+```js
+await captureWebsite.file('https://localhost:8080', 'screenshot.png', {
+	launchOptions: {
+		acceptInsecureCerts: true
+	}
+});
+```
+
 ##### overwrite
 
 Type: `boolean`\

@@ -146,7 +146,9 @@ const parseCookie = (url, cookie) => {
 
 const internalCaptureWebsite = async (input, options) => {
 	options = {
-		launchOptions: {headless: true},
+		launchOptions: {
+			headless: true,
+		},
 		...options,
 	};
 	const {launchOptions} = options;
