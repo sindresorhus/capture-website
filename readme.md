@@ -466,6 +466,17 @@ await captureWebsite.file('file:///path/to/local/file.html', 'screenshot.png', {
 });
 ```
 
+##### waitForNetworkIdle
+
+Type: `boolean`\
+Default: `false`
+
+Wait for all network connections to finish before capturing the screenshot.
+
+This can be useful for websites that have long-running requests or many resources to load.
+
+Note: This uses Puppeteer's `networkidle0` instead of the default `networkidle2`.
+
 ##### launchOptions
 
 Type: `object`\

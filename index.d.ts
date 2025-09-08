@@ -383,6 +383,17 @@ export type Options = {
 	readonly allowCORS?: boolean;
 
 	/**
+	Wait for all network connections to finish before capturing the screenshot.
+
+	This can be useful for websites that have long-running requests or many resources to load.
+
+	Note: This uses Puppeteer's `networkidle0` instead of the default `networkidle2`.
+
+	@default false
+	*/
+	readonly waitForNetworkIdle?: boolean;
+
+	/**
 	Options passed to [`puppeteer.launch()`](https://pptr.dev/api/puppeteer.puppeteernodelaunchoptions).
 
 	Note: Some of the launch options are overridden by the `debug` option.

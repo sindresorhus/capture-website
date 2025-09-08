@@ -990,6 +990,17 @@ test('`allowCORS` option', async () => {
 	assert.ok(isPng(screenshot));
 });
 
+test('`waitForNetworkIdle` option', async () => {
+	// Test that the option is accepted and doesn't throw
+	const screenshot = await instance(server.url, {
+		width: 100,
+		height: 100,
+		waitForNetworkIdle: true,
+	});
+
+	assert.ok(isPng(screenshot));
+});
+
 test('option validation - The `clip` and `element` option are mutually exclusive', async () => {
 	const expectedErrorMessage = 'The `clip` and `element` option are mutually exclusive';
 	const options = {
