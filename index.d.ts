@@ -374,6 +374,15 @@ export type Options = {
 	readonly darkMode?: boolean;
 
 	/**
+	Allow cross-origin requests. Useful when capturing local files that reference other local files.
+
+	Warning: This disables web security features and should only be used in trusted environments.
+
+	@default false
+	*/
+	readonly allowCORS?: boolean;
+
+	/**
 	Options passed to [`puppeteer.launch()`](https://pptr.dev/api/puppeteer.puppeteernodelaunchoptions).
 
 	Note: Some of the launch options are overridden by the `debug` option.

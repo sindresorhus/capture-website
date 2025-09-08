@@ -962,6 +962,34 @@ test('`clip` option', async () => {
 	assert.equal(size.height, 300);
 });
 
+test('`allowCORS` option', async () => {
+	// Create a simple HTML with local file reference
+	const html = `
+		<!DOCTYPE html>
+		<html>
+		<head>
+			<style>
+				body { background: white; }
+				.test { color: red; }
+			</style>
+		</head>
+		<body>
+			<div class="test">CORS Test</div>
+		</body>
+		</html>
+	`;
+
+	// Test that the option is accepted and doesn't throw
+	const screenshot = await captureWebsite.buffer(html, {
+		inputType: 'html',
+		width: 100,
+		height: 100,
+		allowCORS: true,
+	});
+
+	assert.ok(isPng(screenshot));
+});
+
 test('option validation - The `clip` and `element` option are mutually exclusive', async () => {
 	const expectedErrorMessage = 'The `clip` and `element` option are mutually exclusive';
 	const options = {

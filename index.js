@@ -155,6 +155,15 @@ const internalCaptureWebsite = async (input, options) => {
 
 	validateOptions(options);
 
+	if (options.allowCORS) {
+		launchOptions.args ||= [];
+		launchOptions.args.push(
+			'--disable-web-security',
+			'--disable-features=IsolateOrigins',
+			'--disable-site-isolation-trials',
+		);
+	}
+
 	if (options.debug) {
 		launchOptions.headless = false;
 		launchOptions.slowMo = 100;

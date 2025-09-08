@@ -451,6 +451,21 @@ await captureWebsite.file('index.html', 'screenshot.png', {
 });
 ```
 
+##### allowCORS
+
+Type: `boolean`\
+Default: `false`
+
+Allow cross-origin requests. Useful when capturing local HTML files that reference other local files.
+
+**Warning:** This disables web security features and should only be used in trusted environments.
+
+```js
+await captureWebsite.file('file:///path/to/local/file.html', 'screenshot.png', {
+	allowCORS: true
+});
+```
+
 ##### launchOptions
 
 Type: `object`\
