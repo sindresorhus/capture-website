@@ -255,7 +255,8 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (options.preloadFunction) {
-		await page.evaluateOnNewDocument(options.preloadFunction);
+		const arguments_ = options.preloadFunctionArguments ?? [];
+		await page.evaluateOnNewDocument(options.preloadFunction, ...arguments_);
 	}
 
 	await page.setBypassCSP(true);

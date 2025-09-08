@@ -948,6 +948,24 @@ test.skip('`preloadFunction` option', async () => {
 	await server.close();
 });
 
+test('`preloadFunctionArguments` option', async () => {
+	// Simply verify that the option is accepted and works without errors
+	const screenshot = await captureWebsite.buffer('<h1>Test</h1>', {
+		inputType: 'html',
+		width: 100,
+		height: 100,
+		preloadFunction(value1, value2) {
+			/* eslint-disable no-undef, unicorn/prefer-global-this */
+			window.testValue1 = value1;
+			window.testValue2 = value2;
+			/* eslint-enable no-undef, unicorn/prefer-global-this */
+		},
+		preloadFunctionArguments: ['test', 123],
+	});
+
+	assert.ok(isPng(screenshot));
+});
+
 test('`clip` option', async () => {
 	const size = imageDimensionsFromData(await instance(server.url, {
 		scaleFactor: 1,

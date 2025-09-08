@@ -514,6 +514,25 @@ Inject a function to be executed prior to navigation.
 
 This can be useful for [altering the JavaScript environment](https://pptr.dev/api/puppeteer.page.evaluateonnewdocument). For example, you could define a global method on the `window`, overwrite `navigator.languages` to change the language presented by the browser, or mock `Math.random` to return a fixed value.
 
+##### preloadFunctionArguments
+
+Type: `Array`\
+Default: `[]`
+
+Arguments to pass to the `preloadFunction`.
+
+The arguments must be serializable (JSON-serializable values, not functions or DOM elements).
+
+```js
+await captureWebsite.file('https://example.com', 'screenshot.png', {
+	preloadFunction: (customValue, anotherValue) => {
+		window.myValue = customValue;
+		window.myOtherValue = anotherValue;
+	},
+	preloadFunctionArguments: ['Hello', 42]
+});
+```
+
 ##### clip
 
 Type: `object`

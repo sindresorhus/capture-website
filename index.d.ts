@@ -232,6 +232,28 @@ export type Options = {
 	readonly preloadFunction?: EvaluateFunc<unknown[]>;
 
 	/**
+	Arguments to pass to the `preloadFunction`.
+
+	The arguments must be serializable (JSON-serializable values, not functions or DOM elements).
+
+	@default []
+
+	@example
+	```
+	import captureWebsite from 'capture-website';
+
+	await captureWebsite.file('https://example.com', 'screenshot.png', {
+		preloadFunction: (customValue, anotherValue) => {
+			window.myValue = customValue;
+			window.myOtherValue = anotherValue;
+		},
+		preloadFunctionArguments: ['Hello', 42]
+	});
+	```
+	*/
+	readonly preloadFunctionArguments?: unknown[];
+
+	/**
 	Inject [JavaScript modules](https://developers.google.com/web/fundamentals/primers/modules) into the page.
 
 	Accepts an array of inline code, absolute URLs, and local file paths (must have a .js extension).
