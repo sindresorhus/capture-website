@@ -179,11 +179,19 @@ const internalCaptureWebsite = async (input, options) => {
 		return await internalCaptureWebsiteCore(input, options, page, browser);
 	} finally {
 		if (page) {
-			await page.close();
+			try {
+				await page.close();
+			} catch {
+				// Ignore errors when closing the page
+			}
 		}
 
 		if (browser && !options._keepAlive) {
-			await browser.close();
+			try {
+				await browser.close();
+			} catch {
+				// Ignore errors when closing the browser
+			}
 		}
 	}
 };
