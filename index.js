@@ -171,9 +171,15 @@ const internalCaptureWebsite = async (input, options) => {
 
 	let browser;
 	let page;
+	let pageError;
 	try {
 		browser = options._browser || await puppeteer.launch(launchOptions);
 		page = await browser.newPage();
+
+		// Handle page crashes
+		page.on('error', error => {
+			pageError = error;
+		});
 
 		if (options.blockAds) {
 			const blocker = await PuppeteerBlocker.fromPrebuiltFull(fetch, {
@@ -185,7 +191,14 @@ const internalCaptureWebsite = async (input, options) => {
 			await blocker.enableBlockingInPage(page);
 		}
 
-		return await internalCaptureWebsiteCore(input, options, page, browser);
+		const result = await internalCaptureWebsiteCore(input, options, page, browser);
+
+		// If a page crash occurred during capture, throw the error
+		if (pageError) {
+			throw pageError;
+		}
+
+		return result;
 	} finally {
 		if (page) {
 			try {
