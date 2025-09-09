@@ -581,13 +581,13 @@ Devices supported by the `emulateDevice` option.
 
 ### Capturing multiple screenshots
 
+**Avoid unlimited concurrency** as each capture creates a new browser instance. Use a concurrency limiter like [`p-limit`](https://github.com/sindresorhus/p-limit):
+
 ```js
+import pLimit from 'p-limit';
 import captureWebsite from 'capture-website';
 
-const options = {
-	width: 1920,
-	height: 1000
-};
+const limit = pLimit(2); // Limit to 2 concurrent captures
 
 const items = [
 	['https://sindresorhus.com', 'sindresorhus'],
@@ -596,8 +596,25 @@ const items = [
 ];
 
 await Promise.all(items.map(([url, filename]) => {
-	return captureWebsite.file(url, `${filename}.png`, options);
+	return limit(() => captureWebsite.file(url, `${filename}.png`));
 }));
+```
+
+Or use [`p-map`](https://github.com/sindresorhus/p-map):
+
+```js
+import pMap from 'p-map';
+import captureWebsite from 'capture-website';
+
+const items = [
+	['https://sindresorhus.com', 'sindresorhus'],
+	['https://github.com', 'github'],
+	// …
+];
+
+await pMap(items, async ([url, filename]) => {
+	await captureWebsite.file(url, `${filename}.png`);
+}, {concurrency: 2});
 ```
 
 *Check out [`filenamify-url`](https://github.com/sindresorhus/filenamify-url) if you need to create a filename from the URL.*
