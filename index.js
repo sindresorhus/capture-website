@@ -2,6 +2,7 @@
 import process from 'node:process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import os from 'node:os';
 import {setTimeout} from 'node:timers/promises';
 import fileUrl from 'file-url';
 import puppeteer, {KnownDevices} from 'puppeteer';
@@ -182,8 +183,12 @@ const internalCaptureWebsite = async (input, options) => {
 		});
 
 		if (options.blockAds) {
+			const cacheDirectory = path.join(os.tmpdir(), 'capture-website');
+			await fs.mkdir(cacheDirectory, {recursive: true});
+			const cachePath = path.join(cacheDirectory, 'engine.bin');
+
 			const blocker = await PuppeteerBlocker.fromPrebuiltFull(fetch, {
-				path: 'engine.bin',
+				path: cachePath,
 				read: fs.readFile,
 				write: fs.writeFile,
 			});
