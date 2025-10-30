@@ -7,6 +7,7 @@ import type {
 	BoundingBox,
 	PaperFormat,
 	PDFMargin,
+	ConsoleMessage,
 } from 'puppeteer';
 
 export type Authentication = {
@@ -17,6 +18,8 @@ export type Authentication = {
 export type BeforeScreenshot = (page: Page, browser: Browser) => void | Promise<void>;
 
 export type BeforeNavigation = (page: Page, browser: Browser) => void | Promise<void>;
+
+export type OnConsole = (message: ConsoleMessage) => void;
 
 export type ScrollToElementOptions = {
 	/**
@@ -470,6 +473,26 @@ export type Options = {
 	@default false
 	*/
 	readonly debug?: boolean;
+
+	/**
+	A function that is called whenever the page logs to its console. This allows you to receive and handle console output from the page.
+
+	The function receives a Puppeteer [`ConsoleMessage`](https://pptr.dev/api/puppeteer.consolemessage) object as its argument, which provides access to the console message text, type, location, and more.
+
+	Note: Errors thrown in the callback are caught to prevent breaking the screenshot capture. If `debug` is enabled, errors are logged to the console.
+
+	@example
+	```
+	import captureWebsite from 'capture-website';
+
+	await captureWebsite.file('https://example.com', 'screenshot.png', {
+		onConsole: message => {
+			console.log(`[${message.type()}] ${message.text()}`);
+		}
+	});
+	```
+	*/
+	readonly onConsole?: OnConsole;
 
 	/**
 	Emulate preference of dark color scheme ([`prefers-color-scheme`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme)).

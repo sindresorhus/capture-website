@@ -300,6 +300,18 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		// TODO: Add more events from https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md#event-requestfailed
 	}
 
+	if (options.onConsole) {
+		page.on('console', message => {
+			try {
+				options.onConsole(message);
+			} catch (error) {
+				if (options.debug) {
+					console.error('\nError in onConsole callback:', error, '\n');
+				}
+			}
+		});
+	}
+
 	if (options.authentication) {
 		await page.authenticate(options.authentication);
 	}

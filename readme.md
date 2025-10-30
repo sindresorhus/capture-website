@@ -521,6 +521,26 @@ Show the browser window so you can see what it's doing, redirect page console ou
 
 Note: This overrides `launchOptions` with `{headless: false, slowMo: 100}`.
 
+##### onConsole
+
+Type: `Function`
+
+A function that is called whenever the page logs to its console. This allows you to receive and handle console output from the page.
+
+The function receives a Puppeteer [`ConsoleMessage`](https://pptr.dev/api/puppeteer.consolemessage) object as its argument, which provides access to the console message text, type, location, and more.
+
+Note: Errors thrown in the callback are caught to prevent breaking the screenshot capture. If `debug` is enabled, errors are logged to the console.
+
+```js
+import captureWebsite from 'capture-website';
+
+await captureWebsite.file('https://example.com', 'screenshot.png', {
+	onConsole: message => {
+		console.log(`[${message.type()}] ${message.text()}`);
+	}
+});
+```
+
 ##### darkMode
 
 Type: `boolean`\

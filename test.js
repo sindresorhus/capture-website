@@ -1426,3 +1426,44 @@ test('`beforeNavigation` option - handle multiple dialogs during page load', asy
 
 	await server.close();
 });
+
+test('`onConsole` option', async () => {
+	const server = await createTestServer();
+
+	server.get('/', (request, response) => {
+		response.end(`
+			<body>
+				<script>
+					console.log('Test message');
+					console.warn('Warning message');
+				</script>
+			</body>
+		`);
+	});
+
+	const messages = [];
+
+	const screenshot = await instance(server.url, {
+		width: 100,
+		height: 100,
+		onConsole(message) {
+			messages.push({
+				text: message.text(),
+				type: message.type(),
+			});
+		},
+	});
+
+	assert.ok(isPng(screenshot));
+	assert.ok(messages.length >= 2);
+
+	const log = messages.find(m => m.text === 'Test message');
+	const warn = messages.find(m => m.text === 'Warning message');
+
+	assert.ok(log);
+	assert.equal(log.type, 'log');
+	assert.ok(warn);
+	assert.equal(warn.type, 'warn');
+
+	await server.close();
+});
