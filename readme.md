@@ -93,10 +93,13 @@ Page height.
 ##### type
 
 Type: `string`\
-Values: `'png' | 'jpeg' | 'webp'`\
+Values: `'png' | 'jpeg' | 'webp' | 'pdf'`\
 Default: `'png'`
 
-Image type.
+Output type.
+
+> [!NOTE]
+> When using `'pdf'`, the `clip`, `element`, and `quality` options are not supported. Use the `pdf` option for PDF-specific settings.
 
 ##### quality
 
@@ -367,6 +370,38 @@ import captureWebsite from 'capture-website';
 
 await captureWebsite.file('https://example.com', 'screenshot.png', {
 	referrer: 'https://google.com'
+});
+```
+
+##### pdf
+
+Type: `object`
+
+PDF-specific options. Only applies when `type` is `'pdf'`.
+
+The object can have the following properties:
+
+- `format` (string): Paper format. Values: `'letter' | 'legal' | 'tabloid' | 'ledger' | 'a0' | 'a1' | 'a2' | 'a3' | 'a4' | 'a5' | 'a6'`. Default: `'letter'`
+- `landscape` (boolean): Use landscape orientation. Default: `false`
+- `margin` (object): Set page margins. Accepts string values (e.g., '10px', '2cm') or numeric values in pixels. Object with `top`, `right`, `bottom`, `left` properties.
+- `background` (boolean): Include background graphics. Default: `false`
+
+```js
+import captureWebsite from 'capture-website';
+
+await captureWebsite.file('https://example.com', 'output.pdf', {
+	type: 'pdf',
+	pdf: {
+		format: 'a4',
+		landscape: true,
+		margin: {
+			top: '20px',
+			right: '20px',
+			bottom: '20px',
+			left: '20px'
+		},
+		background: true
+	}
 });
 ```
 

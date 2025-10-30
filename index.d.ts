@@ -5,6 +5,8 @@ import type {
 	EvaluateFunc,
 	Protocol,
 	BoundingBox,
+	PaperFormat,
+	PDFMargin,
 } from 'puppeteer';
 
 export type Authentication = {
@@ -54,11 +56,13 @@ export type Options = {
 	readonly height?: number;
 
 	/**
-	Image type.
+	Output type.
 
-	@default png
+	Note: When using `'pdf'`, the `clip`, `element`, and `quality` options are not supported. Use the `pdf` option for PDF-specific settings.
+
+	@default 'png'
 	*/
-	readonly type?: 'png' | 'jpeg' | 'webp';
+	readonly type?: 'png' | 'jpeg' | 'webp' | 'pdf';
 
 	/**
 	Image quality. Only for `{type: 'jpeg'}` and `{type: 'webp'}`.
@@ -494,6 +498,57 @@ export type Options = {
 	```
 	*/
 	readonly inset?: number | Partial<Record<'top' | 'right' | 'bottom' | 'left', number>>;
+
+	/**
+	PDF-specific options. Only applies when `type` is `'pdf'`.
+
+	@example
+	```
+	await captureWebsite.file('https://example.com', 'output.pdf', {
+		type: 'pdf',
+		pdf: {
+			format: 'a4',
+			landscape: true,
+			margin: {
+				top: '20px',
+				right: '20px',
+				bottom: '20px',
+				left: '20px'
+			},
+			background: true
+		}
+	});
+	```
+	*/
+	readonly pdf?: {
+		/**
+		Paper format.
+
+		@default 'letter'
+		*/
+		readonly format?: PaperFormat;
+
+		/**
+		Use landscape orientation.
+
+		@default false
+		*/
+		readonly landscape?: boolean;
+
+		/**
+		Set page margins.
+
+		Accepts string values (e.g., '10px', '2cm') or numeric values in pixels.
+		*/
+		readonly margin?: PDFMargin;
+
+		/**
+		Include background graphics.
+
+		@default false
+		*/
+		readonly background?: boolean;
+	};
 };
 
 export type FileOptions = {

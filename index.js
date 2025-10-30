@@ -20,6 +20,9 @@ const assert = (value, message) => {
 const validateOptions = options => {
 	assert(!(options.clip && options.element), 'The `clip` and `element` option are mutually exclusive');
 	assert(!(options.clip && options.fullPage), 'The `clip` and `fullPage` option are mutually exclusive');
+	assert(!(options.type === 'pdf' && options.clip), 'The `clip` option is not supported when type is `pdf`');
+	assert(!(options.type === 'pdf' && options.element), 'The `element` option is not supported when type is `pdf`');
+	assert(!(options.type === 'pdf' && options.quality), 'The `quality` option is not supported when type is `pdf`');
 };
 
 const scrollToElement = (element, options) => {
@@ -515,7 +518,37 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		};
 	}
 
-	const buffer = await page.screenshot(screenshotOptions);
+	// Generate PDF or screenshot based on type
+	let buffer;
+	if (options.type === 'pdf') {
+		const pdfOptions = {
+			printBackground: options.pdf?.background ?? false,
+		};
+
+		if (options.pdf?.format) {
+			pdfOptions.format = options.pdf.format;
+		}
+
+		if (options.pdf?.landscape) {
+			pdfOptions.landscape = options.pdf.landscape;
+		}
+
+		if (options.pdf?.margin) {
+			pdfOptions.margin = options.pdf.margin;
+		}
+
+		if (options.scaleFactor) {
+			pdfOptions.scale = options.scaleFactor;
+		}
+
+		if (typeof options.defaultBackground === 'boolean') {
+			pdfOptions.omitBackground = !options.defaultBackground;
+		}
+
+		buffer = await page.pdf(pdfOptions);
+	} else {
+		buffer = await page.screenshot(screenshotOptions);
+	}
 
 	return buffer;
 };

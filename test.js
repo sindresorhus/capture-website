@@ -1154,6 +1154,81 @@ test('`throwOnHttpError` option - does not throw for data URLs', async () => {
 	})));
 });
 
+test('`type: pdf` option', async () => {
+	const buffer = await instance(server.url, {
+		width: 400,
+		height: 300,
+		type: 'pdf',
+	});
+
+	// PDF signature starts with %PDF
+	assert.ok(buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46);
+});
+
+test('`type: pdf` with all pdf options', async () => {
+	const buffer = await instance(server.url, {
+		width: 400,
+		height: 300,
+		type: 'pdf',
+		scaleFactor: 1.5,
+		pdf: {
+			format: 'a4',
+			landscape: true,
+			margin: {
+				top: '10px',
+				right: '10px',
+				bottom: '10px',
+				left: '10px',
+			},
+			background: true,
+		},
+	});
+
+	// Verify it's a valid PDF
+	assert.ok(buffer[0] === 0x25 && buffer[1] === 0x50 && buffer[2] === 0x44 && buffer[3] === 0x46);
+});
+
+test('`type: pdf` validation - rejects clip option', async () => {
+	await assert.rejects(
+		instance(server.url, {
+			type: 'pdf',
+			clip: {
+				x: 0,
+				y: 0,
+				width: 100,
+				height: 100,
+			},
+		}),
+		{
+			message: /clip.*not supported.*pdf/i,
+		},
+	);
+});
+
+test('`type: pdf` validation - rejects element option', async () => {
+	await assert.rejects(
+		instance(server.url, {
+			type: 'pdf',
+			element: '.logo',
+		}),
+		{
+			message: /element.*not supported.*pdf/i,
+		},
+	);
+});
+
+test('`type: pdf` validation - rejects quality option', async () => {
+	await assert.rejects(
+		instance(server.url, {
+			type: 'pdf',
+			quality: 0.5,
+		}),
+		{
+			message: /quality.*not supported.*pdf/i,
+		},
+	);
+});
+
 test('`referrer` option', async () => {
 	const expectedReferrer = 'https://example.com/';
 	const server = await createTestServer();
