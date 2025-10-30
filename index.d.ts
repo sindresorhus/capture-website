@@ -104,6 +104,8 @@ export type Options = {
 	/**
 	Capture the full scrollable page, not just the viewport.
 
+	Warning: Screenshots taller than 16384px will repeat content due to a Chromium limitation. Use the `clip` option to capture sections separately.
+
 	@default false
 	*/
 	readonly fullPage?: boolean;
