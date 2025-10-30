@@ -354,6 +354,10 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		gotoOptions.referrerPolicy = 'unsafe-url';
 	}
 
+	if (options.beforeNavigation) {
+		await options.beforeNavigation(page, browser);
+	}
+
 	const response = await page[isHTMLContent ? 'setContent' : 'goto'](input, gotoOptions);
 
 	if (

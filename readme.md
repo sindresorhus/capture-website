@@ -445,6 +445,52 @@ Type: `string`
 
 Type: `string`
 
+##### beforeNavigation
+
+Type: `Function`
+
+The specified function is called right before navigating to the page. It receives the Puppeteer [`Page` instance](https://pptr.dev/api/puppeteer.page) as the first argument and the [`browser` instance](https://pptr.dev/api/puppeteer.browser) as the second argument. This is useful for registering event handlers that need to be set up before page navigation, such as dialog handlers or request interceptors. The function can be async.
+
+> [!CAUTION]
+> Do not register event listeners on the `browser` object. Browser listeners persist and cause memory leaks. Only register listeners on the `page` object.
+
+Note: Do not call `page.close()`, `browser.close()`, or `page.goto()`.
+
+**Example: Handling a dialog during page load**
+
+```js
+import captureWebsite from 'capture-website';
+
+await captureWebsite.file('https://example.com', 'screenshot.png', {
+	beforeNavigation: async page => {
+		page.once('dialog', async dialog => {
+			await dialog.dismiss();
+		});
+	}
+});
+```
+
+**Example: Blocking requests**
+
+```js
+import captureWebsite from 'capture-website';
+
+await captureWebsite.file('https://example.com', 'screenshot.png', {
+	beforeNavigation: async page => {
+		await page.setRequestInterception(true);
+
+		// Important: Every request must call continue() or abort()
+		page.on('request', request => {
+			if (['image', 'font'].includes(request.resourceType())) {
+				request.abort();
+			} else {
+				request.continue();
+			}
+		});
+	}
+});
+```
+
 ##### beforeScreenshot
 
 Type: `Function`

@@ -1283,3 +1283,146 @@ test('`referrer` option - takes precedence over headers option', async () => {
 
 	await server.close();
 });
+
+test('`beforeNavigation` option - basic functionality', async () => {
+	let beforeNavigationCalled = false;
+	let receivedPage;
+	let receivedBrowser;
+
+	const screenshot = await instance(server.url, {
+		width: 100,
+		height: 100,
+		async beforeNavigation(page, browser) {
+			beforeNavigationCalled = true;
+			receivedPage = page;
+			receivedBrowser = browser;
+		},
+	});
+
+	assert.ok(beforeNavigationCalled);
+	assert.ok(receivedPage);
+	assert.ok(receivedBrowser);
+	assert.ok(isPng(screenshot));
+});
+
+test('`beforeNavigation` option - handle dialogs during page load', async () => {
+	const server = await createTestServer();
+
+	// Create a page that shows an alert during page load
+	server.get('/', (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div style="background-color: black; width: 100px; height: 100px;"></div>
+				<script>
+					alert('This alert appears during page load');
+				</script>
+			</body>
+		`);
+	});
+
+	let dialogMessage;
+
+	// This should not hang and should capture the screenshot successfully
+	const screenshot = await instance(server.url, {
+		width: 100,
+		height: 100,
+		async beforeNavigation(page, _browser) {
+			// Use page.once() for single events
+			page.once('dialog', async dialog => {
+				dialogMessage = dialog.message();
+				await dialog.dismiss();
+			});
+		},
+	});
+
+	assert.ok(isPng(screenshot));
+	assert.equal(dialogMessage, 'This alert appears during page load');
+
+	await server.close();
+});
+
+test('`beforeNavigation` option - works with HTML content', async () => {
+	let beforeNavigationCalled = false;
+
+	const screenshot = await instance('<h1>Test</h1>', {
+		inputType: 'html',
+		width: 100,
+		height: 100,
+		async beforeNavigation(_page, _browser) {
+			beforeNavigationCalled = true;
+		},
+	});
+
+	assert.ok(beforeNavigationCalled);
+	assert.ok(isPng(screenshot));
+});
+
+test('`beforeNavigation` option - propagates errors', async () => {
+	await assert.rejects(
+		instance(server.url, {
+			async beforeNavigation(_page, _browser) {
+				throw new Error('Test error from beforeNavigation');
+			},
+		}),
+		{message: 'Test error from beforeNavigation'},
+	);
+});
+
+test('`beforeNavigation` and `beforeScreenshot` - execute in correct order', async () => {
+	const executionOrder = [];
+
+	const screenshot = await instance(server.url, {
+		width: 100,
+		height: 100,
+		async beforeNavigation(_page, _browser) {
+			executionOrder.push('navigation');
+		},
+		async beforeScreenshot(_page, _browser) {
+			executionOrder.push('screenshot');
+		},
+	});
+
+	assert.deepEqual(executionOrder, ['navigation', 'screenshot']);
+	assert.ok(isPng(screenshot));
+});
+
+test('`beforeNavigation` option - handle multiple dialogs during page load', async () => {
+	const server = await createTestServer();
+
+	// Create a page that shows multiple alerts during page load
+	server.get('/', (request, response) => {
+		response.end(`
+			<body style="margin: 0;">
+				<div style="background-color: black; width: 100px; height: 100px;"></div>
+				<script>
+					alert('First alert');
+					alert('Second alert');
+					alert('Third alert');
+				</script>
+			</body>
+		`);
+	});
+
+	const dialogMessages = [];
+
+	// This should handle all dialogs and not hang
+	const screenshot = await instance(server.url, {
+		width: 100,
+		height: 100,
+		async beforeNavigation(page, _browser) {
+			// Use page.on() for multiple events
+			page.on('dialog', async dialog => {
+				dialogMessages.push(dialog.message());
+				await dialog.dismiss();
+			});
+		},
+	});
+
+	assert.ok(isPng(screenshot));
+	assert.equal(dialogMessages.length, 3);
+	assert.equal(dialogMessages[0], 'First alert');
+	assert.equal(dialogMessages[1], 'Second alert');
+	assert.equal(dialogMessages[2], 'Third alert');
+
+	await server.close();
+});
