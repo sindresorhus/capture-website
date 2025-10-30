@@ -43,15 +43,15 @@
 		"jpeg"
 	],
 	"dependencies": {
-		"@ghostery/adblocker-puppeteer": "^2.11.6",
+		"@ghostery/adblocker-puppeteer": "^2.12.5",
 		"file-url": "^4.0.0",
-		"puppeteer": "^24.19.0",
+		"puppeteer": "^24.27.0",
 		"tough-cookie": "^6.0.0"
 	},
 	"devDependencies": {
 		"create-test-server": "^3.0.1",
 		"delay": "^6.0.0",
-		"image-dimensions": "^2.4.0",
+		"image-dimensions": "^2.5.0",
 		"is-jpg": "^3.0.0",
 		"is-png": "^3.0.1",
 		"pify": "^6.1.0",
@@ -59,6 +59,6 @@
 		"tempy": "^3.1.0",
 		"tsd": "^0.33.0",
 		"uint8array-extras": "^1.5.0",
-		"xo": "^1.2.2"
+		"xo": "^1.2.3"
 	}
 }
