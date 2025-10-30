@@ -1153,3 +1153,58 @@ test('`throwOnHttpError` option - does not throw for data URLs', async () => {
 		throwOnHttpError: true,
 	})));
 });
+
+test('`referrer` option', async () => {
+	const expectedReferrer = 'https://example.com/';
+	const server = await createTestServer();
+
+	let receivedReferrer;
+	server.get('/', (request, response) => {
+		receivedReferrer = request.headers.referer;
+		response.end(defaultResponse);
+	});
+
+	await instance(server.url, {
+		width: 100,
+		height: 100,
+		referrer: 'https://example.com',
+	});
+
+	assert.equal(receivedReferrer, expectedReferrer);
+
+	await server.close();
+});
+
+test('`referrer` option - does not affect HTML content', async () => {
+	// Should not break when using referrer with HTML content
+	assert.ok(isPng(await instance('<h1>Test</h1>', {
+		inputType: 'html',
+		width: 100,
+		height: 100,
+		referrer: 'https://example.com',
+	})));
+});
+
+test('`referrer` option - takes precedence over headers option', async () => {
+	const expectedReferrer = 'https://referrer-option.com/';
+	const server = await createTestServer();
+
+	let receivedReferrer;
+	server.get('/', (request, response) => {
+		receivedReferrer = request.headers.referer;
+		response.end(defaultResponse);
+	});
+
+	await instance(server.url, {
+		width: 100,
+		height: 100,
+		headers: {
+			referer: 'https://headers-option.com',
+		},
+		referrer: 'https://referrer-option.com',
+	});
+
+	assert.equal(receivedReferrer, expectedReferrer);
+
+	await server.close();
+});

@@ -307,7 +307,13 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (options.headers) {
-		await page.setExtraHTTPHeaders(options.headers);
+		const headers = {...options.headers};
+		// Remove referer from headers if referrer option is specified (referrer takes precedence)
+		if (options.referrer && headers.referer) {
+			delete headers.referer;
+		}
+
+		await page.setExtraHTTPHeaders(headers);
 	}
 
 	if (options.userAgent) {
@@ -333,10 +339,19 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		value: options.darkMode ? 'dark' : 'light',
 	}]);
 
-	const response = await page[isHTMLContent ? 'setContent' : 'goto'](input, {
+	const gotoOptions = {
 		timeout: timeoutInMilliseconds,
 		waitUntil: options.waitForNetworkIdle ? 'networkidle0' : 'networkidle2',
-	});
+	};
+
+	// Set referrer and referrerPolicy for page navigation
+	// Note: We use 'unsafe-url' policy to allow referrer to be sent even for cross-origin requests (e.g., HTTPS -> HTTP localhost in tests)
+	if (options.referrer && !isHTMLContent) {
+		gotoOptions.referer = options.referrer;
+		gotoOptions.referrerPolicy = 'unsafe-url';
+	}
+
+	const response = await page[isHTMLContent ? 'setContent' : 'goto'](input, gotoOptions);
 
 	if (
 		options.throwOnHttpError

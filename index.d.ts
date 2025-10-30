@@ -347,6 +347,22 @@ export type Options = {
 	readonly userAgent?: string;
 
 	/**
+	Set a custom [referrer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) for the page navigation.
+
+	This takes preference over the referrer header value set by the `headers` option.
+
+	@example
+	```
+	import captureWebsite from 'capture-website';
+
+	await captureWebsite.file('https://example.com', 'screenshot.png', {
+		referrer: 'https://google.com'
+	});
+	```
+	*/
+	readonly referrer?: string;
+
+	/**
 	Set cookies in [browser string format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) or [object format](https://pptr.dev/api/puppeteer.page.setcookie).
 
 	Tip: Go to the website you want a cookie for and [copy-paste it from DevTools](https://stackoverflow.com/a/24961735/64949).

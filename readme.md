@@ -354,6 +354,22 @@ Type: `string`
 
 Set a custom [user agent](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/User-Agent).
 
+##### referrer
+
+Type: `string`
+
+Set a custom [referrer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) for the page navigation.
+
+This takes preference over the referrer header value set by the `headers` option.
+
+```js
+import captureWebsite from 'capture-website';
+
+await captureWebsite.file('https://example.com', 'screenshot.png', {
+	referrer: 'https://google.com'
+});
+```
+
 ##### cookies
 
 Type: `Array<string | object>`
