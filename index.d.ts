@@ -118,6 +118,25 @@ export type Options = {
 	readonly timeout?: number;
 
 	/**
+	Throw an error if the HTTP response status code is not in the 200-299 range.
+
+	This only applies to `http://` and `https://` URLs. Local files, data URLs, and HTML content are not affected.
+
+	@default false
+
+	@example
+	```
+	import captureWebsite from 'capture-website';
+
+	// Throws an error if the page returns a 404, 500, etc.
+	await captureWebsite.file('https://example.com/missing', 'screenshot.png', {
+		throwOnHttpError: true
+	});
+	```
+	*/
+	readonly throwOnHttpError?: boolean;
+
+	/**
 	The number of seconds to wait after the page finished loading before capturing the screenshot.
 
 	This can be useful if you know the page has animations that you like it to finish before capturing the screenshot.

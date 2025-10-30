@@ -235,6 +235,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		delay: 0,
 		debug: false,
 		darkMode: false,
+		throwOnHttpError: false,
 		_keepAlive: false,
 		isJavaScriptEnabled: true,
 		blockAds: true,
@@ -332,10 +333,20 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		value: options.darkMode ? 'dark' : 'light',
 	}]);
 
-	await page[isHTMLContent ? 'setContent' : 'goto'](input, {
+	const response = await page[isHTMLContent ? 'setContent' : 'goto'](input, {
 		timeout: timeoutInMilliseconds,
 		waitUntil: options.waitForNetworkIdle ? 'networkidle0' : 'networkidle2',
 	});
+
+	if (
+		options.throwOnHttpError
+		&& !isHTMLContent
+		&& response
+		&& !response.ok()
+		&& /^https?:\/\//i.test(input) // Only check HTTP status for HTTP/HTTPS URLs (not file:// or data: URLs)
+	) {
+		throw new Error(`HTTP ${response.status()} ${response.statusText()}: ${input}`);
+	}
 
 	if (options.disableAnimations) {
 		await page.evaluate(disableAnimations, options.disableAnimations);

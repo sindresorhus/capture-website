@@ -1050,3 +1050,106 @@ test('option validation - The `clip` and `fullPage` option are mutually exclusiv
 		message: expectedErrorMessage,
 	});
 });
+
+test('`throwOnHttpError` option - throws on 404', async () => {
+	const server = await createTestServer();
+
+	server.get('/not-found', (request, response) => {
+		response.status(404).end('Not Found');
+	});
+
+	await assert.rejects(
+		instance(`${server.url}/not-found`, {
+			width: 100,
+			height: 100,
+			throwOnHttpError: true,
+		}),
+		{
+			message: /HTTP 404/,
+		},
+	);
+
+	await server.close();
+});
+
+test('`throwOnHttpError` option - throws on 500', async () => {
+	const server = await createTestServer();
+
+	server.get('/error', (request, response) => {
+		response.status(500).end('Internal Server Error');
+	});
+
+	await assert.rejects(
+		instance(`${server.url}/error`, {
+			width: 100,
+			height: 100,
+			throwOnHttpError: true,
+		}),
+		{
+			message: /HTTP 500/,
+		},
+	);
+
+	await server.close();
+});
+
+test('`throwOnHttpError` option - does not throw by default', async () => {
+	const server = await createTestServer();
+
+	server.get('/not-found', (request, response) => {
+		response.status(404).end('Not Found');
+	});
+
+	// Should not throw even though it's a 404
+	assert.ok(isPng(await instance(`${server.url}/not-found`, {
+		width: 100,
+		height: 100,
+	})));
+
+	await server.close();
+});
+
+test('`throwOnHttpError` option - does not throw on 2XX', async () => {
+	const server = await createTestServer();
+
+	server.get('/', (request, response) => {
+		response.end(defaultResponse);
+	});
+
+	// Should not throw on 200
+	assert.ok(isPng(await instance(server.url, {
+		width: 100,
+		height: 100,
+		throwOnHttpError: true,
+	})));
+
+	await server.close();
+});
+
+test('`throwOnHttpError` option - does not affect HTML content', async () => {
+	// Should not throw even with throwOnHttpError enabled for HTML content
+	assert.ok(isPng(await instance('<h1>Test</h1>', {
+		inputType: 'html',
+		width: 100,
+		height: 100,
+		throwOnHttpError: true,
+	})));
+});
+
+test('`throwOnHttpError` option - does not throw for local files', async () => {
+	// Should not throw for file:// URLs even with throwOnHttpError enabled
+	assert.ok(isPng(await instance('fixtures/local-file.html', {
+		width: 100,
+		height: 100,
+		throwOnHttpError: true,
+	})));
+});
+
+test('`throwOnHttpError` option - does not throw for data URLs', async () => {
+	// Should not throw for data: URLs even with throwOnHttpError enabled
+	assert.ok(isPng(await instance('data:text/html,<h1>Test</h1>', {
+		width: 100,
+		height: 100,
+		throwOnHttpError: true,
+	})));
+});

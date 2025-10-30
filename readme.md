@@ -157,6 +157,24 @@ The number of seconds before giving up trying to load the page.
 
 Specify `0` to disable the timeout.
 
+##### throwOnHttpError
+
+Type: `boolean`\
+Default: `false`
+
+Throw an error if the HTTP response status code is not in the 200-299 range.
+
+This only applies to `http://` and `https://` URLs. Local files, data URLs, and HTML content are not affected.
+
+```js
+import captureWebsite from 'capture-website';
+
+// Throws an error if the page returns a 404, 500, etc.
+await captureWebsite.file('https://example.com/missing', 'screenshot.png', {
+	throwOnHttpError: true
+});
+```
+
 ##### delay
 
 Type: `number` *(seconds)*\
