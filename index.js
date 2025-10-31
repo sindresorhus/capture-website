@@ -43,59 +43,57 @@ const scrollToElement = (element, options) => {
 		return findScrollParent(element.parentElement);
 	};
 
-	const calculateOffset = (rect, options) => {
-		if (options === undefined) {
-			return {
-				x: rect.left,
-				y: rect.top,
-			};
-		}
+	const parent = findScrollParent(element);
+	if (!parent) {
+		// No scrollable ancestor: scroll the window to the element
+		element.scrollIntoView({block: 'start', inline: 'nearest'});
+		return;
+	}
 
-		const offset = options.offset || 0;
-
-		switch (options.offsetFrom) {
-			case 'top': {
-				return {
-					x: rect.left,
-					y: rect.top + offset,
-				};
-			}
-
-			case 'right': {
-				return {
-					x: rect.left - offset,
-					y: rect.top,
-				};
-			}
-
-			case 'bottom': {
-				return {
-					x: rect.left,
-					y: rect.top - offset,
-				};
-			}
-
-			case 'left': {
-				return {
-					x: rect.left + offset,
-					y: rect.top,
-				};
-			}
-
-			default: {
-				throw new Error('Invalid `scrollToElement.offsetFrom` value');
-			}
-		}
-	};
+	// Align the scroll parent to the viewport origin so rect math is relative to it
+	parent.scrollIntoView(true);
 
 	const rect = element.getBoundingClientRect();
-	const offset = calculateOffset(rect, options);
-	const parent = findScrollParent(element);
+	const parentRect = parent.getBoundingClientRect();
 
-	if (parent !== undefined) {
-		parent.scrollIntoView(true);
-		parent.scrollTo(offset.x, offset.y);
+	const from = options?.offsetFrom ?? 'top';
+	const offset = options?.offset ?? 0;
+
+	const localLeft = rect.left - parentRect.left;
+	const localTop = rect.top - parentRect.top;
+
+	let x = localLeft;
+	let y = localTop;
+
+	switch (from) {
+		case 'top': {
+			y = localTop + offset;
+			break;
+		}
+
+		case 'left': {
+			x = localLeft + offset;
+			break;
+		}
+
+		case 'bottom': {
+			// Position so element's bottom edge is offset px above parent's bottom edge
+			y = (rect.bottom - parentRect.top) - parent.clientHeight - offset;
+			break;
+		}
+
+		case 'right': {
+			// Position so element's right edge is offset px left of parent's right edge
+			x = (rect.right - parentRect.left) - parent.clientWidth - offset;
+			break;
+		}
+
+		default: {
+			throw new Error('Invalid `scrollToElement.offsetFrom` value');
+		}
 	}
+
+	parent.scrollTo({left: x, top: y});
 };
 
 const disableAnimations = () => {
@@ -103,8 +101,11 @@ const disableAnimations = () => {
 		*,
 		::before,
 		::after {
-			animation: initial !important;
-			transition: initial !important;
+			animation: none !important;
+			animation-delay: 0s !important;
+			animation-duration: 0s !important;
+			animation-iteration-count: 1 !important;
+			transition: none !important;
 		}
 	`;
 
@@ -165,6 +166,7 @@ const internalCaptureWebsite = async (input, options) => {
 			'--disable-web-security',
 			'--disable-features=IsolateOrigins',
 			'--disable-site-isolation-trials',
+			'--allow-file-access-from-files',
 		);
 	}
 
@@ -186,17 +188,21 @@ const internalCaptureWebsite = async (input, options) => {
 		});
 
 		if (options.blockAds) {
-			const cacheDirectory = path.join(os.tmpdir(), 'capture-website');
-			await fs.mkdir(cacheDirectory, {recursive: true});
-			const cachePath = path.join(cacheDirectory, 'engine.bin');
+			try {
+				const cacheDirectory = path.join(os.tmpdir(), 'capture-website');
+				await fs.mkdir(cacheDirectory, {recursive: true});
+				const cachePath = path.join(cacheDirectory, 'engine.bin');
 
-			const blocker = await PuppeteerBlocker.fromPrebuiltFull(fetch, {
-				path: cachePath,
-				read: fs.readFile,
-				write: fs.writeFile,
-			});
+				const blocker = await PuppeteerBlocker.fromPrebuiltFull(fetch, {
+					path: cachePath,
+					read: fs.readFile,
+					write: fs.writeFile,
+				});
 
-			await blocker.enableBlockingInPage(page);
+				await blocker.enableBlockingInPage(page);
+			} catch {
+				// Skip blocking if ad-blocker initialization fails (e.g., offline/CI)
+			}
 		}
 
 		const result = await internalCaptureWebsiteCore(input, options, page, browser);
@@ -266,7 +272,8 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (typeof options.quality === 'number' && options.type && options.type !== 'png') {
-		screenshotOptions.quality = options.quality * 100;
+		const quality = Math.max(0, Math.min(1, options.quality));
+		screenshotOptions.quality = Math.round(quality * 100);
 	}
 
 	if (options.fullPage) {
@@ -279,7 +286,12 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 
 	if (options.preloadFunction) {
 		const arguments_ = options.preloadFunctionArguments ?? [];
-		await page.evaluateOnNewDocument(options.preloadFunction, ...arguments_);
+		// eslint-disable-next-line unicorn/prefer-ternary
+		if (typeof options.preloadFunction === 'string') {
+			await page.evaluateOnNewDocument(options.preloadFunction);
+		} else {
+			await page.evaluateOnNewDocument(options.preloadFunction, ...arguments_);
+		}
 	}
 
 	await page.setBypassCSP(true);
@@ -323,10 +335,14 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (options.headers) {
-		const headers = {...options.headers};
+		const headers = Object.fromEntries(Object.entries(options.headers).map(([key, value]) => [key, String(value)]));
 		// Remove referer from headers if referrer option is specified (referrer takes precedence)
-		if (options.referrer && headers.referer) {
-			delete headers.referer;
+		if (options.referrer) {
+			for (const key of Object.keys(headers)) {
+				if (key.toLowerCase() === 'referer') {
+					delete headers[key];
+				}
+			}
 		}
 
 		await page.setExtraHTTPHeaders(headers);
@@ -343,7 +359,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	await page.setViewport(viewportOptions);
 
 	if (options.emulateDevice) {
-		if (!(options.emulateDevice in KnownDevices)) {
+		if (!Object.hasOwn(KnownDevices, options.emulateDevice)) {
 			throw new Error(`The device name \`${options.emulateDevice}\` is not supported`);
 		}
 
@@ -384,7 +400,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 	}
 
 	if (options.disableAnimations) {
-		await page.evaluate(disableAnimations, options.disableAnimations);
+		await page.evaluate(disableAnimations);
 	}
 
 	if (Array.isArray(options.hideElements) && options.hideElements.length > 0) {
@@ -405,22 +421,28 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 
 	const getInjectKey = (extension, value) => isUrl(value) ? 'url' : (value.endsWith(`.${extension}`) ? 'path' : 'content');
 
-	if (!options.isJavaScriptEnabled) {
-		// Enable JavaScript again for `modules` and `scripts`.
+	const needsTemporaryJS = !options.isJavaScriptEnabled && (options.modules?.length || options.scripts?.length);
+	if (needsTemporaryJS) {
 		await page.setJavaScriptEnabled(true);
 	}
 
-	if (options.modules) {
-		await Promise.all(options.modules.map(module_ => page.addScriptTag({
-			[getInjectKey('js', module_)]: module_,
-			type: 'module',
-		})));
-	}
+	try {
+		if (options.modules) {
+			await Promise.all(options.modules.map(module_ => page.addScriptTag({
+				[getInjectKey('js', module_)]: module_,
+				type: 'module',
+			})));
+		}
 
-	if (options.scripts) {
-		await Promise.all(options.scripts.map(script => page.addScriptTag({
-			[getInjectKey('js', script)]: script,
-		})));
+		if (options.scripts) {
+			await Promise.all(options.scripts.map(script => page.addScriptTag({
+				[getInjectKey('js', script)]: script,
+			})));
+		}
+	} finally {
+		if (needsTemporaryJS) {
+			await page.setJavaScriptEnabled(false);
+		}
 	}
 
 	if (options.styles) {
@@ -429,7 +451,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		})));
 	}
 
-	if (options.waitForElement) {
+	if (options.waitForElement && options.waitForElement !== options.element) {
 		await page.waitForSelector(options.waitForElement, {
 			visible: true,
 			timeout: timeoutInMilliseconds,
@@ -584,8 +606,8 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		const width = clipOptions.width - (inset.left + inset.right);
 		const height = clipOptions.height - (inset.top + inset.bottom);
 
-		if (width === 0 || height === 0) {
-			throw new Error('When using the `clip` option, the width or height of the screenshot cannot be equal to 0.');
+		if (width <= 0 || height <= 0) {
+			throw new Error('When using the `clip` option, the width or height of the screenshot cannot be <= 0.');
 		}
 
 		screenshotOptions.clip = {
@@ -607,8 +629,8 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 			pdfOptions.format = options.pdf.format;
 		}
 
-		if (options.pdf?.landscape) {
-			pdfOptions.landscape = options.pdf.landscape;
+		if (options.pdf?.landscape !== undefined) {
+			pdfOptions.landscape = Boolean(options.pdf.landscape);
 		}
 
 		if (options.pdf?.margin) {
@@ -616,7 +638,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		}
 
 		if (options.scaleFactor) {
-			pdfOptions.scale = options.scaleFactor;
+			pdfOptions.scale = Math.max(0.1, Math.min(2, options.scaleFactor));
 		}
 
 		if (typeof options.defaultBackground === 'boolean') {

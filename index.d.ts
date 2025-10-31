@@ -12,7 +12,7 @@ import type {
 
 export type Authentication = {
 	readonly username: string;
-	readonly password?: string;
+	readonly password: string;
 };
 
 export type BeforeScreenshot = (page: Page, browser: Browser) => void | Promise<void>;

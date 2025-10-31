@@ -36,7 +36,7 @@ Returns a `Promise<void>` that resolves when the screenshot is written.
 
 Capture a screenshot of the given `input`.
 
-Returns a `Promise<Buffer>` with the screenshot as binary.
+Returns a `Promise<Uint8Array>` with the screenshot as binary.
 
 ### captureWebsite.base64(input, options?)
 
@@ -731,11 +731,18 @@ await captureWebsite.file('https://sindresorhus.com', 'screenshot.png', {
 });
 ```
 
-### captureWebsite.devices
+### devices
 
 Type: `string[]`
 
 Devices supported by the `emulateDevice` option.
+
+```js
+import captureWebsite, {devices} from 'capture-website';
+
+console.log(devices);
+//=> ['iPhone 13', 'iPad Pro', …]
+```
 
 ## Tips
 
