@@ -243,6 +243,7 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		isJavaScriptEnabled: true,
 		blockAds: true,
 		inset: 0,
+		preloadLazyContent: false,
 		...options,
 	};
 
@@ -464,34 +465,95 @@ const internalCaptureWebsiteCore = async (input, options, page, browser) => {
 		}
 	}
 
-	if (screenshotOptions.fullPage) {
+	const shouldScrollToLoadContent = screenshotOptions.fullPage || options.preloadLazyContent;
+
+	if (shouldScrollToLoadContent) {
 		// Get the height of the rendered page
 		const bodyHandle = await page.$('body');
-		const bodyBoundingBox = await bodyHandle.boundingBox();
-		await bodyHandle.dispose();
 
-		// Scroll one viewport at a time, pausing to let content load
-		const viewportHeight = viewportOptions.height;
-		let viewportIncrement = 0;
-		while (viewportIncrement + viewportHeight < bodyBoundingBox.height) {
-			const navigationPromise = page.waitForNetworkIdle();
-			/* eslint-disable no-await-in-loop */
-			await page.evaluate(_viewportHeight => {
-				/* eslint-disable no-undef */
-				window.scrollBy(0, _viewportHeight);
-				/* eslint-enable no-undef */
-			}, viewportHeight);
-			await navigationPromise;
-			/* eslint-enable no-await-in-loop */
-			viewportIncrement += viewportHeight;
+		// Guard against missing body element
+		if (bodyHandle) {
+			let bodyBoundingBox = await bodyHandle.boundingBox();
+
+			try {
+				// Guard against null bounding box (element not rendered)
+				if (bodyBoundingBox && bodyBoundingBox.height > viewportOptions.height) {
+					let pageHeight = bodyBoundingBox.height;
+					const waitForIdleAfterScroll = async () => {
+						try {
+							await page.waitForNetworkIdle({
+								timeout: timeoutInMilliseconds,
+							});
+						} catch (error) {
+							if (!(error instanceof puppeteer.errors.TimeoutError)) {
+								throw error;
+							}
+						}
+					};
+
+					// Save the current scroll position only when needed (not for fullPage)
+					let initialScrollPosition = null;
+
+					if (!screenshotOptions.fullPage) {
+						initialScrollPosition = await page.evaluate(() => ({
+							/* eslint-disable no-undef */
+							x: window.scrollX,
+							y: window.scrollY,
+							/* eslint-enable no-undef */
+						}));
+					}
+
+					// Scroll one viewport at a time, pausing to let content load
+					const viewportHeight = viewportOptions.height;
+					let viewportIncrement = 0;
+					// Use <= to ensure we scroll to the last partial viewport
+					while (viewportIncrement + viewportHeight <= pageHeight) {
+						/* eslint-disable no-await-in-loop */
+						await page.evaluate(_viewportHeight => {
+							/* eslint-disable no-undef */
+							window.scrollBy(0, _viewportHeight);
+							/* eslint-enable no-undef */
+						}, viewportHeight);
+
+						await waitForIdleAfterScroll();
+						await setTimeout(100);
+
+						const updatedBoundingBox = await bodyHandle.boundingBox();
+						if (updatedBoundingBox) {
+							bodyBoundingBox = updatedBoundingBox;
+							if (updatedBoundingBox.height > pageHeight) {
+								pageHeight = updatedBoundingBox.height;
+							}
+						}
+						/* eslint-enable no-await-in-loop */
+
+						viewportIncrement += viewportHeight;
+					}
+
+					// Scroll back to original position
+					// For fullPage, always scroll to top. For preloadLazyContent, scroll to saved position
+					if (screenshotOptions.fullPage) {
+						await page.evaluate(_ => {
+							/* eslint-disable no-undef */
+							window.scrollTo(0, 0);
+							/* eslint-enable no-undef */
+						});
+					} else if (initialScrollPosition) {
+						await page.evaluate(position => {
+							/* eslint-disable no-undef */
+							window.scrollTo(position.x, position.y);
+							/* eslint-enable no-undef */
+						}, initialScrollPosition);
+					}
+				}
+			} finally {
+				// Always dispose the handle to prevent memory leaks
+				await bodyHandle.dispose();
+			}
+		} else {
+			// Page might not have a body element (e.g., XML, SVG documents)
+			// Skip scrolling in this case
 		}
-
-		// Scroll back to top
-		await page.evaluate(_ => {
-			/* eslint-disable no-undef */
-			window.scrollTo(0, 0);
-			/* eslint-enable no-undef */
-		});
 	}
 
 	if (options.inset && !screenshotOptions.fullPage) {

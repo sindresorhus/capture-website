@@ -145,6 +145,26 @@ Capture the full scrollable page, not just the viewport.
 > [!WARNING]
 > Screenshots taller than 16384px will repeat content due to a Chromium limitation. Use the `clip` option to capture sections separately.
 
+##### preloadLazyContent
+
+Type: `boolean`\
+Default: `false`
+
+Scroll through the entire page to trigger lazy-loaded content before capturing the screenshot.
+
+This scrolls through the page viewport by viewport, waiting for network idle after each scroll, then returns to the original scroll position. This is useful for capturing third-party widgets, marketing banners, or any content that only loads when scrolled into view.
+
+> [!NOTE]
+> This option is automatically enabled when `fullPage` is `true`.
+
+```js
+import captureWebsite from 'capture-website';
+
+await captureWebsite.file('https://example.com', 'screenshot.png', {
+	preloadLazyContent: true
+});
+```
+
 ##### defaultBackground
 
 Type: `boolean`\
@@ -189,6 +209,8 @@ Default: `0`
 The number of seconds to wait after the page finished loading before capturing the screenshot.
 
 This can be useful if you know the page has animations that you like it to finish before capturing the screenshot.
+
+This is also useful for capturing lazy-loaded content from third-party scripts (marketing widgets, analytics, etc.) that load asynchronously after the initial page load.
 
 ##### waitForElement
 

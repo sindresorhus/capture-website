@@ -1467,3 +1467,142 @@ test('`onConsole` option', async () => {
 
 	await server.close();
 });
+
+test('`preloadLazyContent` option', async () => {
+	const server = await createTestServer();
+
+	server.get('/', (request, response) => {
+		response.end(`
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<style>
+					body { margin: 0; background: white; }
+					#spacer { height: 2000px; }
+					#lazy-content {
+						width: 100%;
+						height: 50px;
+						background: red;
+						position: absolute;
+						top: 1500px;
+					}
+				</style>
+			</head>
+			<body>
+				<div id="spacer"></div>
+				<div id="lazy-content">Lazy Content</div>
+				<script>
+					// Track if page was scrolled beyond viewport
+					window.wasScrolled = false;
+					window.maxScrollY = 0;
+
+					window.addEventListener('scroll', () => {
+						window.maxScrollY = Math.max(window.maxScrollY, window.scrollY);
+						if (window.scrollY > window.innerHeight) {
+							window.wasScrolled = true;
+							console.log('Scrolled beyond viewport, maxScrollY:', window.maxScrollY);
+						}
+					});
+				</script>
+			</body>
+			</html>
+		`);
+	});
+
+	// Test without preloadLazyContent - should not scroll
+	const messagesWithout = [];
+	await instance(server.url, {
+		width: 100,
+		height: 100,
+		scaleFactor: 1,
+		onConsole(message) {
+			messagesWithout.push(message.text());
+		},
+	});
+
+	const scrolledWithout = messagesWithout.some(m => m.includes('Scrolled beyond viewport'));
+
+	// Test with preloadLazyContent - should scroll through the page
+	const messagesWith = [];
+	const screenshot = await instance(server.url, {
+		width: 100,
+		height: 100,
+		scaleFactor: 1,
+		preloadLazyContent: true,
+		onConsole(message) {
+			messagesWith.push(message.text());
+		},
+	});
+
+	const scrolledWith = messagesWith.some(m => m.includes('Scrolled beyond viewport'));
+
+	assert.ok(isPng(screenshot));
+	assert.equal(scrolledWithout, false, 'Should not scroll without preloadLazyContent');
+	assert.equal(scrolledWith, true, 'Should scroll with preloadLazyContent');
+
+	await server.close();
+});
+
+test('fullPage capture waits for slow lazy content', async () => {
+	const server = await createTestServer();
+	let delayedRequests = 0;
+
+	server.get('/', (request, response) => {
+		response.end(`
+			<!DOCTYPE html>
+			<html>
+			<head>
+				<style>
+					body { margin: 0; background: white; }
+					#initial { height: 1800px; background: linear-gradient(#fff, #eee); }
+				</style>
+			</head>
+			<body>
+				<div id="initial"></div>
+				<script>
+					let appended = false;
+
+					window.addEventListener('scroll', () => {
+						if (appended) {
+							return;
+						}
+
+						appended = true;
+
+						(async () => {
+							await fetch('/delayed-chunk');
+							const delayed = document.createElement('div');
+							delayed.id = 'delayed-content';
+							delayed.style.height = '1000px';
+							delayed.style.background = '#f00';
+							delayed.textContent = 'Delayed content';
+							document.body.append(delayed);
+						})();
+					});
+				</script>
+			</body>
+			</html>
+		`);
+	});
+
+	server.get('/delayed-chunk', async (request, response) => {
+		delayedRequests++;
+		await delay(3500);
+		response.end('ok');
+	});
+
+	const screenshot = await instance(server.url, {
+		width: 300,
+		height: 400,
+		scaleFactor: 1,
+		fullPage: true,
+		preloadLazyContent: true,
+	});
+
+	const size = imageDimensionsFromData(screenshot);
+
+	assert.ok(size.height > 2600, 'Should capture delayed lazy content');
+	assert.equal(delayedRequests, 1);
+
+	await server.close();
+});
